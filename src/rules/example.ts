@@ -8,11 +8,8 @@ const STATE = z.object({
 export default defineModule({
   id: 'example',
   load: async () => STATE.parse({ foo: 4 }),
-  rule: async ({ state, core, action }) => {
+  rule: async ({ state, core, action, api }) => {
     console.log('💚');
-  },
-  schedule: async ({ state, core, api }) => {
-    console.log('💙');
 
     console.log(api.pr.user);
     console.log(core.players.active);
@@ -21,5 +18,8 @@ export default defineModule({
         throw new Error('PR user is not by the active player');
       }
     }
+  },
+  schedule: async ({ state, core, api }) => {
+    console.log('💙');
   },
 });
