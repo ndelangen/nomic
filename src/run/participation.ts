@@ -1,18 +1,9 @@
 import { z } from "zod";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { ACTION } from "../core/rule.ts";
+import { ACTION } from "../core/actions.ts";
 import { main } from "../lib/main.ts";
 import { RuleModuleFactory } from "../lib/types.ts";
 
 const ARGS = z.tuple([z.string(), z.enum(["join", "leave"])]);
-const LOCATION = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "..",
-  "state",
-  "core.yml"
-);
 
 const RuleModule = RuleModuleFactory(z.unknown());
 

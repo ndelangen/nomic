@@ -2,7 +2,7 @@ import { z } from "zod";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineModule } from "../lib/types.ts";
-import { parse, stringify } from "yaml";
+import * as YAML from "yaml";
 
 const LOCATION = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -17,27 +17,9 @@ export const STATE = z.object({
   }),
 });
 
-const JOIN_ACTION = z.object({
-  type: z.literal("join"),
-  payload: z.object({ name: z.string() }),
-});
-
-const LEAVE_ACTION = z.object({
-  type: z.literal("leave"),
-  payload: z.object({ name: z.string() }),
-});
-
-export const ACTION = z.union([JOIN_ACTION, LEAVE_ACTION]);
-
-// const validateAction = (action: z.infer<typeof ACTION>) => {
-//   return ACTION.safeParse(action).success;
-// };
-
-// validateAction({ type: "join", payload: { name: "foo", foo: 3 } });
-
 export default defineModule({
   id: "core",
-  load: async () => STATE.parse(parse(await Deno.readTextFile(LOCATION))),
+  load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),
   rule: async ({ state, action }) => {
     if (action) {
       const name = action.payload.name;
@@ -62,7 +44,7 @@ export default defineModule({
           throw new Error("Invalid action");
         }
       }
-      await Deno.writeTextFile(LOCATION, stringify(state));
+      await Deno.writeTextFile(LOCATION, YAML.stringify(state));
     }
 
     console.log("🟢");
@@ -72,6 +54,6 @@ export default defineModule({
     const nextIndex = (index + 1) % state.players.list.length;
     state.players.active = state.players.list[nextIndex];
 
-    await Deno.writeTextFile(LOCATION, stringify(state));
+    await Deno.writeTextFile(LOCATION, YAML.stringify(state));
   },
 });
