@@ -2,7 +2,10 @@ import { z } from "zod";
 import { STATE as CORE_STATE } from "../core/rule.ts";
 
 export const ID = z.string().describe("The unique identifier for the module.");
-export const RuleFn = z.function().args(z.unknown()).returns(z.promise(z.void()));
+export const RuleFn = z
+  .function()
+  .args(z.unknown())
+  .returns(z.promise(z.void()));
 export const ScheduleFn = z
   .function()
   .args(z.unknown())
@@ -34,10 +37,10 @@ export function RuleModuleFactory<T>(schema: z.ZodType<T>) {
 export function ModuleFactory<T>(schema: z.ZodType<T>) {
   const aa = RuleModuleFactory<T>(schema);
   const bb = ScheduleModuleFactory<T>(schema);
-  return (aa.extend(bb.shape));
+  return aa.extend(bb.shape);
 }
 
-type MODULE<T> = z.infer<ReturnType<typeof ModuleFactory<T>>>
+type MODULE<T> = z.infer<ReturnType<typeof ModuleFactory<T>>>;
 
 export function defineModule<T>(module: MODULE<T>) {
   return module;

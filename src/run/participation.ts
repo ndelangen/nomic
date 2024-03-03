@@ -2,7 +2,7 @@ import { z } from "zod";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse, stringify } from "yaml";
-import { CORE_STATE } from "../lib/CORE_STATE.ts";
+import { STATE as CORE_STATE } from "../core/rule.ts";
 
 const ARGS = z.tuple([z.string(), z.enum(["join", "leave"])]);
 const LOCATION = join(

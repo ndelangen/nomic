@@ -2,7 +2,7 @@ import { z } from "zod";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ModuleFactory } from "./types.ts";
-import { CORE_STATE } from "./CORE_STATE.ts";
+import { STATE as CORE_STATE } from "../core/rule.ts";
 
 const Unknown = z.unknown();
 const Mole = ModuleFactory(Unknown);
