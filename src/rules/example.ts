@@ -1,14 +1,14 @@
 import { z } from "zod";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+// import { join, dirname } from "node:path";
+// import { fileURLToPath } from "node:url";
 import { defineModule } from "../lib/types.ts";
 
-const LOCATION = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "state",
-  "core.yml"
-);
+// const LOCATION = join(
+//   dirname(fileURLToPath(import.meta.url)),
+//   "..",
+//   "state",
+//   "core.yml"
+// );
 const STATE = z.object({
   foo: z.number(),
 });

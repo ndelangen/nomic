@@ -2,5 +2,4 @@ id: core
 players:
   list:
     - central419
-    - jimmy
   active: central419

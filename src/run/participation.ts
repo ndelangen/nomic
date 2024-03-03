@@ -8,6 +8,7 @@ const ARGS = z.tuple([z.string(), z.enum(["join", "leave"])]);
 const LOCATION = join(
   dirname(fileURLToPath(import.meta.url)),
   "..",
+  "..",
   "state",
   "core.yml"
 );
