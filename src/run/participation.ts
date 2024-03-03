@@ -1,16 +1,21 @@
 import { z } from "zod";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { parse, stringify } from "yaml";
-import { CORE_STATE } from "./lib/types";
+import { CORE_STATE } from "../lib/CORE_STATE.ts";
 
 const ARGS = z.tuple([z.string(), z.enum(["join", "leave"])]);
-const LOCATION = join(import.meta.dir, "..", "state", "core.yml");
+const LOCATION = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "state",
+  "core.yml"
+);
 
 const main = async () => {
-  const [name, action] = ARGS.parse(process.argv.slice(2));
+  const [name, action] = ARGS.parse(Deno.args);
 
-  const file = await Bun.file(LOCATION);
-  const content = await file.text();
+  const content = await Deno.readTextFile(LOCATION);
   const data = CORE_STATE.parse(parse(content));
 
   switch (action) {
@@ -33,10 +38,10 @@ const main = async () => {
     }
   }
 
-  await Bun.write(LOCATION, stringify(data));
+  await Deno.writeTextFile(LOCATION, stringify(data));
 };
 
 main().catch((e) => {
   console.error(e);
-  process.exitCode = 1;
+  Deno.exit(1);
 });

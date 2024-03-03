@@ -1,11 +1,22 @@
 import { z } from "zod";
-import { readdir } from "node:fs/promises";
-import { join } from "node:path";
-import { CORE_STATE, ModuleFactory } from "./types";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { ModuleFactory } from "./types.ts";
+import { CORE_STATE } from "./CORE_STATE.ts";
 
 const Unknown = z.unknown();
 const Mole = ModuleFactory(Unknown);
 const Data = z.object({ state: Unknown, core: CORE_STATE });
+
+async function getFiles() {
+  const files: Deno.DirEntry[] = [];
+  for await (const file of Deno.readDir(
+    join(dirname(fileURLToPath(import.meta.url)), "..", `rules`)
+  )) {
+    files.push(file);
+  }
+  return files;
+}
 
 /**
  * Run a series of modules in parallel.
@@ -18,13 +29,23 @@ export async function main(
     data: z.infer<typeof Data>
   ) => Promise<void>
 ) {
-  const core_state = await load_core();
+  const { default: core_rule } = await import("../core/rule.ts");
+  const core_state = core_rule.load ? await core_rule.load() : undefined;
 
-  const files = await readdir(join(import.meta.dir, "../rules"));
+  if (core_state === undefined) {
+    throw new Error("Core state is undefined");
+  }
+
+  await callback(core_rule as z.infer<typeof Mole>, {
+    state: core_state,
+    core: core_state,
+  });
+
+  const files = await getFiles();
 
   const modules = await Promise.all(
     files.map(async (file) => {
-      const module = await import(`../rules/${file}`);
+      const module = await import(`../rules/${file.name}`);
 
       return Mole.parse(module.default);
     })
@@ -36,14 +57,4 @@ export async function main(
     const state = item.load ? await item.load() : undefined;
     await callback(item, { state, core: core_state });
   }, Promise.resolve());
-}
-
-function load_core() {
-  return CORE_STATE.parse({
-    id: "core",
-    players: {
-      list: [],
-      active: "",
-    },
-  });
 }

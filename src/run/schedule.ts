@@ -1,6 +1,7 @@
-import { ScheduleModuleFactory } from "./lib/types";
-import { main } from "./lib/main";
 import { z } from "zod";
+
+import { ScheduleModuleFactory } from "../lib/types.ts";
+import { main } from "../lib/main.ts";
 
 const ScheduleModule = ScheduleModuleFactory(z.unknown());
 
@@ -14,5 +15,5 @@ main(
   }
 ).catch((e) => {
   console.error(e);
-  process.exitCode = 1;
+  Deno.exit(1);
 });

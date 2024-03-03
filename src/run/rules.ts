@@ -1,6 +1,6 @@
-import { RuleModuleFactory } from "./lib/types";
-import { main } from "./lib/main";
 import { z } from "zod";
+import { RuleModuleFactory } from "../lib/types.ts";
+import { main } from "../lib/main.ts";
 
 const RuleModule = RuleModuleFactory(z.unknown());
 
@@ -14,5 +14,5 @@ main(
   }
 ).catch((e) => {
   console.error(e);
-  process.exitCode = 1;
+  Deno.exit(1);
 });
