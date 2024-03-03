@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parse, stringify } from "yaml";
-import { STATE as CORE_STATE } from "../core/rule.ts";
+import { ACTION } from "../core/rule.ts";
+import { main } from "../lib/main.ts";
+import { RuleModuleFactory } from "../lib/types.ts";
 
 const ARGS = z.tuple([z.string(), z.enum(["join", "leave"])]);
 const LOCATION = join(
@@ -13,36 +14,23 @@ const LOCATION = join(
   "core.yml"
 );
 
-const main = async () => {
-  const [name, action] = ARGS.parse(Deno.args);
+const RuleModule = RuleModuleFactory(z.unknown());
 
-  const content = await Deno.readTextFile(LOCATION);
-  const data = CORE_STATE.parse(parse(content));
+const run = async () => {
+  const [name, type] = ARGS.parse(Deno.args);
 
-  switch (action) {
-    case "join": {
-      if (data.players.list.includes(name)) {
-        throw new Error("409 - conflict: Player already exists");
-      }
-      data.players.list = [...data.players.list, name];
-      break;
-    }
-    case "leave": {
-      if (!data.players.list.includes(name)) {
-        throw new Error("404 - not found: Player does not exist");
-      }
-      data.players.list = data.players.list.filter((player) => player !== name);
-      break;
-    }
-    default: {
-      throw new Error("Invalid action");
-    }
-  }
+  const action = ACTION.parse({ type, payload: { name } });
 
-  await Deno.writeTextFile(LOCATION, stringify(data));
+  await main(async (item, { core, state }) => {
+    const validated = RuleModule.safeParse(item);
+    if (validated.success) {
+      await validated.data.rule({ state, core, action });
+      console.log(`Action ${action.type} ran on ${item.id} ran successfully!`);
+    }
+  });
 };
 
-main().catch((e) => {
+run().catch((e) => {
   console.error(e);
   Deno.exit(1);
 });

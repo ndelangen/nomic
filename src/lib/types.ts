@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { STATE as CORE_STATE } from "../core/rule.ts";
+import { ACTION } from "../core/rule.ts";
 
 export const ID = z.string().describe("The unique identifier for the module.");
 export const RuleFn = z
@@ -12,11 +13,9 @@ export const ScheduleFn = z
   .returns(z.promise(z.void()));
 
 function createBase<T>(schema: z.ZodType<T>) {
-  // const Fn = z.function().args(schema).returns(z.promise(z.void()));
   return z.object({
     id: ID,
     load: z.function().returns(z.promise(schema)).optional(),
-    // hooks: z.object({join: Fn}).and(z.record(z.any()).optional()).optional(),
   });
 }
 
@@ -29,7 +28,9 @@ export function ScheduleModuleFactory<T>(schema: z.ZodType<T>) {
 
 export function RuleModuleFactory<T>(schema: z.ZodType<T>) {
   const aa = z.object({
-    rule: RuleFn.args(z.object({ state: schema, core: CORE_STATE })),
+    rule: RuleFn.args(
+      z.object({ state: schema, core: CORE_STATE, action: ACTION.optional() })
+    ),
   });
   return createBase<T>(schema).extend(aa.shape);
 }

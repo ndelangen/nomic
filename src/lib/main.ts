@@ -6,7 +6,10 @@ import { STATE as CORE_STATE } from "../core/rule.ts";
 
 const Unknown = z.unknown();
 const Mole = ModuleFactory(Unknown);
-const Data = z.object({ state: Unknown, core: CORE_STATE });
+const Data = z.object({
+  state: Unknown,
+  core: CORE_STATE,
+});
 
 async function getFiles() {
   const files: Deno.DirEntry[] = [];
@@ -18,17 +21,17 @@ async function getFiles() {
   return files;
 }
 
+type Callback = (
+  item: z.infer<typeof Mole>,
+  data: z.infer<typeof Data>
+) => Promise<void>;
+
 /**
  * Run a series of modules in parallel.
  * @param ingest - A function that returns the state to be passed to each module.
  * @param callback - A function that runs the module and returns the state.
  */
-export async function main(
-  callback: (
-    module: z.infer<typeof Mole>,
-    data: z.infer<typeof Data>
-  ) => Promise<void>
-) {
+export async function main(callback: Callback) {
   const { default: core_rule } = await import("../core/rule.ts");
   const core_state = core_rule.load ? await core_rule.load() : undefined;
 
