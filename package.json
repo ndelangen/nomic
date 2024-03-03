@@ -1,19 +1,21 @@
 {
   "name": "nomic",
   "version": "0.0.0",
-  "type": "module",
   "description": "",
   "author": "central419",
+  "type": "module",
   "scripts": {
-    "rules": "deno run -A ./src/run/rules.ts",
-    "schedule": "deno run -A ./src/run/schedule.ts",
-    "participation": "deno run -A ./src/run/participation.ts"
+    "participation": "deno run -A --node-modules-dir ./src/run/participation.ts",
+    "rules": "deno run -A --node-modules-dir ./src/run/rules.ts",
+    "schedule": "deno run -A --node-modules-dir ./src/run/schedule.ts"
   },
   "dependencies": {
     "octokit": "^3.1.2",
-    "prettier": "^3.2.5",
-    "typescript": "^5.2.2",
     "yaml": "^2.4.0",
     "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "typescript": "^5.2.2"
   }
 }
