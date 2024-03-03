@@ -7,3 +7,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: ./steps/rules.yml@v1
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}

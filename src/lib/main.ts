@@ -40,7 +40,6 @@ type Callback = (
 
 /**
  * Run a series of modules in parallel.
- * @param ingest - A function that returns the state to be passed to each module.
  * @param callback - A function that runs the module and returns the state.
  */
 export async function main(callback: Callback) {
@@ -58,7 +57,6 @@ export async function main(callback: Callback) {
     core: core_state,
   });
 
-  // run every module in sequence
   await (
     await modules
   ).reduce(async (acc, item) => {

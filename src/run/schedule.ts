@@ -9,17 +9,17 @@ const RuleModule = RuleModuleFactory(z.unknown());
 
 const run = async () => {
   await main(async (item, { core, state }) => {
-    const va = RuleModule.safeParse(item);
-    if (va.success) {
-      await va.data.rule({ state, core });
+    const validated = RuleModule.safeParse(item);
+    if (validated.success) {
+      await validated.data.rule({ state, core });
       console.log(`Rule ${item.id} ran successfully!`);
     }
   });
 
   await main(async (item, { core, state }) => {
-    const vb = ScheduleModule.safeParse(item);
-    if (vb.success) {
-      await vb.data.schedule({ state, core });
+    const validated = ScheduleModule.safeParse(item);
+    if (validated.success) {
+      await validated.data.schedule({ state, core });
       console.log(`Schedule ${item.id} ran successfully!`);
     }
   });
