@@ -6,6 +6,7 @@ jobs:
   rules:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ./steps/rules.yml@v1
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}

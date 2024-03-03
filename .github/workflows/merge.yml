@@ -7,4 +7,5 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ./steps/schedule.yml@v1
