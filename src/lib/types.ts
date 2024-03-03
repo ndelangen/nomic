@@ -14,24 +14,24 @@ function createBase<T>(schema: z.ZodType<T>) {
   });
 }
 
-export function createZZS<T>(schema: z.ZodType<T>) {
-  const bb = z.object({
+export function ScheduleModuleFactory<T>(schema: z.ZodType<T>) {
+  const aa = z.object({
     schedule: Schedule.args(z.object({ state: schema, core: CORE_STATE })),
   });
-  return createBase<T>(schema).and(bb);
+  return createBase<T>(schema).extend(aa.shape);
 }
 
-export function createZZR<T>(schema: z.ZodType<T>) {
+export function RuleModuleFactory<T>(schema: z.ZodType<T>) {
   const aa = z.object({
     rule: Rule.args(z.object({ state: schema, core: CORE_STATE })),
   });
-  return createBase<T>(schema).and(aa);
+  return createBase<T>(schema).extend(aa.shape);
 }
 
-export function createZZB<T>(schema: z.ZodType<T>) {
-  const aa = createZZR(schema);
-  const bb = createZZS(schema);
-  return aa.or(bb).or(aa.and(bb));
+export function ModuleFactory<T>(schema: z.ZodType<T>) {
+  const aa = RuleModuleFactory<T>(schema);
+  const bb = ScheduleModuleFactory<T>(schema);
+  return (aa.extend(bb.shape));
 }
 
 //
@@ -43,7 +43,26 @@ export const CORE_STATE = z.object({
   }),
 });
 
-type MODULE<T> = z.infer<ReturnType<typeof createZZB<T>>>;
+// TODO: this should be valid, but BUN won't let me
+// type MODULE<T> = z.infer<ReturnType<typeof ModuleFactory<T>>>
+// This is the fallback
+type MODULE<T> = {
+  id: string;
+  load?: () => Promise<T>;
+} & (
+  | {
+      rule: (module: {
+        state: T;
+        core: z.infer<typeof CORE_STATE>;
+      }) => Promise<void>;
+    }
+  | {
+      schedule: (module: {
+        state: T;
+        core: z.infer<typeof CORE_STATE>;
+      }) => Promise<void>;
+    }
+);
 
 export function defineModule<T>(module: MODULE<T>) {
   return module;

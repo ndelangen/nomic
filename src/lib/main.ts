@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { CORE_STATE, createZZB } from "./types";
+import { CORE_STATE, ModuleFactory } from "./types";
 
 const rr = z.unknown();
-const ff = createZZB(rr);
+const ff = ModuleFactory(rr);
 const cc = z.object({state: rr, core: CORE_STATE});
 
 /**

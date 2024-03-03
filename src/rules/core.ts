@@ -11,9 +11,9 @@ export default defineModule({
   id: "core",
   load: async () => STATE.parse({ foo: 4 }),
   rule: async ({ state, core }) => {
-    console.log("Rule ran successfully!");
+    console.log("💚");
   },
   schedule: async ({ state, core }) => {
-    console.log("Schedule ran successfully!");
+    console.log("💙");
   },
 });
