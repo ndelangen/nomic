@@ -1,0 +1,28 @@
+name: Participation
+on:
+  workflow_dispatch:
+    inputs:
+      activity:
+        description: "Action to take"
+        required: true
+        default: "join"
+        type: choice
+        options:
+          - join
+          - leave
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
+      - run: bun run participation ${{ github.actor }} ${{ github.event.inputs.activity }}
+      - run: git add .
+      - run: |
+          git config user.name ${{ github.actor }}
+          git config user.email "github-actions@github.com"
+          git commit -m "${{ github.actor }} ${{ github.event.inputs.activity }}s [skip ci]"
+          git push

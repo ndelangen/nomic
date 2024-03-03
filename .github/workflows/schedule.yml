@@ -1,4 +1,4 @@
-name: Merge
+name: Schedule
 on:
   schedule:
     - cron: "0 0 * * *"

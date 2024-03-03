@@ -5,13 +5,15 @@
   "author": "central419",
   "scripts": {
     "rules": "bun run ./src/rules.ts",
-    "schedule": "bun run ./src/schedule.ts"
+    "schedule": "bun run ./src/schedule.ts",
+    "participation": "bun run ./src/participation.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.0.0",
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "yaml": "^2.4.0",
     "zod": "^3.22.4"
   }
 }

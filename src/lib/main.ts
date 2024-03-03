@@ -3,9 +3,9 @@ import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import { CORE_STATE, ModuleFactory } from "./types";
 
-const rr = z.unknown();
-const ff = ModuleFactory(rr);
-const cc = z.object({state: rr, core: CORE_STATE});
+const Unknown = z.unknown();
+const Mole = ModuleFactory(Unknown);
+const Data = z.object({ state: Unknown, core: CORE_STATE });
 
 /**
  * Run a series of modules in parallel.
@@ -13,22 +13,20 @@ const cc = z.object({state: rr, core: CORE_STATE});
  * @param callback - A function that runs the module and returns the state.
  */
 export async function main(
-  callback: (module: z.infer<typeof ff>, data: z.infer<typeof cc>) => Promise<void>
+  callback: (
+    module: z.infer<typeof Mole>,
+    data: z.infer<typeof Data>
+  ) => Promise<void>
 ) {
-  // ingest core data
   const core_state = await load_core();
 
-  // read list of files
   const files = await readdir(join(import.meta.dir, "../rules"));
 
-  // read every file in parallel
   const modules = await Promise.all(
     files.map(async (file) => {
-      // load the module
       const module = await import(`../rules/${file}`);
 
-      // parse the module's default export
-      return ff.parse(module.default);
+      return Mole.parse(module.default);
     })
   );
 

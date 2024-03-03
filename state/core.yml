@@ -1,5 +1,5 @@
-id: "core"
+id: core
 players:
-  active: "central419"
   list:
-    - "central419"
+    - central419
+  active: central419
