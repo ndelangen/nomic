@@ -11,7 +11,12 @@ export default defineModule({
   rule: async ({ state, core, action }) => {
     console.log('💚');
   },
-  schedule: async ({ state, core }) => {
+  schedule: async ({ state, core, api }) => {
     console.log('💙');
+    if (api.pr) {
+      if (api.pr?.user.login !== core.players.active) {
+        throw new Error('PR user is not by the active player');
+      }
+    }
   },
 });
