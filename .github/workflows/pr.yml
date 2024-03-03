@@ -1,0 +1,9 @@
+name: Merge
+on:
+  pull_request:
+
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./steps/rules.yml@v1

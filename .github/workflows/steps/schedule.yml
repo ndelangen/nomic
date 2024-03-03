@@ -1,0 +1,11 @@
+name: Scheduled
+jobs:
+  scheduled:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
+      - run: bun run schedule
