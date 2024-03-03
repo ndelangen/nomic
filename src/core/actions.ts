@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const JOIN_ACTION = z.object({
-  type: z.literal("join"),
+  type: z.literal('join'),
   payload: z.object({ name: z.string() }),
 });
 const LEAVE_ACTION = z.object({
-  type: z.literal("leave"),
+  type: z.literal('leave'),
   payload: z.object({ name: z.string() }),
 });
 

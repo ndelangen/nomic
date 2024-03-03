@@ -1,8 +1,8 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { ScheduleModuleFactory } from "../lib/types.ts";
-import { main } from "../lib/main.ts";
-import { RuleModuleFactory } from "../lib/types.ts";
+import { ScheduleModuleFactory } from '../lib/types.ts';
+import { main } from '../lib/main.ts';
+import { RuleModuleFactory } from '../lib/types.ts';
 
 const ScheduleModule = ScheduleModuleFactory(z.unknown());
 const RuleModule = RuleModuleFactory(z.unknown());

@@ -10,6 +10,7 @@
     "participation": "deno run -A ./src/run/participation.ts"
   },
   "dependencies": {
+    "prettier": "^3.2.5",
     "typescript": "^5.2.2",
     "yaml": "^2.4.0",
     "zod": "^3.22.4"

@@ -1,8 +1,8 @@
-import { z } from "zod";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { ModuleFactory } from "./types.ts";
-import { STATE as CORE_STATE } from "../core/rule.ts";
+import { z } from 'zod';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { ModuleFactory } from './types.ts';
+import { STATE as CORE_STATE } from '../core/rule.ts';
 
 const Unknown = z.unknown();
 const Mole = ModuleFactory(Unknown);
@@ -14,7 +14,7 @@ const Data = z.object({
 async function getFiles() {
   const files: Deno.DirEntry[] = [];
   for await (const file of Deno.readDir(
-    join(dirname(fileURLToPath(import.meta.url)), "..", `rules`)
+    join(dirname(fileURLToPath(import.meta.url)), '..', `rules`),
   )) {
     files.push(file);
   }
@@ -29,13 +29,13 @@ async function getModules() {
       const module = await import(`../rules/${file.name}`);
 
       return Mole.parse(module.default);
-    })
+    }),
   );
 }
 
 type Callback = (
   item: z.infer<typeof Mole>,
-  data: z.infer<typeof Data>
+  data: z.infer<typeof Data>,
 ) => Promise<void>;
 
 /**
@@ -46,11 +46,11 @@ type Callback = (
 export async function main(callback: Callback) {
   const modules = getModules();
 
-  const { default: core_rule } = await import("../core/rule.ts");
+  const { default: core_rule } = await import('../core/rule.ts');
   const core_state = core_rule.load ? await core_rule.load() : undefined;
 
   if (core_state === undefined) {
-    throw new Error("Core state is undefined");
+    throw new Error('Core state is undefined');
   }
 
   await callback(core_rule as z.infer<typeof Mole>, {
