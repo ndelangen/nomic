@@ -64,7 +64,13 @@ const ARGS = z.tuple([z.string(), z.string()]);
 export async function getPrInfo() {
   const githubToken = Deno.env.get('GITHUB_TOKEN');
   const eventName = Deno.env.get('GITHUB_EVENT_NAME');
-  const [owner, repo] = ARGS.parse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
+  const result = ARGS.safeParse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
+
+  if (!result.success) {
+    return undefined;
+  }
+
+  const [owner, repo] = result.data;
 
   const octokit = new Octokit({ auth: githubToken });
 
