@@ -5,11 +5,10 @@ import { main } from '../lib/main.ts';
 const RuleModule = RuleModuleFactory(z.unknown());
 
 const run = async () => {
-  console.log({ pr: Deno.env.get('PR_NUMBER') });
-  await main(async (item, { core, state }) => {
+  await main(async (item, { core, state, api }) => {
     const validated = RuleModule.safeParse(item);
     if (validated.success) {
-      await validated.data.rule({ state, core });
+      await validated.data.rule({ state, core, api });
       console.log(`Rule ${item.id} ran successfully!`);
     }
   });

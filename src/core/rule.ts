@@ -4,10 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { defineModule } from '../lib/types.ts';
 import * as YAML from 'yaml';
 
-const LOCATION = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '../../state/core.yml',
-);
+const LOCATION = join(dirname(fileURLToPath(import.meta.url)), '../../state/core.yml');
 
 export const STATE = z.object({
   id: z.string(),
@@ -35,9 +32,12 @@ export default defineModule({
           if (!state.players.list.includes(name)) {
             throw new Error('404 - not found: Player does not exist');
           }
-          state.players.list = state.players.list.filter(
-            (player) => player !== name,
-          );
+          state.players.list = state.players.list.filter((player) => player !== name);
+          if (state.players.active === name) {
+            const index = state.players.list.indexOf(name);
+            const nextIndex = (index + 1) % state.players.list.length;
+            state.players.active = state.players.list[nextIndex];
+          }
           break;
         }
         default: {
