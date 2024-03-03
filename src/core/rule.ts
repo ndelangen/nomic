@@ -55,5 +55,7 @@ export default defineModule({
     state.players.active = state.players.list[nextIndex];
 
     await Deno.writeTextFile(LOCATION, YAML.stringify(state));
+
+    console.log("🔵");
   },
 });

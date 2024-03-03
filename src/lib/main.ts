@@ -21,6 +21,18 @@ async function getFiles() {
   return files;
 }
 
+async function getModules() {
+  const files = await getFiles();
+
+  return Promise.all(
+    files.map(async (file) => {
+      const module = await import(`../rules/${file.name}`);
+
+      return Mole.parse(module.default);
+    })
+  );
+}
+
 type Callback = (
   item: z.infer<typeof Mole>,
   data: z.infer<typeof Data>
@@ -32,6 +44,8 @@ type Callback = (
  * @param callback - A function that runs the module and returns the state.
  */
 export async function main(callback: Callback) {
+  const modules = getModules();
+
   const { default: core_rule } = await import("../core/rule.ts");
   const core_state = core_rule.load ? await core_rule.load() : undefined;
 
@@ -44,18 +58,10 @@ export async function main(callback: Callback) {
     core: core_state,
   });
 
-  const files = await getFiles();
-
-  const modules = await Promise.all(
-    files.map(async (file) => {
-      const module = await import(`../rules/${file.name}`);
-
-      return Mole.parse(module.default);
-    })
-  );
-
   // run every module in sequence
-  await modules.reduce(async (acc, item) => {
+  await (
+    await modules
+  ).reduce(async (acc, item) => {
     await acc;
     const state = item.load ? await item.load() : undefined;
     await callback(item, { state, core: core_state });
