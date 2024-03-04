@@ -7,7 +7,7 @@ jobs:
   check-inactivity:
     runs-on: ubuntu-latest
     outputs:
-      no_commits: ${{ steps.check_inactivity.outputs.no_commits }}
+      skip: ${{ steps.check_inactivity.outputs.skip }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -21,10 +21,11 @@ jobs:
           desired_inactivity_seconds=$(( $DESIRED_INACTIVITY_SECONDS + $DESIRED_INACTIVITY_MINUTES * 60 + $DESIRED_INACTIVITY_HOURS * 60 * 60 + $DESIRED_INACTIVITY_DAYS * 24 * 60 * 60 ))
 
           if [[ $difference -gt $desired_inactivity_seconds ]]; then
-            echo "No commits in the last 24 hours!"
-            echo "no_commits=true" >> $GITHUB_OUTPUT
+            echo "No commits within the desired inactivity seconds!"
+            echo "skip=false" >> $GITHUB_OUTPUT
           else
             echo "Recent commit detected. Skipping script."
+            echo "skip=true" >> $GITHUB_OUTPUT
           fi
         env:
           DESIRED_INACTIVITY_SECONDS: 0
@@ -34,7 +35,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
     needs: check-inactivity
-    if: ${{ needs.check-inactivity.outputs.no_commits != 'true' }}
+    if: ${{ needs.check-inactivity.outputs.skip == 'false' }}
     steps:
       - uses: actions/checkout@v3
         with:
