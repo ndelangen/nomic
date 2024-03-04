@@ -16,16 +16,19 @@ jobs:
         id: check_inactivity
         run: |
           now=$(date +%s)
-          last_commit_timestamp=$(date -d "$last_commit_date" +%s)
+          last_commit_timestamp=$(git log -1 --format=%ct)
           difference=$((now - last_commit_timestamp))
           desired_inactivity_seconds=$(( $DESIRED_INACTIVITY_SECONDS + $DESIRED_INACTIVITY_MINUTES * 60 + $DESIRED_INACTIVITY_HOURS * 60 * 60 + $DESIRED_INACTIVITY_DAYS * 24 * 60 * 60 ))
 
+          echo "Last commit was $difference seconds ago."
+          echo "Desired inactivity is $desired_inactivity_seconds seconds."
+
           if [[ $difference -gt $desired_inactivity_seconds ]]; then
-            echo "No commits in the last 24 hours!"
-            echo "no_commits=true" >> $GITHUB_OUTPUT
+            echo "No commits within the desired inactivity seconds!"
+            echo "skip=false" >> $GITHUB_OUTPUT
           else
-            echo "no_commits=false" >> $GITHUB_OUTPUT
             echo "Recent commit detected. Skipping script."
+            echo "skip=true" >> $GITHUB_OUTPUT
           fi
         env:
           DESIRED_INACTIVITY_SECONDS: 0
@@ -44,3 +47,9 @@ jobs:
       - uses: denoland/setup-deno@v1
       - run: bun install --production
       - run: bun run schedule
+      - run: git add .
+      - run: |
+          git config user.name ${{ github.actor }}
+          git config user.email "github-actions@github.com"
+          git commit -m "schedule [skip ci]"
+          git push
