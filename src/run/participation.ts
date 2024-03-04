@@ -12,10 +12,10 @@ const run = async () => {
 
   const action = ACTION.parse({ type, payload: { name } });
 
-  await main(async (item, { core, state }) => {
+  await main(async (item, { core, state, api }) => {
     const validated = RuleModule.safeParse(item);
     if (validated.success) {
-      await validated.data.rule({ state, core, action });
+      await validated.data.rule({ state, core, action, api });
       console.log(`Action ${action.type} ran on ${item.id} ran successfully!`);
     }
   });
