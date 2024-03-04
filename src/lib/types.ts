@@ -26,7 +26,14 @@ export function ScheduleModuleFactory<T>(schema: z.ZodType<T>) {
 
 export function RuleModuleFactory<T>(schema: z.ZodType<T>) {
   const aa = z.object({
-    rule: RuleFn.args(z.object({ state: schema, core: CORE_STATE, action: ACTION.optional(), api: API })),
+    rule: RuleFn.args(
+      z.object({
+        state: schema,
+        core: CORE_STATE,
+        action: ACTION.optional(),
+        api: API.required(),
+      }),
+    ),
   });
   return createBase<T>(schema).extend(aa.shape);
 }
