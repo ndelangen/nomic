@@ -16,7 +16,7 @@ jobs:
           now=$(date +%s)
           last_commit_timestamp=$(date -d "$last_commit_date" +%s)
           difference=$((now - last_commit_timestamp))
-          desired_inactivity_seconds=$DESIRED_INACTIVITY_SECONDS + ($DESIRED_INACTIVITY_MINUTES * 60) + ($DESIRED_INACTIVITY_HOURS * 60 * 60) + ($DESIRED_INACTIVITY_DAYS * 24 * 60 * 60)
+          desired_inactivity_seconds=$(( $DESIRED_INACTIVITY_SECONDS + $DESIRED_INACTIVITY_MINUTES * 60 + $DESIRED_INACTIVITY_HOURS * 60 * 60 + $DESIRED_INACTIVITY_DAYS * 24 * 60 * 60 ))
 
           if [[ $difference -gt $desired_inactivity_seconds ]]; then
             echo "No commits in the last 24 hours!"
