@@ -34,7 +34,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
     needs: check-inactivity
-    if: ${{ needs.check-inactivity.outputs.no_commits == 'true' }}
+    if: ${{ needs.check-inactivity.outputs.no_commits != 'true' }}
     steps:
       - uses: actions/checkout@v3
         with:
