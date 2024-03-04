@@ -11,8 +11,6 @@ export default defineModule({
   rule: async ({ state, core, action, api }) => {
     console.log('💚');
 
-    console.log(api.pr.user);
-    console.log(core.players.active);
     if (api.pr) {
       if (api.pr.user.login !== core.players.active) {
         throw new Error('PR user is not by the active player');
