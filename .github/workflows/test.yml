@@ -6,6 +6,8 @@ on:
 jobs:
   check-inactivity:
     runs-on: ubuntu-latest
+    outputs:
+      no_commits: ${{ steps.check_inactivity.outputs.no_commits }}
     steps:
       - uses: actions/checkout@v3
         with:
