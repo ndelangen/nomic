@@ -30,8 +30,8 @@ jobs:
       - uses: denoland/setup-deno@v1
       - run: bun install --production
       - run: bun run participation ${{ github.actor }} ${{ github.event.inputs.activity }}
-      - run: git add .
-      - run: |
+      - name: Commit changes
+        run: |
           git config user.name ${{ github.actor }}
           git config user.email "github-actions@github.com"
           git commit -m "${{ github.actor }} ${{ github.event.inputs.activity }}s [skip ci]"
