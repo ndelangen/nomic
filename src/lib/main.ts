@@ -51,11 +51,8 @@ export async function main(callback: Callback) {
     throw new Error('Core state is undefined');
   }
 
-  const pr = await getPrInfo();
+  const api = await defineAPI();
 
-  const api = {
-    pr,
-  };
   await callback(core_rule as z.infer<typeof Mole>, {
     state: core_state,
     core: core_state,
