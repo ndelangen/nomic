@@ -3,7 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ModuleFactory } from './types.ts';
 import { STATE as CORE_STATE } from '../core/rule.ts';
-import { getPrInfo } from '../core/api.ts';
+import { defineAPI } from '../core/api.ts';
 
 const Unknown = z.unknown();
 const Mole = ModuleFactory(Unknown);
@@ -51,11 +51,8 @@ export async function main(callback: Callback) {
     throw new Error('Core state is undefined');
   }
 
-  const pr = await getPrInfo();
+  const api = await defineAPI();
 
-  const api = {
-    pr,
-  };
   await callback(core_rule as z.infer<typeof Mole>, {
     state: core_state,
     core: core_state,
