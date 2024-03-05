@@ -24,8 +24,8 @@ jobs:
       - run: bun run schedule
       - name: Commit changes
         run: |
-          git config --local user.email "github-action@github.com"
           git config --local user.name ${{ github.actor }}
+          git config --local user.email "github-action@github.com"
           git commit -a -m "merge [skip ci]"
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}

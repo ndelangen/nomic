@@ -12,7 +12,6 @@ on:
         ready_for_review,
         review_requested,
         review_request_removed,
-        closed,
         synchronize,
         edited,
         locked,
@@ -33,4 +32,3 @@ jobs:
       - run: bun run rules
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
