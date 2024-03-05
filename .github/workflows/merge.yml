@@ -7,14 +7,29 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ steps.generate-token.outputs.token }}
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install --production
       - run: bun run schedule
-      - run: git add .
-      - run: |
-          git config user.name ${{ github.actor }}
-          git config user.email "github-actions@github.com"
-          git commit -m "merge [skip ci]"
-          git push
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-action@github.com"
+          git config --local user.name ${{ github.actor }}
+          git commit -a -m "merge [skip ci]"
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ steps.generate-token.outputs.token }}
