@@ -3,16 +3,14 @@ import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 import { defineAPI } from '../core/api.ts';
 import { STATE as CORE_STATE } from '../core/rule.ts';
-import { RuleFactory } from './types.ts';
+import { API, RuleFactory } from './types.ts';
 
 const Unknown = z.unknown();
 const Mole = RuleFactory(Unknown);
 const Data = z.object({
   state: Unknown,
   core: CORE_STATE,
-  api: z.object({
-    pr: z.any(),
-  }),
+  api: API,
 });
 
 async function getFiles() {

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ACTION } from '../core/actions.ts';
+import { defineAPI } from '../core/api.ts';
 import { STATE as CORE_STATE } from '../core/rule.ts';
 
 export const ID = z.string().describe('The unique identifier for the module.');
@@ -7,7 +8,8 @@ export const CheckFn = z.function().args(z.unknown()).returns(z.promise(z.void()
 export const ProgressFn = z.function().args(z.unknown()).returns(z.promise(z.void()));
 
 export const API = z.object({
-  pr: z.any(),
+  pr: z.any() as z.ZodType<Awaited<ReturnType<typeof defineAPI>>['pr']>,
+  github: z.any() as z.ZodType<Awaited<ReturnType<typeof defineAPI>>['github']>,
 });
 
 function createBase<T>(schema: z.ZodType<T>) {
