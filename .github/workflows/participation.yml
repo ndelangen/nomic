@@ -35,4 +35,9 @@ jobs:
           git config user.name ${{ github.actor }}
           git config user.email "github-actions@github.com"
           git commit -m "${{ github.actor }} ${{ github.event.inputs.activity }}s [skip ci]"
-          git push
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ steps.generate-token.outputs.token }}
