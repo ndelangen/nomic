@@ -61,8 +61,7 @@ import { z } from 'npm:zod@^3.22.4';
 
 const ARGS = z.tuple([z.string(), z.string()]);
 
-export async function getPrInfo() {
-  const githubToken = Deno.env.get('GITHUB_TOKEN');
+export async function getPrInfo(octokit: Octokit) {
   const eventName = Deno.env.get('GITHUB_EVENT_NAME');
   const result = ARGS.safeParse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
 
@@ -71,8 +70,6 @@ export async function getPrInfo() {
   }
 
   const [owner, repo] = result.data;
-
-  const octokit = new Octokit({ auth: githubToken });
 
   if (eventName === 'pull_request') {
     const pull_number = parseInt(Deno.env.get('PR_NUMBER')!, 10);
@@ -94,3 +91,12 @@ export async function getPrInfo() {
     return undefined;
   }
 }
+
+export const defineAPI = async () => {
+  const githubToken = Deno.env.get('GITHUB_TOKEN');
+  const octokit = new Octokit({ auth: githubToken });
+
+  const pr = await getPrInfo(octokit);
+
+  return { pr, github: octokit };
+};
