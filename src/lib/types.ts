@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { STATE as CORE_STATE } from '../core/rule.ts';
 import { ACTION } from '../core/actions.ts';
+import { STATE as CORE_STATE } from '../core/rule.ts';
 
 export const ID = z.string().describe('The unique identifier for the module.');
 export const RuleFn = z.function().args(z.unknown()).returns(z.promise(z.void()));

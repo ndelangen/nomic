@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { RuleModuleFactory } from '../lib/types.ts';
 import { main } from '../lib/main.ts';
+import { RuleModuleFactory } from '../lib/types.ts';
 
 const RuleModule = RuleModuleFactory(z.unknown());
 

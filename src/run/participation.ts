@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { ACTION } from '../core/actions.ts';
+import { ACTION, JOIN_ACTION, LEAVE_ACTION } from '../core/actions.ts';
 import { main } from '../lib/main.ts';
 import { RuleModuleFactory } from '../lib/types.ts';
 
-const ARGS = z.tuple([z.string(), z.enum(['join', 'leave'])]);
+const ARGS = z.tuple([z.string(), z.enum([JOIN_ACTION.name, LEAVE_ACTION.name])]);
 
 const RuleModule = RuleModuleFactory(z.unknown());
 

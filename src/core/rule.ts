@@ -1,8 +1,9 @@
-import { z } from 'zod';
-import { join, dirname } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineModule } from '../lib/types.ts';
 import * as YAML from 'yaml';
+import { z } from 'zod';
+import { defineModule } from '../lib/types.ts';
+import { JOIN_ACTION, LEAVE_ACTION } from './actions.ts';
 
 const LOCATION = join(dirname(fileURLToPath(import.meta.url)), '../../state/core.yml');
 
@@ -14,6 +15,8 @@ export const STATE = z.object({
   }),
 });
 
+JOIN_ACTION.shape.type.value;
+
 export default defineModule({
   id: 'core',
   load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),
@@ -21,14 +24,14 @@ export default defineModule({
     if (action) {
       const name = action.payload.name;
       switch (action?.type) {
-        case 'join': {
+        case JOIN_ACTION.name: {
           if (state.players.list.includes(name)) {
             throw new Error('409 - conflict: Player already exists');
           }
           state.players.list = [...state.players.list, name];
           break;
         }
-        case 'leave': {
+        case LEAVE_ACTION.name: {
           if (!state.players.list.includes(name)) {
             throw new Error('404 - not found: Player does not exist');
           }

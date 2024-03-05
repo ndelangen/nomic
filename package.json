@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "octokit": "^3.1.2",
+    "prettier-plugin-organize-imports": "^3.2.4",
     "yaml": "^2.4.0",
     "zod": "^3.22.4"
   },
