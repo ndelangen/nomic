@@ -29,6 +29,6 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install --production
-      - run: bun run rules
+      - run: bun run check
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}

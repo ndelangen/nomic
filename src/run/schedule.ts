@@ -1,30 +1,23 @@
 import { z } from 'zod';
 
 import { main } from '../lib/main.ts';
-import { RuleModuleFactory, ScheduleModuleFactory } from '../lib/types.ts';
+import { CheckRuleFactory, ProgressRuleFactory } from '../lib/types.ts';
 
-const ScheduleModule = ScheduleModuleFactory(z.unknown());
-const RuleModule = RuleModuleFactory(z.unknown());
+const ProgressRule = ProgressRuleFactory(z.unknown());
+const CheckRule = CheckRuleFactory(z.unknown());
 
-const run = async () => {
-  await main(async (item, { core, state, api }) => {
-    const validated = RuleModule.safeParse(item);
-    if (validated.success) {
-      await validated.data.rule({ state, core, api });
-      console.log(`Rule ${item.id} ran successfully!`);
-    }
-  });
+await main(async (item, { core, state, api }) => {
+  const validated = CheckRule.safeParse(item);
+  if (validated.success) {
+    await validated.data.check({ state, core, api });
+    console.log(`Check ${item.id} ran successfully!`);
+  }
+});
 
-  await main(async (item, { core, state, api }) => {
-    const validated = ScheduleModule.safeParse(item);
-    if (validated.success) {
-      await validated.data.schedule({ state, core, api });
-      console.log(`Schedule ${item.id} ran successfully!`);
-    }
-  });
-};
-
-run().catch((e) => {
-  console.error(e);
-  Deno.exit(1);
+await main(async (item, { core, state, api }) => {
+  const validated = ProgressRule.safeParse(item);
+  if (validated.success) {
+    await validated.data.progress({ state, core, api });
+    console.log(`Progress ${item.id} ran successfully!`);
+  }
 });

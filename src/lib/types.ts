@@ -3,8 +3,8 @@ import { ACTION } from '../core/actions.ts';
 import { STATE as CORE_STATE } from '../core/rule.ts';
 
 export const ID = z.string().describe('The unique identifier for the module.');
-export const RuleFn = z.function().args(z.unknown()).returns(z.promise(z.void()));
-export const ScheduleFn = z.function().args(z.unknown()).returns(z.promise(z.void()));
+export const CheckFn = z.function().args(z.unknown()).returns(z.promise(z.void()));
+export const ProgressFn = z.function().args(z.unknown()).returns(z.promise(z.void()));
 
 export const API = z.object({
   pr: z.any(),
@@ -17,16 +17,16 @@ function createBase<T>(schema: z.ZodType<T>) {
   });
 }
 
-export function ScheduleModuleFactory<T>(schema: z.ZodType<T>) {
+export function ProgressRuleFactory<T>(schema: z.ZodType<T>) {
   const aa = z.object({
-    schedule: ScheduleFn.args(z.object({ state: schema, core: CORE_STATE, api: API })),
+    progress: ProgressFn.args(z.object({ state: schema, core: CORE_STATE, api: API })),
   });
   return createBase<T>(schema).extend(aa.shape);
 }
 
-export function RuleModuleFactory<T>(schema: z.ZodType<T>) {
+export function CheckRuleFactory<T>(schema: z.ZodType<T>) {
   const aa = z.object({
-    rule: RuleFn.args(
+    check: CheckFn.args(
       z.object({
         state: schema,
         core: CORE_STATE,
@@ -38,14 +38,14 @@ export function RuleModuleFactory<T>(schema: z.ZodType<T>) {
   return createBase<T>(schema).extend(aa.shape);
 }
 
-export function ModuleFactory<T>(schema: z.ZodType<T>) {
-  const aa = RuleModuleFactory<T>(schema);
-  const bb = ScheduleModuleFactory<T>(schema);
+export function RuleFactory<T>(schema: z.ZodType<T>) {
+  const aa = CheckRuleFactory<T>(schema);
+  const bb = ProgressRuleFactory<T>(schema);
   return aa.extend(bb.shape);
 }
 
-type MODULE<T> = z.infer<ReturnType<typeof ModuleFactory<T>>>;
+type RULE<T> = z.infer<ReturnType<typeof RuleFactory<T>>>;
 
-export function defineModule<T>(module: MODULE<T>) {
+export function defineRule<T>(module: RULE<T>) {
   return module;
 }

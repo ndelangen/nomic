@@ -1,14 +1,14 @@
 import { z } from 'zod';
-import { defineModule } from '../lib/types.ts';
+import { defineRule } from '../lib/types.ts';
 
 const STATE = z.object({
   foo: z.number(),
 });
 
-export default defineModule({
+export default defineRule({
   id: 'example',
   load: async () => STATE.parse({ foo: 4 }),
-  rule: async ({ state, core, action, api }) => {
+  check: async ({ state, core, action, api }) => {
     console.log('💚');
 
     if (api.pr) {
@@ -17,7 +17,7 @@ export default defineModule({
       }
     }
   },
-  schedule: async ({ state, core, api }) => {
+  progress: async ({ state, core, api }) => {
     console.log('💙');
   },
 });

@@ -55,12 +55,12 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install --production
-      - run: bun run schedule
+      - run: bun run progress
       - name: Commit changes
         run: |
           git config --local user.name ${{ github.actor }}
           git config --local user.email "github-action@github.com"
-          git commit -a -m "schedule [skip ci]"
+          git commit -a -m "progress [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:

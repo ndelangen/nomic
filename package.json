@@ -5,9 +5,9 @@
   "author": "central419",
   "type": "module",
   "scripts": {
-    "participation": "deno run -A --node-modules-dir ./src/run/participation.ts",
-    "rules": "deno run -A --node-modules-dir ./src/run/rules.ts",
-    "schedule": "deno run -A --node-modules-dir ./src/run/schedule.ts"
+    "action": "deno run -A --node-modules-dir ./src/run/action.ts",
+    "check": "deno run -A --node-modules-dir ./src/run/check.ts",
+    "progress": "deno run -A --node-modules-dir ./src/run/progress.ts"
   },
   "dependencies": {
     "octokit": "^3.1.2",

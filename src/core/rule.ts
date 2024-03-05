@@ -2,7 +2,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as YAML from 'yaml';
 import { z } from 'zod';
-import { defineModule } from '../lib/types.ts';
+import { defineRule } from '../lib/types.ts';
 import { JOIN_ACTION, LEAVE_ACTION } from './actions.ts';
 
 const LOCATION = join(dirname(fileURLToPath(import.meta.url)), '../../state/core.yml');
@@ -17,10 +17,10 @@ export const STATE = z.object({
 
 JOIN_ACTION.shape.type.value;
 
-export default defineModule({
+export default defineRule({
   id: 'core',
   load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),
-  rule: async ({ state, action }) => {
+  check: async ({ state, action }) => {
     if (action) {
       const name = action.payload.name;
       switch (action?.type) {
@@ -52,7 +52,7 @@ export default defineModule({
 
     console.log('🟢');
   },
-  schedule: async ({ state }) => {
+  progress: async ({ state }) => {
     const index = state.players.list.indexOf(state.players.active);
     const nextIndex = (index + 1) % state.players.list.length;
     state.players.active = state.players.list[nextIndex];
