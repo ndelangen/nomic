@@ -6,7 +6,7 @@ jobs:
   check-inactivity:
     runs-on: ubuntu-latest
     outputs:
-      no_commits: ${{ steps.check_inactivity.outputs.no_commits }}
+      skip: ${{ steps.check_inactivity.outputs.skip }}
     steps:
       - uses: actions/checkout@v3
         with:
