@@ -1,5 +1,3 @@
 {
-  "unstable": [
-    "byonm"
-  ]
+  "unstable": ["byonm"]
 }

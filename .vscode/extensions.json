@@ -1,6 +1,10 @@
 {
   "recommendations": [
     "denoland.vscode-deno",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "yoavbls.pretty-ts-errors",
+    "unional.vscode-sort-package-json",
+    "dskwrk.vscode-generate-getter-setter",
+    "ms-vscode.vscode-typescript-next"
   ]
 }
