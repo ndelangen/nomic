@@ -20,7 +20,7 @@ JOIN_ACTION.shape.type.value;
 export default defineRule({
   id: 'core',
   load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),
-  check: async ({ state, action }) => {
+  check: async ({ state, action, api }) => {
     if (action) {
       const name = action.payload.name;
       switch (action?.type) {
@@ -48,6 +48,12 @@ export default defineRule({
         }
       }
       await Deno.writeTextFile(LOCATION, YAML.stringify(state));
+    }
+
+    if (api.pr) {
+      if (api.pr.user.login !== state.players.active) {
+        throw new Error('PR user is not by the active player');
+      }
     }
 
     console.log('🟢');

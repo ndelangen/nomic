@@ -7,17 +7,18 @@ const STATE = z.object({
 
 export default defineRule({
   id: 'example',
-  load: async () => STATE.parse({ foo: 4 }),
-  check: async ({ state, core, action, api }) => {
+  load: () => STATE.parse({ foo: 4 }),
+  check: async ({ api }) => {
     console.log('💚');
 
     if (api.pr) {
-      if (api.pr.user.login !== core.players.active) {
-        throw new Error('PR user is not by the active player');
+      const isGrateful = api.pr.body?.match(/I am grateful .+\./);
+
+      if (isGrateful) {
+        console.log('🎉');
+      } else {
+        throw new Error('PR body does not contain a gratitude message');
       }
     }
-  },
-  progress: async ({ state, core, api }) => {
-    console.log('💙');
   },
 });
