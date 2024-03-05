@@ -61,7 +61,7 @@ import { z } from 'npm:zod@^3.22.4';
 
 const ARGS = z.tuple([z.string(), z.string()]);
 
-export async function getPrInfo(octokit: Octokit) {
+async function getPrInfo(octokit: Octokit) {
   const eventName = Deno.env.get('GITHUB_EVENT_NAME');
   const result = ARGS.safeParse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
 
@@ -96,7 +96,6 @@ export const defineAPI = async () => {
   const githubToken = Deno.env.get('GITHUB_TOKEN');
   const octokit = new Octokit({ auth: githubToken });
 
-  console.log({ octokit, githubToken });
   const pr = await getPrInfo(octokit);
 
   return { pr, github: octokit };
