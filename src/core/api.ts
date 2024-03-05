@@ -96,6 +96,7 @@ export const defineAPI = async () => {
   const githubToken = Deno.env.get('GITHUB_TOKEN');
   const octokit = new Octokit({ auth: githubToken });
 
+  console.log({ octokit, githubToken });
   const pr = await getPrInfo(octokit);
 
   return { pr, github: octokit };
