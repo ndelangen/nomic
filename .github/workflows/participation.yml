@@ -30,10 +30,15 @@ jobs:
       - uses: denoland/setup-deno@v1
       - run: bun install --production
       - run: bun run action ${{ github.actor }} ${{ github.event.inputs.activity }}
+      - name: Get user email
+        id: email-data
+        uses: evvanErb/get-github-email-by-username-action@v1.25
+        with:
+          github-username: '${{ github.actor }}'
       - name: Commit changes
         run: |
-          git config user.name ${{ github.actor }}
-          git config user.email "github-actions@github.com"
+          git config --local user.name ${{ github.actor }}
+          git config --local user.email "${{ steps.email-data.outputs.email }}"
           git commit -m "${{ github.actor }} ${{ github.event.inputs.activity }}s [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master

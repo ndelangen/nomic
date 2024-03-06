@@ -70,7 +70,7 @@ jobs:
         run: |
           git config --local user.name ${{ steps.yaml-data.outputs.data }}
           git config --local user.email "${{ steps.email-data.outputs.email }}"
-          git commit -a -m "'s turn [progess] [skip ci]"
+          git commit -a -m "new active player = ${{ steps.yaml-data.outputs.data }} [progess] by ${{ github.actor }} by ${{ github.actor }} [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
