@@ -56,11 +56,17 @@ jobs:
       - uses: denoland/setup-deno@v1
       - run: bun install --production
       - run: bun run progress
+      - name: Run core-yaml
+        id: yaml-data
+        uses: jbutcher5/read-yaml@main
+        with:
+          file: './state/core.yml'
+          key-path: '["players", "active"]'
       - name: Commit changes
         run: |
-          git config --local user.name ${{ github.actor }}
+          git config --local user.name ${{ steps.yaml-data.outputs.data }}
           git config --local user.email "github-action@github.com"
-          git commit -a -m "progress [skip ci]"
+          git commit -a -m "'s turn [schedule] [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
