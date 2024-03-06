@@ -63,12 +63,13 @@ jobs:
           key-path: '["players", "active"]'
       - name: Get user email
         id: email-data
-        uses: evvanErb/get-github-email-by-username-action@v1.25
+        uses: evvanErb/get-github-email-by-username-action@v2.0
         with:
           github-username: '${{ steps.yaml-data.outputs.data }}'
+          token: ${{ steps.generate-token.outputs.token }}
       - name: Commit changes
         run: |
-          git config --local user.name ${{ steps.yaml-data.outputs.data }}
+          git config --local user.name "${{ steps.yaml-data.outputs.data }}"
           git config --local user.email "${{ steps.email-data.outputs.email }}"
           git commit -a -m "new active player = ${{ steps.yaml-data.outputs.data }} [progess] by ${{ github.actor }} by ${{ github.actor }} [skip ci]"
       - name: Push changes
