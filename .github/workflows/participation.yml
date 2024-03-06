@@ -32,14 +32,15 @@ jobs:
       - run: bun run action ${{ github.actor }} ${{ github.event.inputs.activity }}
       - name: Get user email
         id: email-data
-        uses: evvanErb/get-github-email-by-username-action@v2.0
+        uses: ndelangen/email-by-username-action@main
+        continue-on-error: true
         with:
           github-username: ${{ steps.yaml-data.outputs.data }}
           token: ${{ steps.generate-token.outputs.token }}
       - name: Commit changes
         run: |
           git config --local user.name "${{ github.actor }}"
-          git config --local user.email ${{ steps.email-data.outputs.email }}
+          git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
           git commit -m "${{ github.actor }} ${{ github.event.inputs.activity }}s [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
