@@ -14,12 +14,14 @@ await main(async (item, { core, state, api }) => {
     } catch (e) {
       const sha = SHA.parse(Deno.env.get('SHA'));
       const other = JSON.parse(Deno.env.get('OTHER') || '{}');
-      console.log({ e, sha, repo: api.repository, other });
+      console.log({
+        e,
+        sha,
+        repo: api.repository,
+        // other,
+      });
       if (api.repository && sha) {
-        await api.github.request('POST /repos/{owner}/{repo}/statuses/{sha}', {
-          owner: api.repository.owner,
-          repo: api.repository.name,
-          sha,
+        await api.github.request(`POST ${other._links.statuses.href}`, {
           state: 'failure',
           description: 'Check failed',
           context: item.id,
