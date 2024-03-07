@@ -39,7 +39,6 @@ export const defineAPI = async () => {
   const result = ARGS.safeParse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
 
   const repository = result.success ? { owner: result.data[0], name: result.data[1] } : undefined;
-
   const pr = result.success ? await getPrInfo(octokit, Repository.parse(repository)) : undefined;
 
   return { pr, github: octokit, repository };

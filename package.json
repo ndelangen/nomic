@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "action": "deno run -A --node-modules-dir ./src/run/action.ts",
+    "action-event": "deno run -A --node-modules-dir ./src/run/action-event.ts",
     "check": "deno run -A --node-modules-dir ./src/run/check.ts",
     "progress": "deno run -A --node-modules-dir ./src/run/progress.ts"
   },
