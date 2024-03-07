@@ -16,7 +16,7 @@ await main(async (item, { core, state, api }) => {
       const other = JSON.parse(Deno.env.get('OTHER') || '{}');
       console.log({ e, sha, repo: api.repository, other });
       if (api.repository && sha) {
-        await api.github.request('POST /repos/{owner}/{repo}/statuses/{ref}', {
+        await api.github.request('POST /repos/{owner}/{repo}/statuses/{sha}', {
           owner: api.repository.owner,
           repo: api.repository.name,
           sha,
