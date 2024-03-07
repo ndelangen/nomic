@@ -3,7 +3,7 @@ import { main } from '../lib/main.ts';
 import { CheckRuleFactory } from '../lib/types.ts';
 
 const CheckRule = CheckRuleFactory(z.unknown());
-const REF = z.string();
+const SHA = z.string();
 
 await main(async (item, { core, state, api }) => {
   const validated = CheckRule.safeParse(item);
@@ -12,13 +12,14 @@ await main(async (item, { core, state, api }) => {
       await validated.data.check({ state, core, api });
       console.log(`Check ${item.id} ran successfully!`);
     } catch (e) {
-      const ref = REF.parse(Deno.env.get('REF'));
-      console.log({ e, ref, repo: api.repository });
-      if (api.repository && ref) {
+      const sha = SHA.parse(Deno.env.get('REF'));
+      const other = JSON.parse(Deno.env.get('OTHER') || '{}');
+      console.log({ e, sha, repo: api.repository, other });
+      if (api.repository && sha) {
         await api.github.request('POST /repos/{owner}/{repo}/statuses/{ref}', {
           owner: api.repository.owner,
           repo: api.repository.name,
-          ref,
+          sha,
           state: 'failure',
           description: 'Check failed',
           context: item.id,
