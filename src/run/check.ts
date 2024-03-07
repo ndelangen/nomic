@@ -11,7 +11,6 @@ await main(async (item, { core, state, api }) => {
     try {
       await validated.data.check({ state, core, api });
       console.log(`Check ${item.id} ran successfully!`);
-    } catch (e) {
       const sha = SHA.parse(Deno.env.get('SHA'));
       // const other = JSON.parse(Deno.env.get('OTHER') || '{}');
       // console.log({
@@ -48,6 +47,8 @@ await main(async (item, { core, state, api }) => {
           },
         });
       }
+    } catch (e) {
+      const sha = SHA.parse(Deno.env.get('SHA'));
 
       if (api.repository && sha) {
         // await api.github.rest.repos.createCommitStatus({
