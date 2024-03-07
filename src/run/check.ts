@@ -13,6 +13,7 @@ await main(async (item, { core, state, api }) => {
       console.log(`Check ${item.id} ran successfully!`);
     } catch (e) {
       const sha = SHA.parse(Deno.env.get('SHA'));
+      console.log({ e, sha, repo: api.repository });
       if (api.repository && sha) {
         await api.github.request('POST /repos/{owner}/{repo}/statuses/{sha}', {
           owner: api.repository.owner,
