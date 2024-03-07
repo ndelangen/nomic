@@ -14,12 +14,41 @@ await main(async (item, { core, state, api }) => {
     } catch (e) {
       const sha = SHA.parse(Deno.env.get('SHA'));
       // const other = JSON.parse(Deno.env.get('OTHER') || '{}');
-      console.log({
-        e,
-        sha,
-        repo: api.repository,
-        // other,
-      });
+      // console.log({
+      //   e,
+      //   sha,
+      //   repo: api.repository,
+      //   // other,
+      // });
+      if (api.repository && sha) {
+        await api.github.rest.checks.create({
+          owner: api.repository.owner,
+          repo: api.repository.name,
+          name: 'my-check',
+          head_sha: sha,
+          status: 'completed',
+          conclusion: 'success',
+          actions: [
+            {
+              label: 'View',
+              description: 'View the logs',
+              identifier: 'view',
+            },
+          ],
+          output: {
+            title: 'Check failed',
+            summary: 'Check failed',
+            text: '',
+            images: [
+              {
+                alt: 'Check failed',
+                image_url: 'https://octodex.github.com/images/labtocat.png',
+              },
+            ],
+          },
+        });
+      }
+
       if (api.repository && sha) {
         // await api.github.rest.repos.createCommitStatus({
         //   owner: api.repository.owner,
@@ -32,7 +61,7 @@ await main(async (item, { core, state, api }) => {
         await api.github.rest.checks.create({
           owner: api.repository.owner,
           repo: api.repository.name,
-          name: 'Check',
+          name: 'my-check',
           head_sha: sha,
           status: 'completed',
           conclusion: 'failure',
@@ -43,6 +72,7 @@ await main(async (item, { core, state, api }) => {
               identifier: 'view',
             },
           ],
+
           output: {
             title: 'Check failed',
             summary: 'Check failed',

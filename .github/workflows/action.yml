@@ -1,4 +1,4 @@
-name: Participation
+name: Action Event
 
 on:
   check_run:
