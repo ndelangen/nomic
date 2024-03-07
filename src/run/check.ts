@@ -21,18 +21,18 @@ await main(async (item, { core, state, api }) => {
         // other,
       });
       if (api.repository && sha) {
-        await api.github.rest.checks.create({
-          owner: api.repository.owner,
-          repo: api.repository.name,
-          name: 'Check',
-          head_sha: sha,
-          status: 'completed',
-          conclusion: 'failure',
-          output: {
-            title: 'Check failed',
-            summary: 'Check failed',
-          },
-        });
+        // await api.github.rest.checks.create({
+        //   owner: api.repository.owner,
+        //   repo: api.repository.name,
+        //   name: 'Check',
+        //   head_sha: sha,
+        //   status: 'completed',
+        //   conclusion: 'failure',
+        //   output: {
+        //     title: 'Check failed',
+        //     summary: 'Check failed',
+        //   },
+        // });
         await api.github.rest.repos.createCommitStatus({
           owner: api.repository.owner,
           repo: api.repository.name,
