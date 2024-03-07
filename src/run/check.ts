@@ -12,7 +12,7 @@ await main(async (item, { core, state, api }) => {
       await validated.data.check({ state, core, api });
       console.log(`Check ${item.id} ran successfully!`);
     } catch (e) {
-      const sha = SHA.parse(Deno.env.get('REF'));
+      const sha = SHA.parse(Deno.env.get('SHA'));
       const other = JSON.parse(Deno.env.get('OTHER') || '{}');
       console.log({ e, sha, repo: api.repository, other });
       if (api.repository && sha) {
