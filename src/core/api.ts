@@ -36,6 +36,7 @@ const createOctokit = () => new Octokit({ auth: Deno.env.get('GITHUB_TOKEN') });
 
 export const defineAPI = async () => {
   const octokit = createOctokit();
+  await octokit.auth();
   const result = ARGS.safeParse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
 
   const repository = result.success ? { owner: result.data[0], name: result.data[1] } : undefined;
