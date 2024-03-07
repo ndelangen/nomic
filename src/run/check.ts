@@ -21,14 +21,14 @@ await main(async (item, { core, state, api }) => {
         // other,
       });
       if (api.repository && sha) {
-        await api.github.rest.repos.createCommitStatus({
-          owner: api.repository.owner,
-          repo: api.repository.name,
-          sha,
-          state: 'failure',
-          description: 'Status failed',
-          context: item.id,
-        });
+        // await api.github.rest.repos.createCommitStatus({
+        //   owner: api.repository.owner,
+        //   repo: api.repository.name,
+        //   sha,
+        //   state: 'failure',
+        //   description: 'Status failed',
+        //   context: item.id,
+        // });
         await api.github.rest.checks.create({
           owner: api.repository.owner,
           repo: api.repository.name,
@@ -36,9 +36,23 @@ await main(async (item, { core, state, api }) => {
           head_sha: sha,
           status: 'completed',
           conclusion: 'failure',
+          actions: [
+            {
+              label: 'View',
+              description: 'View the logs',
+              identifier: 'view',
+            },
+          ],
           output: {
             title: 'Check failed',
             summary: 'Check failed',
+            text: e.toString(),
+            images: [
+              {
+                alt: 'Check failed',
+                image_url: 'https://octodex.github.com/images/labtocat.png',
+              },
+            ],
           },
         });
       }
