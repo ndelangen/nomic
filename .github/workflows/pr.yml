@@ -32,5 +32,5 @@ jobs:
       - run: bun run check
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          SHA: '${{ secrets.GITHUB_SHA }}'
+          SHA: '${{ github.event.pull_request.head.sha }}'
           OTHER: ${{ toJSON(github.event.pull_request) }}
