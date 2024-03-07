@@ -15,8 +15,6 @@ export const STATE = z.object({
   }),
 });
 
-JOIN_ACTION.shape.type.value;
-
 export default defineRule({
   id: 'core',
   load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),

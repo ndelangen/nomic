@@ -8,10 +8,13 @@ const SHA = z.string();
 await main(async (item, { core, state, api }) => {
   const validated = CheckRule.safeParse(item);
   if (validated.success) {
-    await validated.data.check({ state, core, api }).catch((e) => {
+    try {
+      await validated.data.check({ state, core, api });
+      console.log(`Check ${item.id} ran successfully!`);
+    } catch (e) {
       const sha = SHA.parse(Deno.env.get('SHA'));
       if (api.repository && sha) {
-        api.github.request('POST /repos/{owner}/{repo}/statuses/{sha}', {
+        await api.github.request('POST /repos/{owner}/{repo}/statuses/{sha}', {
           owner: api.repository.owner,
           repo: api.repository.name,
           sha,
@@ -24,7 +27,6 @@ await main(async (item, { core, state, api }) => {
         });
       }
       throw e;
-    });
-    console.log(`Check ${item.id} ran successfully!`);
+    }
   }
 });
