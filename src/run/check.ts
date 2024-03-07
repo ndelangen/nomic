@@ -13,7 +13,7 @@ await main(async (item, { core, state, api }) => {
       console.log(`Check ${item.id} ran successfully!`);
     } catch (e) {
       const sha = SHA.parse(Deno.env.get('SHA'));
-      const other = JSON.parse(Deno.env.get('OTHER') || '{}');
+      // const other = JSON.parse(Deno.env.get('OTHER') || '{}');
       console.log({
         e,
         sha,
@@ -21,13 +21,25 @@ await main(async (item, { core, state, api }) => {
         // other,
       });
       if (api.repository && sha) {
-        await api.github.request(`POST ${other._links.statuses.href}`, {
-          state: 'failure',
-          description: 'Check failed',
-          context: item.id,
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
+        await api.github.rest.checks.create({
+          owner: api.repository.owner,
+          repo: api.repository.name,
+          name: 'Check',
+          head_sha: sha,
+          status: 'completed',
+          conclusion: 'failure',
+          output: {
+            title: 'Check failed',
+            summary: 'Check failed',
           },
+        });
+        await api.github.rest.repos.createCommitStatus({
+          owner: api.repository.owner,
+          repo: api.repository.name,
+          sha,
+          state: 'failure',
+          description: 'Status failed',
+          context: item.id,
         });
       }
       throw e;
