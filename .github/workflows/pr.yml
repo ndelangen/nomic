@@ -33,4 +33,4 @@ jobs:
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           SHA: '${{ secrets.GITHUB_SHA }}'
-          OTHER: toJSON(${{ github.event.pull_request }})
+          OTHER: ${{ toJSON(github.event.pull_request) }}
