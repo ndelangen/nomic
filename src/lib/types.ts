@@ -7,13 +7,11 @@ export const ID = z.string().describe('The unique identifier for the module.');
 export const CheckFn = z.function().args(z.unknown()).returns(z.promise(z.void()));
 export const ProgressFn = z.function().args(z.unknown()).returns(z.promise(z.void()));
 
-export const API = z
-  .object({
-    pr: z.any(),
-    github: z.any(),
-    repository: Repository.optional(),
-  })
-  .required() as z.ZodType<Awaited<ReturnType<typeof defineAPI>>>;
+export const API = z.object({
+  pr: z.any(),
+  github: z.any(),
+  repository: Repository.optional(),
+}) as z.ZodType<Awaited<ReturnType<typeof defineAPI>>>;
 
 function createBase<T>(schema: z.ZodType<T>) {
   return z.object({

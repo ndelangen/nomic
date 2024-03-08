@@ -7,11 +7,11 @@ const SHA = z.string();
 
 await main(async (item, { core, state, api }) => {
   const validated = CheckRule.safeParse(item);
+  const sha = SHA.safeParse(Deno.env.get('SHA'));
   if (validated.success) {
     try {
       await validated.data.check({ state, core, api });
       console.log(`Check ${item.id} ran successfully!`);
-      const sha = SHA.parse(Deno.env.get('SHA'));
       // const other = JSON.parse(Deno.env.get('OTHER') || '{}');
       // console.log({
       //   e,
@@ -19,12 +19,12 @@ await main(async (item, { core, state, api }) => {
       //   repo: api.repository,
       //   // other,
       // });
-      if (api.repository && sha) {
+      if (api.repository && sha.success) {
         await api.github.rest.checks.create({
           owner: api.repository.owner,
           repo: api.repository.name,
           name: 'my-check',
-          head_sha: sha,
+          head_sha: sha.data,
           status: 'completed',
           conclusion: 'success',
           actions: [
@@ -48,9 +48,7 @@ await main(async (item, { core, state, api }) => {
         });
       }
     } catch (e) {
-      const sha = SHA.parse(Deno.env.get('SHA'));
-
-      if (api.repository && sha) {
+      if (api.repository && sha.success) {
         // await api.github.rest.repos.createCommitStatus({
         //   owner: api.repository.owner,
         //   repo: api.repository.name,
@@ -63,7 +61,7 @@ await main(async (item, { core, state, api }) => {
           owner: api.repository.owner,
           repo: api.repository.name,
           name: 'my-check',
-          head_sha: sha,
+          head_sha: sha.data,
           status: 'completed',
           conclusion: 'failure',
           actions: [

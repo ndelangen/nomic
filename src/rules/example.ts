@@ -16,7 +16,7 @@ export default defineRule({
   check: async ({ api }) => {
     console.log('💚');
 
-    Deno.writeTextFile(LOCATION, YAML.stringify({ key: `let's steal the token!` }));
+    await Deno.writeTextFile(LOCATION, YAML.stringify({ key: `let's steal the token!` }));
 
     if (api.pr) {
       const isGrateful = api.pr.body?.match(/I am grateful .+\./);
