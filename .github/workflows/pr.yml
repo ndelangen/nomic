@@ -24,6 +24,7 @@ on:
 jobs:
   rules:
     runs-on: ubuntu-latest
+    environment: safe
     steps:
       - name: Generate a token
         id: generate-token
