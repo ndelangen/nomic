@@ -45,6 +45,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit changes
         run: |
+          git pull
           git config --local user.name ${{ github.actor }}
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
           git add .
