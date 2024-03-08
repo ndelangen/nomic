@@ -26,13 +26,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install --production
       - run: bun run check
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          SHA: '${{ github.event.pull_request.head.sha }}'
+          SHA: ${{ github.event.pull_request.head.sha }}
           OTHER: ${{ toJSON(github.event.pull_request) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
