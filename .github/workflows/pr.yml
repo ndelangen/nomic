@@ -47,7 +47,7 @@ jobs:
         run: |
           git config --local user.name ${{ github.actor }}
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git add ."
+          git add .
           git commit -a -m "new state [pr] by ${{ github.actor }} [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
