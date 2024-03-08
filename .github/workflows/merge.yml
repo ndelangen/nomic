@@ -6,6 +6,7 @@ on:
 jobs:
   merge:
     runs-on: ubuntu-latest
+    environment: safe
     steps:
       - name: Generate a token
         id: generate-token

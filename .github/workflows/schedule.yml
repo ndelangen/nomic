@@ -37,6 +37,7 @@ jobs:
           DESIRED_INACTIVITY_DAYS: 0
   run:
     runs-on: ubuntu-latest
+    environment: safe
     needs: check-inactivity
     if: ${{ needs.check-inactivity.outputs.skip == 'false' }}
     steps:
