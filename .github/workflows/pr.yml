@@ -25,6 +25,12 @@ jobs:
   rules:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
@@ -35,3 +41,12 @@ jobs:
           SHA: '${{ github.event.pull_request.head.sha }}'
           OTHER: ${{ toJSON(github.event.pull_request) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changes
+        run: |
+          git config --local user.name ${{ steps.yaml-data.outputs.data }}
+          git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
+          git commit -a -m "new active player = ${{ steps.yaml-data.outputs.data }} [progess] by ${{ github.actor }} by ${{ github.actor }} [skip ci]"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ steps.generate-token.outputs.token }}
