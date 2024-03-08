@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
+        # with:
+        #   ref: ${{ github.event.pull_request.head.ref }}
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install --production
@@ -37,23 +37,22 @@ jobs:
           SHA: ${{ github.event.pull_request.head.sha }}
           OTHER: ${{ toJSON(github.event.pull_request) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get user email
-        id: email-data
-        uses: ndelangen/email-by-username-action@main
-        continue-on-error: true
-        with:
-          github-username: ${{ github.actor }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Commit changes
-        run: |
-          git pull
-          git config --local user.name ${{ github.actor }}
-          git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git add .
-          git commit -a -m "new state [pr] by ${{ github.actor }} [skip ci]"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event.pull_request.head.ref }}
+      # - name: Get user email
+      #   id: email-data
+      #   uses: ndelangen/email-by-username-action@main
+      #   continue-on-error: true
+      #   with:
+      #     github-username: ${{ github.actor }}
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Commit changes
+      #   run: |
+      #     git pull
+      #     git config --local user.name ${{ github.actor }}
+      #     git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
+      #     git add .
+      #     git commit -a -m "new state [pr] by ${{ github.actor }} [skip ci]"
+      # - name: Push changes
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: ${{ github.event.pull_request.head.ref }}
