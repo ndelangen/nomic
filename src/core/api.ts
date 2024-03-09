@@ -35,12 +35,12 @@ const createOctokit = () => new Octokit({ auth: Deno.env.get('GITHUB_TOKEN') });
 export const defineAPI = async () => {
   const octokit = createOctokit();
   const repo = ARGS.safeParse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
-  const sha = SHA.parse(Deno.env.get('SHA'));
+  const sha = SHA.safeParse(Deno.env.get('SHA'));
   let pull_number = parseInt(Deno.env.get('PR_NUMBER')!, 10);
 
   const repository = repo.success ? { owner: repo.data[0], name: repo.data[1] } : undefined;
 
-  if (repository && !pull_number) {
+  if (sha.success && repository && !pull_number) {
     const prs = await octokit.rest.pulls.list({
       owner: repository.owner,
       repo: repository.name,
@@ -49,7 +49,7 @@ export const defineAPI = async () => {
       per_page: 10,
     });
 
-    const pr = prs.data.find((pr) => pr.head.sha === sha);
+    const pr = prs.data.find((pr) => pr.head.sha === sha.data);
 
     if (pr) {
       pull_number = pr.number;
