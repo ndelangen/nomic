@@ -18,12 +18,17 @@ await main(async (item, { core, state, api }) => {
       throw e;
     } finally {
       const sha = SHA.safeParse(Deno.env.get('SHA'));
+
       if (api.repository && sha.success) {
+        console.log({ sha });
+        console.log(api.repository);
+        console.log({ out });
+
         const isError = out instanceof Error;
         await api.github.rest.checks.create({
           owner: api.repository.owner,
           repo: api.repository.name,
-          name: validated.data.id,
+          name: `AA ${validated.data.id}`,
           head_sha: sha.data,
           status: 'completed',
           conclusion: isError ? 'failure' : 'success',
@@ -35,8 +40,8 @@ await main(async (item, { core, state, api }) => {
             },
           ],
           output: {
-            title: isError ? 'Check failed' : 'OK',
-            summary: isError ? 'Check failed' : 'Success',
+            title: isError ? 'AA Check failed' : 'AA OK',
+            summary: isError ? 'AA Check failed' : 'AA Success',
             text: isError ? out.stack : '',
             // images: [
             //   {
@@ -46,6 +51,8 @@ await main(async (item, { core, state, api }) => {
             // ],
           },
         });
+
+        console.log('done');
       }
     }
   }

@@ -2,24 +2,22 @@ name: PR
 on:
   pull_request:
     types:
-      [
-        opened,
-        reopened,
-        labeled,
-        unlabeled,
-        assigned,
-        unassigned,
-        ready_for_review,
-        review_requested,
-        review_request_removed,
-        synchronize,
-        edited,
-        locked,
-        auto_merge_disabled,
-        auto_merge_enabled,
-        converted_to_draft,
-        unlocked,
-      ]
+      - opened
+      - reopened
+      - labeled
+      - unlabeled
+      - assigned
+      - unassigned
+      - ready_for_review
+      - review_requested
+      - review_request_removed
+      - synchronize
+      - edited
+      - locked
+      - auto_merge_disabled
+      - auto_merge_enabled
+      - converted_to_draft
+      - unlocked
 
 jobs:
   rules:

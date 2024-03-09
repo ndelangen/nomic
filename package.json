@@ -5,10 +5,10 @@
   "author": "central419",
   "type": "module",
   "scripts": {
-    "action": "deno run -A --node-modules-dir ./src/run/action.ts",
-    "action-event": "deno run -A --node-modules-dir ./src/run/action-event.ts",
-    "check": "deno run -A --node-modules-dir ./src/run/check.ts",
-    "progress": "deno run -A --node-modules-dir ./src/run/progress.ts"
+    "action": "deno run -A ./src/run/action.ts",
+    "action-event": "deno run -A ./src/run/action-event.ts",
+    "check": "deno run -A ./src/run/check.ts",
+    "progress": "deno run -A ./src/run/progress.ts"
   },
   "dependencies": {
     "octokit": "^3.1.2",
