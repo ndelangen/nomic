@@ -13,7 +13,7 @@ await main(async (item, { core, state, api }) => {
     try {
       out = await validated.data.check({ state, core, api });
       console.log(`Check ${item.id} ran successfully!`);
-    } catch (e) {
+    } catch (e: unknown) {
       out = e;
 
       throw e;
@@ -23,37 +23,38 @@ await main(async (item, { core, state, api }) => {
 
       if (api.repository && sha.success && type.success) {
         const isError = out instanceof Error;
+        const message = out instanceof Error ? out.message : (out as string);
 
-        const o = await api.github.rest.checks.create({
-          owner: api.repository.owner,
-          repo: api.repository.name,
-          name: `${type.data}: ${validated.data.id}`,
-          head_sha: sha.data,
-          status: 'completed',
-          external_id: `check_${type.data}${validated.data.id}}`,
-          conclusion: isError ? 'failure' : 'success',
-          actions: [
-            {
-              label: 'View',
-              description: 'View the logs',
-              identifier: 'view',
-            },
-          ],
-          output: {
-            title: isError ? 'Fail' : 'OK',
-            summary: isError ? 'Error summary' : 'Success summary',
-            text: isError ? out.stack : undefined,
-          },
-        });
+        // const o = await api.github.rest.checks.create({
+        //   owner: api.repository.owner,
+        //   repo: api.repository.name,
+        //   name: `${type.data}: ${validated.data.id}`,
+        //   head_sha: sha.data,
+        //   status: 'completed',
+        //   external_id: `check_${type.data}${validated.data.id}}`,
+        //   conclusion: isError ? 'failure' : 'success',
+        //   actions: [
+        //     {
+        //       label: 'View',
+        //       description: 'View the logs',
+        //       identifier: 'view',
+        //     },
+        //   ],
+        //   output: {
+        //     title: isError ? 'Fail' : 'OK',
+        //     summary: isError ? 'Error summary' : 'Success summary',
+        //     text: isError ? out.stack : undefined,
+        //   },
+        // });
 
         await api.github.rest.repos.createCommitStatus({
           owner: api.repository.owner,
           repo: api.repository.name,
           sha: sha.data,
           state: isError ? 'error' : 'success',
-          description: `${new Date().toISOString()}`,
+          description: `${message.substring(0, 20)}`,
           context: `${type.data}: ${validated.data.id}`,
-          target_url: o.data.details_url,
+          // target_url: o.data.details_url,
         });
 
         console.log('done');
