@@ -7,63 +7,26 @@ const SHA = z.string();
 
 await main(async (item, { core, state, api }) => {
   const validated = CheckRule.safeParse(item);
-  const sha = SHA.safeParse(Deno.env.get('SHA'));
+  let out;
   if (validated.success) {
     try {
-      await validated.data.check({ state, core, api });
+      out = await validated.data.check({ state, core, api });
       console.log(`Check ${item.id} ran successfully!`);
-      // const other = JSON.parse(Deno.env.get('OTHER') || '{}');
-      // console.log({
-      //   e,
-      //   sha,
-      //   repo: api.repository,
-      //   // other,
-      // });
-      if (api.repository && sha.success) {
-        await api.github.rest.checks.create({
-          owner: api.repository.owner,
-          repo: api.repository.name,
-          name: 'my-check',
-          head_sha: sha.data,
-          status: 'completed',
-          conclusion: 'success',
-          actions: [
-            {
-              label: 'View',
-              description: 'View the logs',
-              identifier: 'view',
-            },
-          ],
-          output: {
-            title: 'Check failed',
-            summary: 'Check failed',
-            text: '',
-            images: [
-              {
-                alt: 'Check failed',
-                image_url: 'https://octodex.github.com/images/labtocat.png',
-              },
-            ],
-          },
-        });
-      }
     } catch (e) {
+      out = e;
+
+      throw e;
+    } finally {
+      const sha = SHA.safeParse(Deno.env.get('SHA'));
       if (api.repository && sha.success) {
-        // await api.github.rest.repos.createCommitStatus({
-        //   owner: api.repository.owner,
-        //   repo: api.repository.name,
-        //   sha,
-        //   state: 'failure',
-        //   description: 'Status failed',
-        //   context: item.id,
-        // });
+        const isError = out instanceof Error;
         await api.github.rest.checks.create({
           owner: api.repository.owner,
           repo: api.repository.name,
-          name: 'my-check',
+          name: validated.data.id,
           head_sha: sha.data,
           status: 'completed',
-          conclusion: 'failure',
+          conclusion: isError ? 'failure' : 'success',
           actions: [
             {
               label: 'View',
@@ -71,21 +34,19 @@ await main(async (item, { core, state, api }) => {
               identifier: 'view',
             },
           ],
-
           output: {
-            title: 'Check failed',
-            summary: 'Check failed',
-            text: e.toString(),
-            images: [
-              {
-                alt: 'Check failed',
-                image_url: 'https://octodex.github.com/images/labtocat.png',
-              },
-            ],
+            title: isError ? 'Check failed' : 'OK',
+            summary: isError ? 'Check failed' : 'Success',
+            text: isError ? out.stack : '',
+            // images: [
+            //   {
+            //     alt: 'Check failed',
+            //     image_url: 'https://octodex.github.com/images/labtocat.png',
+            //   },
+            // ],
           },
         });
       }
-      throw e;
     }
   }
 });
