@@ -12,6 +12,7 @@ export default defineRule({
     console.log('💚');
 
     if (api.pr) {
+      console.log(api.pr.body)
       const isGrateful = api.pr.body?.match(/I am grateful .+\./);
 
       if (isGrateful) {
