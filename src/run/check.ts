@@ -21,14 +21,11 @@ await main(async (item, { core, state, api }) => {
 
       if (api.repository && sha.success) {
         const isError = out instanceof Error;
-        // console.log({ sha });
-        // console.log(api.repository);
-        // console.log({ out });
 
         const o = await api.github.rest.checks.create({
           owner: api.repository.owner,
           repo: api.repository.name,
-          name: validated.data.id,
+          name: `check_${validated.data.id}${Date.now()}`,
           head_sha: sha.data,
           status: 'completed',
           conclusion: isError ? 'failure' : 'success',
@@ -42,11 +39,9 @@ await main(async (item, { core, state, api }) => {
           output: {
             title: isError ? 'Fail' : 'OK',
             summary: isError ? 'Error summary' : 'Success summary',
-            text: isError ? out.stack : '',
+            text: isError ? out.stack : undefined,
           },
         });
-
-        console.log({ o });
 
         await api.github.rest.repos.createCommitStatus({
           owner: api.repository.owner,
@@ -54,7 +49,7 @@ await main(async (item, { core, state, api }) => {
           sha: sha.data,
           state: isError ? 'error' : 'success',
           description: 'description',
-          context: validated.data.id,
+          context: `status_${validated.data.id}${Date.now()}`,
           target_url: o.data.details_url,
         });
 
