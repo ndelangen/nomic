@@ -4,7 +4,7 @@ on:
     workflows:
       - PR
     types:
-      - completed
+      - requested
 
 jobs:
   rules:
