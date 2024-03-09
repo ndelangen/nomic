@@ -35,7 +35,6 @@ jobs:
         env:
           ACTION_NAME: ${{github.event.inputs.activity }}
           ACTION_PAYLOAD: '{"name":"${{ github.actor }}"}'
-
       - name: Get user email
         id: email-data
         uses: ndelangen/email-by-username-action@main
@@ -45,6 +44,8 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
       - name: Commit changes
         run: |
+          git pull
+          git add .
           git config --local user.name "${{ github.actor }}"
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
           git commit -m "${{ github.actor }} ${{ github.event.inputs.activity }}s [skip ci]"
