@@ -23,4 +23,5 @@ jobs:
           SHA: ${{ github.event.workflow_run.head_sha }}
           # OTHER: ${{ toJSON(github.event.workflow_run.event.pull_request) }}
           # MAIN: true
+          TYPE: MAIN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

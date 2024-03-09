@@ -4,6 +4,7 @@ import { CheckRuleFactory } from '../lib/types.ts';
 
 const CheckRule = CheckRuleFactory(z.unknown());
 const SHA = z.string();
+const TYPE = z.string();
 
 await main(async (item, { core, state, api }) => {
   const validated = CheckRule.safeParse(item);
@@ -18,14 +19,15 @@ await main(async (item, { core, state, api }) => {
       throw e;
     } finally {
       const sha = SHA.safeParse(Deno.env.get('SHA'));
+      const type = SHA.safeParse(Deno.env.get('TYPE'));
 
-      if (api.repository && sha.success) {
+      if (api.repository && sha.success && type.success) {
         const isError = out instanceof Error;
 
         const o = await api.github.rest.checks.create({
           owner: api.repository.owner,
           repo: api.repository.name,
-          name: `check_${validated.data.id}${Date.now()}`,
+          name: `check_${type.data}${validated.data.id}${Date.now()}`,
           head_sha: sha.data,
           status: 'completed',
           conclusion: isError ? 'failure' : 'success',
@@ -49,7 +51,7 @@ await main(async (item, { core, state, api }) => {
           sha: sha.data,
           state: isError ? 'error' : 'success',
           description: 'description',
-          context: `status_${validated.data.id}${Date.now()}`,
+          context: `${type.data}: ${validated.data.id}`,
           target_url: o.data.details_url,
         });
 
