@@ -1,4 +1,4 @@
-name: Manual Progress
+name: Action Progress
 on:
   workflow_dispatch:
 
