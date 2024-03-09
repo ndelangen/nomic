@@ -25,28 +25,6 @@ await main(async (item, { core, state, api }) => {
         const isError = out instanceof Error;
         const description = out instanceof Error ? out.message.substring(0, 120) : 'Passes';
 
-        // const o = await api.github.rest.checks.create({
-        //   owner: api.repository.owner,
-        //   repo: api.repository.name,
-        //   name: `${type.data}: ${validated.data.id}`,
-        //   head_sha: sha.data,
-        //   status: 'completed',
-        //   external_id: `check_${type.data}${validated.data.id}}`,
-        //   conclusion: isError ? 'failure' : 'success',
-        //   actions: [
-        //     {
-        //       label: 'View',
-        //       description: 'View the logs',
-        //       identifier: 'view',
-        //     },
-        //   ],
-        //   output: {
-        //     title: isError ? 'Fail' : 'OK',
-        //     summary: isError ? 'Error summary' : 'Success summary',
-        //     text: isError ? out.stack : undefined,
-        //   },
-        // });
-
         await api.github.rest.repos.createCommitStatus({
           owner: api.repository.owner,
           repo: api.repository.name,
@@ -54,7 +32,6 @@ await main(async (item, { core, state, api }) => {
           state: isError ? 'error' : 'success',
           description,
           context: `${type.data}: ${validated.data.id}`,
-          // target_url: o.data.details_url,
         });
 
         console.log('done');
