@@ -21,11 +21,33 @@ await main(async (item, { core, state, api }) => {
 
       if (api.repository && sha.success) {
         const isError = out instanceof Error;
-        console.log({ sha });
-        console.log(api.repository);
-        console.log({ out });
+        // console.log({ sha });
+        // console.log(api.repository);
+        // console.log({ out });
 
-        // set a commit status
+        const o = await api.github.rest.checks.create({
+          owner: api.repository.owner,
+          repo: api.repository.name,
+          name: validated.data.id,
+          head_sha: sha.data,
+          status: 'completed',
+          conclusion: isError ? 'failure' : 'success',
+          actions: [
+            {
+              label: 'View',
+              description: 'View the logs',
+              identifier: 'view',
+            },
+          ],
+          output: {
+            title: isError ? 'Fail' : 'OK',
+            summary: isError ? 'Error summary' : 'Success summary',
+            text: isError ? out.stack : '',
+          },
+        });
+
+        console.log({ o });
+
         await api.github.rest.repos.createCommitStatus({
           owner: api.repository.owner,
           repo: api.repository.name,
@@ -33,34 +55,8 @@ await main(async (item, { core, state, api }) => {
           state: isError ? 'error' : 'success',
           description: 'description',
           context: validated.data.id,
+          target_url: o.data.details_url,
         });
-
-        // await api.github.rest.checks.create({
-        //   owner: api.repository.owner,
-        //   repo: api.repository.name,
-        //   name: `AA ${validated.data.id}`,
-        //   head_sha: sha.data,
-        //   status: 'completed',
-        //   conclusion: isError ? 'failure' : 'success',
-        //   actions: [
-        //     {
-        //       label: 'View',
-        //       description: 'View the logs',
-        //       identifier: 'view',
-        //     },
-        //   ],
-        //   output: {
-        //     title: isError ? 'AA Check failed' : 'AA OK',
-        //     summary: isError ? 'AA Check failed' : 'AA Success',
-        //     text: isError ? out.stack : '',
-        //     // images: [
-        //     //   {
-        //     //     alt: 'Check failed',
-        //     //     image_url: 'https://octodex.github.com/images/labtocat.png',
-        //     //   },
-        //     // ],
-        //   },
-        // });
 
         console.log('done');
       }
