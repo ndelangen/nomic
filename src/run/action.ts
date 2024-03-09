@@ -1,18 +1,26 @@
 import { z } from 'zod';
-import { ACTION, JOIN_ACTION, LEAVE_ACTION } from '../core/actions.ts';
+import { ACTION } from '../core/actions.ts';
 import { main } from '../lib/main.ts';
 import { CheckRuleFactory } from '../lib/types.ts';
 
-const ARGS = z.tuple([z.string(), z.enum([JOIN_ACTION.name, LEAVE_ACTION.name])]);
-
 const CheckRule = CheckRuleFactory(z.unknown());
 
-const [name, type] = ARGS.parse(Deno.args);
+function getPayload() {
+  const payloadString = Deno.env.get('ACTION_PAYLOAD');
 
-const action = ACTION.parse({ type, payload: { name } });
+  if (payloadString) {
+    return JSON.parse(payloadString);
+  }
+
+  return {};
+}
 
 await main(async (item, { core, state, api }) => {
   const validated = CheckRule.safeParse(item);
+  const type = Deno.env.get('ACTION_NAME');
+  const payload = getPayload();
+  const action = ACTION.parse({ type, payload });
+
   if (validated.success) {
     await validated.data.check({ state, core, action, api });
     console.log(`Action ${action.type} ran on ${item.id} ran successfully!`);

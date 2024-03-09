@@ -30,7 +30,12 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install --production
-      - run: bun run action ${{ github.actor }} ${{ github.event.inputs.activity }}
+      - name: Handle action in rules
+        run: bun run action
+        env:
+          ACTION_NAME: ${{github.event.inputs.activity }}
+          ACTION_PAYLOAD: ${{ toJson(github.actor) }}
+
       - name: Get user email
         id: email-data
         uses: ndelangen/email-by-username-action@main

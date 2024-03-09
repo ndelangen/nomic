@@ -16,5 +16,6 @@ jobs:
       - run: bun install --production
       - run: bun run action-event
         env:
-          ACTION: ${{ toJson(github.event.action) }}
+          ACTION_NAME: ${{github.event.requested_action }}
+          ACTION_PAYLOAD: ${{ toJson(github.event.action) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
