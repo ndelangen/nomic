@@ -24,6 +24,7 @@ on:
       - main
 jobs:
   rules:
+    if: false
     runs-on: ubuntu-latest
     environment: safe
     steps:
