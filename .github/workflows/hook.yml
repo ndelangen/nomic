@@ -19,7 +19,7 @@ jobs:
       - run: bun install --production
       - run: bun run check
         env:
-          PR_NUMBER: ${{ github.event.workflow_run.event.pull_request.number }}
-          SHA: '${{ github.event.workflow_run.event.pull_request.head.sha }}'
-          OTHER: ${{ toJSON(github.event.workflow_run.event.pull_request) }}
+          # PR_NUMBER: ${{ github.event.workflow_run.event.head_sha }}
+          SHA: '${{ github.event.workflow_run.head_sha }}'
+          # OTHER: ${{ toJSON(github.event.workflow_run.event.pull_request) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
