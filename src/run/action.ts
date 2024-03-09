@@ -12,6 +12,8 @@ function getPayload() {
     return JSON.parse(payloadString);
   }
 
+  console.log({ payloadString });
+
   return {};
 }
 
