@@ -58,11 +58,20 @@ export async function main(callback: Callback) {
     api: api,
   });
 
-  await (
-    await modules
-  ).reduce(async (acc, item) => {
-    await acc;
-    const state = item.load ? await item.load() : undefined;
-    await callback(item, { state, core: core_state, api });
-  }, Promise.resolve());
+  const list = await modules;
+  const outcomes = list.reduce<Record<string, Promise<any>>>((acc, item) => {
+    acc[item.id] = Promise.resolve()
+      .then(() => (item.load ? item.load() : Promise.resolve()))
+      .then((state) => callback(item, { state, core: core_state, api }));
+
+    return acc;
+  }, {});
+
+  const reasons = (await Promise.allSettled(Object.values(outcomes)))
+    .map((item, index) => [list[index].id, item.status === 'rejected' ? item.reason : undefined])
+    .filter(([, reason]) => typeof reason !== 'undefined');
+
+  if (reasons.length > 0) {
+    throw reasons.map(([item]) => item.stack).join('\n\n');
+  }
 }

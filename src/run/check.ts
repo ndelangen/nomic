@@ -19,7 +19,7 @@ await main(async (item, { core, state, api }) => {
       throw e;
     } finally {
       const sha = SHA.safeParse(Deno.env.get('SHA'));
-      const type = SHA.safeParse(Deno.env.get('TYPE'));
+      const type = TYPE.safeParse(Deno.env.get('TYPE'));
 
       if (api.repository && sha.success && type.success) {
         const isError = out instanceof Error;
