@@ -2,7 +2,8 @@ name: Action Event
 
 on:
   check_run:
-    types: [requested_action]
+    types:
+      - requested_action
 
 jobs:
   rules:
