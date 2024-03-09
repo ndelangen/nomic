@@ -1,31 +1,20 @@
-name: PR
+name: Run
 on:
-  pull_request:
+  workflow_run:
+    workflows:
+      - PR
     types:
-      [
-        opened,
-        reopened,
-        labeled,
-        unlabeled,
-        assigned,
-        unassigned,
-        ready_for_review,
-        review_requested,
-        review_request_removed,
-        synchronize,
-        edited,
-        locked,
-        auto_merge_disabled,
-        auto_merge_enabled,
-        converted_to_draft,
-        unlocked,
-      ]
+      - completed
+    # branches:
+    #   - main
 
 jobs:
   rules:
-    environment: normal
     runs-on: ubuntu-latest
+    environment: safe
     steps:
+      - run: |
+          echo "${{toJson(github.event.workflow_run.event)}}"
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
