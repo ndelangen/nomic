@@ -23,6 +23,7 @@ on:
 
 jobs:
   rules:
+    environment: normal
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

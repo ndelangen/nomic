@@ -20,7 +20,8 @@ on:
         converted_to_draft,
         unlocked,
       ]
-
+    branches:
+      - main
 jobs:
   rules:
     runs-on: ubuntu-latest
