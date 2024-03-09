@@ -23,7 +23,7 @@ await main(async (item, { core, state, api }) => {
 
       if (api.repository && sha.success && type.success) {
         const isError = out instanceof Error;
-        const message = out instanceof Error ? out.message : (out as string);
+        const description = out instanceof Error ? out.message.substring(0, 120) : 'Passes';
 
         // const o = await api.github.rest.checks.create({
         //   owner: api.repository.owner,
@@ -52,7 +52,7 @@ await main(async (item, { core, state, api }) => {
           repo: api.repository.name,
           sha: sha.data,
           state: isError ? 'error' : 'success',
-          description: `${message.substring(0, 120)}`,
+          description,
           context: `${type.data}: ${validated.data.id}`,
           // target_url: o.data.details_url,
         });
