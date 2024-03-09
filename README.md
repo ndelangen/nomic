@@ -1,6 +1,6 @@
 # Nomic on GitHub
 
-Welcome! This is Nomic for Coders, by ndelangen.
+Welcome! This is Nomic for Coders, by [ndelangen](https://github.com/ndelangen).
 
 ---
 
