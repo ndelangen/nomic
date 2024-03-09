@@ -46,6 +46,8 @@ export const defineAPI = async () => {
 
   const repository = repo.success ? { owner: repo.data[0], name: repo.data[1] } : undefined;
 
+  console.log({ repository });
+
   if (sha.success && repository && !pull_number) {
     const prs = await octokit.rest.pulls.list({
       owner: repository.owner,
@@ -55,7 +57,11 @@ export const defineAPI = async () => {
       per_page: 10,
     });
 
+    console.log({ prs });
+
     const pr = prs.data.find((pr) => pr.head.sha === sha.data);
+
+    console.log({ pr });
 
     if (pr) {
       pull_number = pr.number;
@@ -63,6 +69,8 @@ export const defineAPI = async () => {
   }
 
   const pr = repo.success ? await getPrInfo(octokit, Repository.parse(repository), pull_number) : undefined;
+
+  console.log({ final: pr });
 
   return { pr, github: octokit, repository };
 };
