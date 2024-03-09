@@ -52,7 +52,7 @@ await main(async (item, { core, state, api }) => {
           repo: api.repository.name,
           sha: sha.data,
           state: isError ? 'error' : 'success',
-          description: `${message.substring(0, 20)}`,
+          description: `${message.substring(0, 120)}`,
           context: `${type.data}: ${validated.data.id}`,
           // target_url: o.data.details_url,
         });
