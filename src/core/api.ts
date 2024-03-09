@@ -14,26 +14,20 @@ export async function getPrInfo(
   repository: z.infer<typeof Repository>,
   pull_number: number,
 ) {
-  const eventName = Deno.env.get('GITHUB_EVENT_NAME');
+  const [pr, reviews] = await Promise.all([
+    octokit.rest.pulls.get({
+      owner: repository.owner,
+      repo: repository.name,
+      pull_number,
+    }),
+    octokit.rest.pulls.listReviews({
+      owner: repository.owner,
+      repo: repository.name,
+      pull_number,
+    }),
+  ]);
 
-  if (eventName === 'pull_request') {
-    const [pr, reviews] = await Promise.all([
-      octokit.rest.pulls.get({
-        owner: repository.owner,
-        repo: repository.name,
-        pull_number,
-      }),
-      octokit.rest.pulls.listReviews({
-        owner: repository.owner,
-        repo: repository.name,
-        pull_number,
-      }),
-    ]);
-
-    return { ...pr.data, reviews: reviews.data };
-  } else {
-    return undefined;
-  }
+  return { ...pr.data, reviews: reviews.data };
 }
 
 const createOctokit = () => new Octokit({ auth: Deno.env.get('GITHUB_TOKEN') });
