@@ -27,9 +27,10 @@ await main(async (item, { core, state, api }) => {
         const o = await api.github.rest.checks.create({
           owner: api.repository.owner,
           repo: api.repository.name,
-          name: `check_${type.data}${validated.data.id}${Date.now()}`,
+          name: `${type.data}: ${validated.data.id}`,
           head_sha: sha.data,
           status: 'completed',
+          external_id: `check_${type.data}${validated.data.id}}`,
           conclusion: isError ? 'failure' : 'success',
           actions: [
             {
