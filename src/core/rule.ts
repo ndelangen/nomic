@@ -12,34 +12,32 @@ export default defineRule({
   id: 'core',
   load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),
   action: async ({ state, action }) => {
-    if (action) {
-      const name = action.payload.name;
-      switch (action?.type) {
-        case JOIN_ACTION.name: {
-          if (state.players.list.includes(name)) {
-            throw new Error('409 - conflict: Player already exists');
-          }
-          state.players.list = [...state.players.list, name];
-          break;
+    const name = action.payload.name;
+    switch (action?.type) {
+      case JOIN_ACTION.name: {
+        if (state.players.list.includes(name)) {
+          throw new Error('409 - conflict: Player already exists');
         }
-        case LEAVE_ACTION.name: {
-          if (!state.players.list.includes(name)) {
-            throw new Error('404 - not found: Player does not exist');
-          }
-          state.players.list = state.players.list.filter((player) => player !== name);
-          if (state.players.active === name) {
-            const index = state.players.list.indexOf(name);
-            const nextIndex = (index + 1) % state.players.list.length;
-            state.players.active = state.players.list[nextIndex];
-          }
-          break;
-        }
-        default: {
-          throw new Error('Invalid action');
-        }
+        state.players.list = [...state.players.list, name];
+        break;
       }
-      await Deno.writeTextFile(LOCATION, YAML.stringify(state));
+      case LEAVE_ACTION.name: {
+        if (!state.players.list.includes(name)) {
+          throw new Error('404 - not found: Player does not exist');
+        }
+        state.players.list = state.players.list.filter((player) => player !== name);
+        if (state.players.active === name) {
+          const index = state.players.list.indexOf(name);
+          const nextIndex = (index + 1) % state.players.list.length;
+          state.players.active = state.players.list[nextIndex];
+        }
+        break;
+      }
+      default: {
+        throw new Error('Invalid action');
+      }
     }
+    await Deno.writeTextFile(LOCATION, YAML.stringify(state));
   },
   check: async ({ api, state }) => {
     if (api.pr) {
