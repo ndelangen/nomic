@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { CheckRuleFactory, ProgressRuleFactory } from '../core/api.ts';
+import { CheckRuleFactory, ProgressRuleFactory } from '../api/api.ts';
 import { main } from '../lib/main.ts';
 
 const ProgressRule = ProgressRuleFactory(z.unknown());

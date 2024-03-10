@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { defineRule } from '../core/api.ts';
+import { defineRule } from '../api/api.ts';
 
 const STATE = z.object({
   foo: z.number(),

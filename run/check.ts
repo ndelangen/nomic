@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { CheckRuleFactory } from '../core/api.ts';
+import { CheckRuleFactory } from '../api/api.ts';
 import { main } from '../lib/main.ts';
 
 const CheckRule = CheckRuleFactory(z.unknown());

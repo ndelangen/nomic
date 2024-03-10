@@ -1,5 +1,5 @@
 import { ACTION } from './actions.ts';
-import { STATE as CORE_STATE } from './STATE.ts';
+import { STATE as CORE_STATE } from '../core/state.ts';
 
 import { Octokit } from 'octokit';
 import { z } from 'zod';
