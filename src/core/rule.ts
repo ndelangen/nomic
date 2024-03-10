@@ -18,7 +18,7 @@ export const STATE = z.object({
 export default defineRule({
   id: 'core',
   load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),
-  check: async ({ state, action, api }) => {
+  action: async ({ state, action, api }) => {
     if (action) {
       const name = action.payload.name;
       switch (action?.type) {

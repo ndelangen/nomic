@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { ACTION } from '../core/actions.ts';
 import { main } from '../lib/main.ts';
-import { CheckRuleFactory } from '../lib/types.ts';
+import { ActionRuleFactory } from '../lib/types.ts';
 
-const CheckRule = CheckRuleFactory(z.unknown());
+const CheckRule = ActionRuleFactory(z.unknown());
 
 function getPayload() {
   const payloadString = Deno.env.get('ACTION_PAYLOAD');
@@ -24,7 +24,7 @@ await main(async (item, { core, state, api }) => {
   const action = ACTION.parse({ type, payload });
 
   if (validated.success) {
-    await validated.data.check({ state, core, action, api });
+    await validated.data.action({ state, core, action, api });
     console.log(`Action ${action.type} ran on ${item.id} ran successfully!`);
   }
 });
