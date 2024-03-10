@@ -5,9 +5,9 @@
   "author": "central419",
   "type": "module",
   "scripts": {
-    "action": "deno run -A ./src/run/action.ts",
-    "check": "deno run -A ./src/run/check.ts",
-    "progress": "deno run -A ./src/run/progress.ts",
+    "action": "deno run -A ./run/action.ts",
+    "check": "deno run -A ./run/check.ts",
+    "progress": "deno run -A ./run/progress.ts",
     "test": "deno test -A",
     "knip": "knip"
   },

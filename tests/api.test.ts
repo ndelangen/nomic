@@ -1,7 +1,7 @@
 // url_test.ts
 import { assert, assertThrows } from 'https://deno.land/std@0.219.0/assert/mod.ts';
 
-import { defineRule } from '../src/core/api.ts';
+import { defineRule } from '../core/api.ts';
 
 Deno.test('validates a check rule', async (t) => {
   await t.step('no load function', () => {
