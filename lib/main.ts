@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 
 import { API, RuleFactory, defineAPI } from '../api/api.ts';
-import { STATE as CORE_STATE } from '../core/state.ts';
+import { STATE as CORE_STATE } from '../core/rule.state.ts';
 
 const Unknown = z.unknown();
 const Mole = RuleFactory(Unknown);

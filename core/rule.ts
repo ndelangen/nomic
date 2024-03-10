@@ -1,12 +1,8 @@
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import * as YAML from 'yaml';
 
 import { JOIN_ACTION, LEAVE_ACTION } from '../api/actions.ts';
 import { defineRule } from '../api/api.ts';
-import { STATE } from './state.ts';
-
-const LOCATION = join(dirname(fileURLToPath(import.meta.url)), '../../state/core.yml');
+import { LOCATION, STATE } from './rule.state.ts';
 
 export default defineRule({
   id: 'core',
