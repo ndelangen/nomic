@@ -1,4 +1,4 @@
-name: Action Event
+name: Handler Action
 
 on:
   check_run:

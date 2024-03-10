@@ -1,4 +1,4 @@
-name: Participation
+name: Action Participation
 on:
   workflow_dispatch:
     inputs:
@@ -34,20 +34,19 @@ jobs:
         run: bun run action
         env:
           ACTION_NAME: ${{github.event.inputs.activity }}
-          ACTION_PAYLOAD: ${{ toJson(github.actor) }}
-
+          ACTION_PAYLOAD: '{"name":"${{ github.actor }}"}'
       - name: Get user email
         id: email-data
         uses: ndelangen/email-by-username-action@main
         continue-on-error: true
         with:
-          github-username: ${{ steps.yaml-data.outputs.data }}
+          github-username: ${{ github.actor }}
           token: ${{ steps.generate-token.outputs.token }}
       - name: Commit changes
         run: |
           git config --local user.name "${{ github.actor }}"
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git commit -m "${{ github.actor }} ${{ github.event.inputs.activity }}s [skip ci]"
+          git commit -a -m "${{ github.actor }} performs ${{ github.event.inputs.activity }} [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
