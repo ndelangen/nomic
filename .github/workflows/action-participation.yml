@@ -44,11 +44,9 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
       - name: Commit changes
         run: |
-          git pull
-          git add .
           git config --local user.name "${{ github.actor }}"
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git commit -m "${{ github.actor }} ${{ github.event.inputs.activity }}s [skip ci]"
+          git commit -a -m "${{ github.actor }} performs ${{ github.event.inputs.activity }} [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
