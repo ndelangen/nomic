@@ -1,6 +1,7 @@
 import { z } from 'zod';
+
+import { CheckRuleFactory } from '../core/api.ts';
 import { main } from '../lib/main.ts';
-import { CheckRuleFactory } from '../lib/types.ts';
 
 const CheckRule = CheckRuleFactory(z.unknown());
 const SHA = z.string();

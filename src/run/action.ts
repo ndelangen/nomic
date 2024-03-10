@@ -1,7 +1,8 @@
 import { z } from 'zod';
+
 import { ACTION } from '../core/actions.ts';
+import { ActionRuleFactory } from '../core/api.ts';
 import { main } from '../lib/main.ts';
-import { ActionRuleFactory } from '../lib/types.ts';
 
 const CheckRule = ActionRuleFactory(z.unknown());
 

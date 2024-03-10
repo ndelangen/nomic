@@ -1,9 +1,9 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
-import { defineAPI } from '../core/api.ts';
-import { STATE as CORE_STATE } from '../core/rule.ts';
-import { API, RuleFactory } from './types.ts';
+
+import { API, RuleFactory, defineAPI } from '../core/api.ts';
+import { STATE as CORE_STATE } from '../core/STATE.ts';
 
 const Unknown = z.unknown();
 const Mole = RuleFactory(Unknown);

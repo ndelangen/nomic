@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { CheckRuleFactory, ProgressRuleFactory } from '../core/api.ts';
 import { main } from '../lib/main.ts';
-import { CheckRuleFactory, ProgressRuleFactory } from '../lib/types.ts';
 
 const ProgressRule = ProgressRuleFactory(z.unknown());
 const CheckRule = CheckRuleFactory(z.unknown());

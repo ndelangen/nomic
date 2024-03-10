@@ -5,6 +5,7 @@
     "yoavbls.pretty-ts-errors",
     "unional.vscode-sort-package-json",
     "dskwrk.vscode-generate-getter-setter",
-    "ms-vscode.vscode-typescript-next"
+    "ms-vscode.vscode-typescript-next",
+    "amatiasq.sort-imports"
   ]
 }

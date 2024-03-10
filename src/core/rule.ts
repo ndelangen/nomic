@@ -1,24 +1,17 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as YAML from 'yaml';
-import { z } from 'zod';
-import { defineRule } from '../lib/types.ts';
+
 import { JOIN_ACTION, LEAVE_ACTION } from './actions.ts';
+import { defineRule } from './api.ts';
+import { STATE } from './STATE.ts';
 
 const LOCATION = join(dirname(fileURLToPath(import.meta.url)), '../../state/core.yml');
-
-export const STATE = z.object({
-  id: z.string(),
-  players: z.object({
-    list: z.array(z.string()),
-    active: z.string(),
-  }),
-});
 
 export default defineRule({
   id: 'core',
   load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),
-  action: async ({ state, action, api }) => {
+  action: async ({ state, action }) => {
     if (action) {
       const name = action.payload.name;
       switch (action?.type) {
@@ -47,7 +40,8 @@ export default defineRule({
       }
       await Deno.writeTextFile(LOCATION, YAML.stringify(state));
     }
-
+  },
+  check: async ({ api, state }) => {
     if (api.pr) {
       if (api.pr.user.login !== state.players.active) {
         throw new Error('PR user is not by the active player');

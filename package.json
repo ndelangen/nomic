@@ -6,16 +6,19 @@
   "type": "module",
   "scripts": {
     "action": "deno run -A ./src/run/action.ts",
-    "action-event": "deno run -A ./src/run/action-event.ts",
     "check": "deno run -A ./src/run/check.ts",
-    "progress": "deno run -A ./src/run/progress.ts"
+    "progress": "deno run -A ./src/run/progress.ts",
+    "test": "deno test -A",
+    "knip": "knip"
   },
   "dependencies": {
+    "knip": "^5.0.3",
     "octokit": "^3.1.2",
     "yaml": "^2.4.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/node": "^16.18.87",
     "prettier-plugin-jsdoc": "^1.3.0",
     "prettier-plugin-organize-imports": "^3.2.4",
     "prettier": "^3.2.5",
