@@ -1,6 +1,5 @@
 id: core
 players:
   list:
-    - ndelangen
     - central419
   active: central419
