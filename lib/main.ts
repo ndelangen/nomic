@@ -34,6 +34,16 @@ async function getModules() {
   );
 }
 
+export async function getAllRules() {
+  const files = await getFiles();
+
+  return [
+    //
+    import('../core/rule.ts'),
+    ...files.map((file) => import(`../rules/${file.name}`)),
+  ];
+}
+
 type Callback = (item: z.infer<typeof Mole>, data: z.infer<typeof Data>) => Promise<void>;
 
 /**
@@ -85,7 +95,15 @@ export async function main(callback: Callback) {
   }
 }
 
-export function v2<T extends typeof ActionRuleFactory | typeof CheckRuleFactory | typeof ProgressRuleFactory>(
+/**
+ * Run a series of modules in parallel.
+ *
+ * @param filter - The type of rule to run.
+ * @param callback - A function that runs the module's method with .
+ */
+export function runRules<
+  T extends typeof ActionRuleFactory | typeof CheckRuleFactory | typeof ProgressRuleFactory,
+>(
   filter: T,
   callback: (
     item: z.infer<ReturnType<T>>,
@@ -95,7 +113,7 @@ export function v2<T extends typeof ActionRuleFactory | typeof CheckRuleFactory 
   ) => Promise<void> | void,
   options: Parameters<typeof defineAPI>[0] = {},
 ) {
-  return async (modules: Promise<z.infer<ReturnType<T>>>[]) => {
+  return async (modules: Promise<z.infer<ReturnType<T>>>[]): Promise<Error[]> => {
     const core = (await import('../core/rule.ts')).default;
     const core_state = core.load ? await core.load() : undefined;
     const api = await defineAPI(options);
@@ -120,6 +138,6 @@ export function v2<T extends typeof ActionRuleFactory | typeof CheckRuleFactory 
   };
 }
 
-v2(ActionRuleFactory, async (item, state, core_state, api) => {
-  await console.log(item.action);
-});
+// v2(ActionRuleFactory, async (item, state, core_state, api) => {
+//   await console.log(item.action);
+// });

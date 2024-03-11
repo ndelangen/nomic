@@ -1,10 +1,10 @@
 import { assert } from 'https://deno.land/std@0.219.0/assert/mod.ts';
 
 import { ActionRuleFactory } from '../api/api.ts';
-import { v2 } from '../lib/main.ts';
+import { runRules } from '../lib/main.ts';
 
 Deno.test('empty array', async () => {
-  const outcome = await v2(ActionRuleFactory, async (item, state, core_state, api) => {}, {
+  const outcome = await runRules(ActionRuleFactory, async (item, state, core_state, api) => {}, {
     disableThrottle: true,
   })([]);
 
@@ -12,7 +12,7 @@ Deno.test('empty array', async () => {
 });
 
 Deno.test('1 item passing', async () => {
-  const outcome = await v2(
+  const outcome = await runRules(
     ActionRuleFactory,
     async (item, state, core_state, api) => {
       await item.action({ state, core: core_state, action: { type: 'join', payload: { name: '' } }, api });
@@ -30,7 +30,7 @@ Deno.test('1 item passing', async () => {
 });
 
 Deno.test('1 item failing', async () => {
-  const outcome = await v2(
+  const outcome = await runRules(
     ActionRuleFactory,
     async (item, state, core_state, api) => {
       await item.action({ state, core: core_state, action: { type: 'join', payload: { name: '' } }, api });

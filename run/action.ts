@@ -1,31 +1,27 @@
-import { z } from 'zod';
-
 import { ACTION } from '../api/actions.ts';
 import { ActionRuleFactory } from '../api/api.ts';
-import { main } from '../lib/main.ts';
+import { getAllRules, runRules } from '../lib/main.ts';
 
-const ActionRule = ActionRuleFactory(z.unknown());
-
-function getPayload() {
-  const payloadString = Deno.env.get('ACTION_PAYLOAD');
-
-  if (payloadString) {
-    return JSON.parse(payloadString);
-  }
-
-  console.log({ payloadString });
-
-  return {};
-}
-
-await main(async (item, { core, state, api }) => {
-  const validated = ActionRule.safeParse(item);
+const allRules = await getAllRules();
+const outcomes = await runRules(ActionRuleFactory, async (item, state, core, api) => {
   const type = Deno.env.get('ACTION_NAME');
-  const payload = getPayload();
+  const payload = JSON.parse(Deno.env.get('ACTION_PAYLOAD') || '');
+
   const action = ACTION.parse({ type, payload });
 
-  if (validated.success) {
-    await validated.data.action({ state, core, action, api });
-    console.log(`Action ${action.type} ran on ${item.id} ran successfully!`);
-  }
+  await item.action({ state, core, action, api });
+
+  console.log(`Action ${action.type} ran on ${item.id} ran successfully!`);
+})(allRules);
+
+outcomes.forEach((outcome) => {
+  console.log();
+  console.error(outcome.stack || outcome.message);
 });
+
+if (outcomes.length > 0) {
+  console.log();
+  console.error(`${outcomes.length} rules rejected.`);
+
+  Deno.exit(1);
+}
