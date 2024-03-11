@@ -110,7 +110,7 @@ export function ActionRuleFactory<T>(schema: z.ZodType<T>) {
   return createBase<T>(schema).extend(aa.shape);
 }
 
-export function RuleFactory<T>(schema: z.ZodType<T>) {
+function RuleFactory<T>(schema: z.ZodType<T>) {
   const aa = CheckRuleFactory<T>(schema);
   const bb = ProgressRuleFactory<T>(schema);
   const cc = ActionRuleFactory<T>(schema);
