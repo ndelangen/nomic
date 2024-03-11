@@ -19,7 +19,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@cspell/cspell-types": "^8.6.0",
     "@types/node": "^16.18.87",
     "knip": "^5.0.3",
     "prettier": "^3.2.5",
