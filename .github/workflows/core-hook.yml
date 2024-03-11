@@ -2,7 +2,7 @@ name: Core - Hook
 on:
   workflow_run:
     workflows:
-      - PR
+      - Core - PR
     types:
       - requested
 
