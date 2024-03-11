@@ -35,3 +35,8 @@ jobs:
           artifact-name: coverage-report
           github-token: ${{ secrets.GITHUB_TOKEN }}
           update-comment: true
+  spellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: streetsidesoftware/cspell-action@v6

@@ -8,5 +8,6 @@
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "cSpell.words": ["Deno", "knip", "ndelangen", "Nomic"]
 }
