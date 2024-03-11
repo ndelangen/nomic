@@ -9,7 +9,7 @@ jobs:
     outputs:
       skip: ${{ steps.check_inactivity.outputs.skip }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: main
       - name: Check for inactivity
@@ -47,7 +47,7 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
