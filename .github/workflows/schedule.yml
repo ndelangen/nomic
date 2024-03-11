@@ -55,7 +55,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
-      - run: bun install --production
+      - run: bun install
       - run: bun run progress
       - name: Run core-yaml
         id: yaml-data
