@@ -1,4 +1,3 @@
-// url_test.ts
 import { assert, assertThrows } from 'https://deno.land/std@0.219.0/assert/mod.ts';
 
 import { defineRule } from '../api/api.ts';

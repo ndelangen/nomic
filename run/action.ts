@@ -4,7 +4,7 @@ import { ACTION } from '../api/actions.ts';
 import { ActionRuleFactory } from '../api/api.ts';
 import { main } from '../lib/main.ts';
 
-const CheckRule = ActionRuleFactory(z.unknown());
+const ActionRule = ActionRuleFactory(z.unknown());
 
 function getPayload() {
   const payloadString = Deno.env.get('ACTION_PAYLOAD');
@@ -19,7 +19,7 @@ function getPayload() {
 }
 
 await main(async (item, { core, state, api }) => {
-  const validated = CheckRule.safeParse(item);
+  const validated = ActionRule.safeParse(item);
   const type = Deno.env.get('ACTION_NAME');
   const payload = getPayload();
   const action = ACTION.parse({ type, payload });

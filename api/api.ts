@@ -1,8 +1,10 @@
 import { ACTION } from './actions.ts';
 import { STATE as CORE_STATE } from '../core/rule.state.ts';
 
-import { Octokit } from 'octokit';
+// import { Octokit } from 'octokit';
 import { z } from 'zod';
+import { Octokit } from '@octokit/rest';
+import { type OctokitOptions } from '@octokit/core';
 
 const ARGS = z.tuple([z.string(), z.string()]);
 const SHA = z.string();
@@ -29,10 +31,11 @@ async function getPrInfo(octokit: Octokit, repository: z.infer<typeof Repository
   return { ...pr.data, reviews: reviews.data };
 }
 
-const createOctokit = () => new Octokit({ auth: Deno.env.get('GITHUB_TOKEN') });
+const createOctokit = (options?: OctokitOptions) =>
+  new Octokit({ auth: Deno.env.get('GITHUB_TOKEN'), ...options });
 
-export const defineAPI = async () => {
-  const octokit = createOctokit();
+export const defineAPI = async ({ disableThrottle = false } = {}) => {
+  const octokit = createOctokit(disableThrottle ? { throttle: { enabled: false } } : undefined);
   const repo = ARGS.safeParse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
   const sha = SHA.safeParse(Deno.env.get('SHA'));
   let pull_number = parseInt(Deno.env.get('PR_NUMBER')!, 10);
