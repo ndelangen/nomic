@@ -56,7 +56,8 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install
-      - run: bun run progress
+      - name: Rules progress
+        run: bun run progress
       - name: Run core-yaml
         id: yaml-data
         uses: jbutcher5/read-yaml@main

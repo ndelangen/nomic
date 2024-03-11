@@ -15,7 +15,8 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install
-      - run: bun run check
+      - name: Rules check
+        run: bun run check
         env:
           SHA: ${{ github.event.workflow_run.head_sha }}
           TYPE: MAIN

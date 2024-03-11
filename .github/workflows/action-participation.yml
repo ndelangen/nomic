@@ -30,7 +30,7 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install
-      - name: Handle action in rules
+      - name: Rules action
         run: bun run action
         env:
           ACTION_NAME: ${{github.event.inputs.activity }}

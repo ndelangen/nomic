@@ -14,7 +14,8 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install
-      - run: bun run action-event
+      - name: Rules action
+        run: bun run action-event
         env:
           ACTION_NAME: ${{github.event.requested_action }}
           ACTION_PAYLOAD: ${{ toJson(github.event.action) }}
