@@ -1,4 +1,4 @@
-name: Schedule
+name: Core - Schedule
 on:
   schedule:
     - cron: '0 * * * *'

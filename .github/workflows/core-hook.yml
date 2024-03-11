@@ -1,9 +1,10 @@
-name: Handler Action
-
+name: Core - Hook
 on:
-  check_run:
+  workflow_run:
+    workflows:
+      - PR
     types:
-      - requested_action
+      - requested
 
 jobs:
   rules:
@@ -14,8 +15,8 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
       - run: bun install
-      - run: bun run action-event
+      - run: bun run check
         env:
-          ACTION_NAME: ${{github.event.requested_action }}
-          ACTION_PAYLOAD: ${{ toJson(github.event.action) }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          TYPE: MAIN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

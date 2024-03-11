@@ -110,11 +110,16 @@ export function ActionRuleFactory<T>(schema: z.ZodType<T>) {
   return createBase<T>(schema).extend(aa.shape);
 }
 
-export function RuleFactory<T>(schema: z.ZodType<T>) {
+function RuleFactory<T>(schema: z.ZodType<T>) {
   const aa = CheckRuleFactory<T>(schema);
   const bb = ProgressRuleFactory<T>(schema);
   const cc = ActionRuleFactory<T>(schema);
-  return aa.or(bb).or(cc).or(aa.and(bb)).or(aa.and(cc)).or(bb.and(cc)).or(aa.and(bb).and(cc));
+
+  const m1 = aa.extend(bb.partial().shape).extend(cc.partial().shape);
+  const m2 = bb.extend(aa.partial().shape).extend(cc.partial().shape);
+  const m3 = cc.extend(aa.partial().shape).extend(bb.partial().shape);
+
+  return m1.or(m2).or(m3);
 }
 
 type RULE<T> = z.infer<ReturnType<typeof RuleFactory<T>>>;

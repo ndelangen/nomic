@@ -1,23 +1,30 @@
-import { z } from 'zod';
-
 import { CheckRuleFactory, ProgressRuleFactory } from '../api/api.ts';
-import { main } from '../lib/main.ts';
+import { getAllRules, runRules } from '../lib/main.ts';
 
-const ProgressRule = ProgressRuleFactory(z.unknown());
-const CheckRule = CheckRuleFactory(z.unknown());
+const allRules = await getAllRules();
 
-await main(async (item, { core, state, api }) => {
-  const validated = CheckRule.safeParse(item);
-  if (validated.success) {
-    await validated.data.check({ state, core, api });
-    console.log(`Check ${item.id} ran successfully!`);
-  }
+const rulesOutcomes = await runRules(CheckRuleFactory, async (item, state, core, api) => {
+  await item.check({ state, core, api });
+})(allRules);
+
+const progressOutcomes = await runRules(ProgressRuleFactory, async (item, state, core, api) => {
+  await item.progress({ state, core, api });
+})(allRules);
+
+rulesOutcomes.forEach((outcome) => {
+  console.log();
+  console.error(outcome.stack || outcome.message);
 });
 
-await main(async (item, { core, state, api }) => {
-  const validated = ProgressRule.safeParse(item);
-  if (validated.success) {
-    await validated.data.progress({ state, core, api });
-    console.log(`Progress ${item.id} ran successfully!`);
-  }
-});
+if (rulesOutcomes.length > 0) {
+  console.log();
+  console.error(`${rulesOutcomes.length} rules rejected.`);
+}
+if (progressOutcomes.length > 0) {
+  console.log();
+  console.error(`${progressOutcomes.length} rules rejected.`);
+}
+
+if (rulesOutcomes.length > 0 || progressOutcomes.length > 0) {
+  Deno.exit(1);
+}

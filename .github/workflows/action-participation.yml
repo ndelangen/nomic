@@ -1,4 +1,4 @@
-name: Action Participation
+name: Action - Participation
 on:
   workflow_dispatch:
     inputs:

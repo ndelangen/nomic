@@ -1,7 +1,8 @@
-name: Merge
+name: Core - Merge
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   merge:
