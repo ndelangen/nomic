@@ -7,10 +7,10 @@
   "scripts": {
     "action": "deno run -A ./run/action.ts",
     "check": "deno run -A ./run/check.ts",
-    "progress": "deno run -A ./run/progress.ts",
-    "test": "deno test -A",
     "coverage": "deno coverage coverage/profile --ignore=node_modules",
-    "knip": "knip"
+    "knip": "knip",
+    "progress": "deno run -A ./run/progress.ts",
+    "test": "deno test -A"
   },
   "dependencies": {
     "@octokit/core": "^6.0.1",
@@ -19,10 +19,11 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "knip": "^5.0.3",
+    "@cspell/cspell-types": "^8.6.0",
     "@types/node": "^16.18.87",
-    "prettier-plugin-jsdoc": "^1.3.0",
+    "knip": "^5.0.3",
     "prettier": "^3.2.5",
+    "prettier-plugin-jsdoc": "^1.3.0",
     "typescript": "^5.2.2"
   }
 }
