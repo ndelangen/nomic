@@ -16,6 +16,7 @@ await main(async (item, { core, state, api }) => {
 
 await main(async (item, { core, state, api }) => {
   const validated = ProgressRule.safeParse(item);
+
   if (validated.success) {
     await validated.data.progress({ state, core, api });
     console.log(`Progress ${item.id} ran successfully!`);
