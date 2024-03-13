@@ -4,8 +4,6 @@ on:
     types:
       - synchronize
   push:
-    branches:
-      - main
 
 jobs:
   knip:
