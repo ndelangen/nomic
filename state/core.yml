@@ -1,7 +1,6 @@
 id: core
 players:
   list:
-    - central419
     - ndelangen
     - Awpteamoose
-  active: central419
+  active: ndelangen
