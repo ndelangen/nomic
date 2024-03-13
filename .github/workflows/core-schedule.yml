@@ -16,7 +16,7 @@ jobs:
         id: check_inactivity
         run: |
           now=$(date +%s)
-          last_commit_timestamp=$(git log -1 --format=%ct)
+          last_commit_timestamp=$(git log --since=HEAD@{28.hours} --pretty="%ct %B" | grep -E "new active player = " -m 1 | cut -d ' ' -f1)
           difference=$((now - last_commit_timestamp))
           desired_inactivity_seconds=$(( $DESIRED_INACTIVITY_SECONDS + $DESIRED_INACTIVITY_MINUTES * 60 + $DESIRED_INACTIVITY_HOURS * 60 * 60 + $DESIRED_INACTIVITY_DAYS * 24 * 60 * 60 ))
 
