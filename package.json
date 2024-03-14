@@ -7,6 +7,7 @@
   "scripts": {
     "action": "deno run -A ./run/action.ts",
     "check": "deno run -A ./run/check.ts",
+    "verify": "deno check **/*.ts",
     "coverage": "deno coverage coverage/profile --ignore=node_modules",
     "knip": "knip",
     "progress": "deno run -A ./run/progress.ts",
