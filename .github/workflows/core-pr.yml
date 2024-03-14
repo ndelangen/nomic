@@ -27,7 +27,7 @@ jobs:
         id: generate-token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ vars.APP_ID_READONLY }}
+          app-id: '855816'
           private-key: ${{ secrets.APP_PRIVATE_KEY_READONLY }}
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
