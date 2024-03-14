@@ -5,13 +5,15 @@
   "author": "central419",
   "type": "module",
   "scripts": {
-    "action": "deno run -A ./run/action.ts",
-    "check": "deno run -A ./run/check.ts",
-    "verify": "deno check **/*.ts",
+    "action": "bun run run-deno ./run/action.ts",
+    "check": "bun run run-deno ./run/check.ts",
     "coverage": "deno coverage coverage/profile --ignore=node_modules",
     "knip": "knip",
-    "progress": "deno run -A ./run/progress.ts",
-    "test": "deno test -A"
+    "lint": "deno lint",
+    "progress": "bun run run-deno ./run/progress.ts",
+    "run-deno": "deno run --allow-read --allow-env --allow-net=$(paste -d, -s ./allowed_domains)  --allow-write=$(paste -d, -s ./allowed_paths)",
+    "test": "deno test -A",
+    "verify": "deno check **/*.ts"
   },
   "dependencies": {
     "@octokit/core": "^6.0.1",
@@ -25,5 +27,8 @@
     "prettier": "^3.2.5",
     "prettier-plugin-jsdoc": "^1.3.0",
     "typescript": "^5.2.2"
-  }
+  },
+  "allow-net": [
+    "https://api.github.com"
+  ]
 }
