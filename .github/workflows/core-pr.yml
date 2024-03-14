@@ -23,12 +23,6 @@ jobs:
   rules:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate a token
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: '855816'
-          private-key: ${{ secrets.APP_PRIVATE_KEY_READONLY }}
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       - uses: denoland/setup-deno@v1
@@ -40,4 +34,4 @@ jobs:
           SHA: '${{ github.event.pull_request.head.sha }}'
           OTHER: ${{ toJSON(github.event.pull_request) }}
           TYPE: PR
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
