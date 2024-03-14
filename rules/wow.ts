@@ -1,7 +1,7 @@
 import * as YAML from 'yaml';
 
 import { defineRule } from '../api/api.ts';
-import { LOCATION } from './rule.state.ts';
+import { LOCATION } from '../core/rule.state.ts';
 
 export default defineRule({
 	id: 'wow',
