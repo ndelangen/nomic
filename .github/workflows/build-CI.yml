@@ -2,10 +2,8 @@ name: Build - CI
 on:
   pull_request:
     types:
-      - synchronize
+      - edited
   push:
-    branches:
-      - main
 
 jobs:
   knip:
@@ -40,3 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: streetsidesoftware/cspell-action@v6
+        with:
+          config: '.'
+          use_cspell_files: true

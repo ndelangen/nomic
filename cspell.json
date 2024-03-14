@@ -4,6 +4,6 @@
   "dictionaries": ["en_US", "softwareTerms", "typescript"],
   "words": ["Deno", "knip", "ndelangen", "Nomic"],
   "ignoreWords": ["lockb"],
-  "ignorePaths": [".vscode", "*.lock", "*.lockb"],
+  "ignorePaths": [".vscode", "*.lock", "*.lockb", ".github"],
   "useGitignore": true
 }
