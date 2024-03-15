@@ -70,7 +70,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Upcoming state changes:
-            ```
+            ```diff
             ${{ steps.git-diff-action.outputs.raw-diff }}
             ```
           edit-mode: replace
