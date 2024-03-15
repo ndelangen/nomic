@@ -35,3 +35,61 @@ jobs:
           OTHER: ${{ toJSON(github.event.pull_request) }}
           TYPE: PR
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  prescience:
+    runs-on: ubuntu-latest
+    needs: rules
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - uses: denoland/setup-deno@v1
+      - run: bun install
+      - name: Prescience check
+        run: bun run prescience
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SHA: '${{ github.event.pull_request.head.sha }}'
+          OTHER: ${{ toJSON(github.event.pull_request) }}
+          TYPE: PR
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Upcoming state changes
+      - uses: GrantBirki/git-diff-action@v2
+        id: git-diff-action
+        with:
+          base_branch: 'HEAD'
+          search_path: 'state'
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Upcoming state changes:
+            ```diff
+            ${{ steps.git-diff-action.outputs.raw-diff }}
+            ```
+          edit-mode: replace
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: rules
+    if: ${{ always() && needs.rules.result == 'failure'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Upcoming state changes
+      - uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Upcoming state changes cannot be determined.
+          edit-mode: replace

@@ -86,7 +86,7 @@ export function ProgressRuleFactory<T>(schema: z.ZodType<T>) {
     progress: z
       .function()
       .args(z.object({ state: schema, core: CORE_STATE, api: API }))
-      .returns(z.promise(z.void())),
+      .returns(z.promise(z.void()).or(z.void())),
   });
   return createBase<T>(schema).extend(aa.shape);
 }
@@ -96,7 +96,7 @@ export function CheckRuleFactory<T>(schema: z.ZodType<T>) {
     check: z
       .function()
       .args(z.object({ state: schema, core: CORE_STATE, api: API }))
-      .returns(z.promise(z.void())),
+      .returns(z.promise(z.void()).or(z.void())),
   });
   return createBase<T>(schema).extend(aa.shape);
 }
@@ -105,7 +105,7 @@ export function ActionRuleFactory<T>(schema: z.ZodType<T>) {
     action: z
       .function()
       .args(z.object({ state: schema, core: CORE_STATE, api: API, action: ACTION }))
-      .returns(z.promise(z.void())),
+      .returns(z.promise(z.void()).or(z.void())),
   });
   return createBase<T>(schema).extend(aa.shape);
 }

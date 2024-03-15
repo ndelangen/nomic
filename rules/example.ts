@@ -9,7 +9,7 @@ const STATE = z.object({
 export default defineRule({
   id: 'example',
   load: () => STATE.parse({ foo: 4 }),
-  check: async ({ api }) => {
+  check: ({ api }) => {
     console.log('🍐');
 
     if (api.pr) {

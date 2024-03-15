@@ -4,7 +4,7 @@ import { ActionRuleFactory } from '../api/api.ts';
 import { runRules } from '../lib/main.ts';
 
 Deno.test('empty array', async () => {
-  const outcome = await runRules(ActionRuleFactory, async (item, state, core_state, api) => {}, {
+  const outcome = await runRules(ActionRuleFactory, async () => {}, {
     disableThrottle: true,
   })([]);
 
@@ -39,7 +39,7 @@ Deno.test('1 item failing', async () => {
   )([
     Promise.resolve({
       id: 'test',
-      action: async () => {
+      action: () => {
         throw new Error('TestError');
       },
     }),
