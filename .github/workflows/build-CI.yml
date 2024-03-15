@@ -3,7 +3,10 @@ on:
   pull_request:
     types:
       - edited
+      - synchronize
   push:
+    branches:
+      - main
 
 jobs:
   knip:
