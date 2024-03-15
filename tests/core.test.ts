@@ -72,7 +72,7 @@ Deno.test('actions -leave -active player', async () => {
   assert(startState.players.active === 'test-user-b');
 });
 
-Deno.test('progress', async (t) => {
+Deno.test('progress', async () => {
   const api = await defineAPI();
   const startState = {
     id: 'core',
