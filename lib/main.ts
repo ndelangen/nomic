@@ -23,7 +23,6 @@ export async function getAllRules() {
 
   return [
     //
-    import('../core/rule.ts').then((m) => m.default),
     ...files.map((file) => import(`../rules/${file.name}`).then((m) => m.default)),
   ];
 }
@@ -44,15 +43,22 @@ export function runRules<
     core_state: z.infer<typeof CORE_STATE>,
     api: z.infer<typeof API>,
   ) => Promise<void> | void,
-  options: Parameters<typeof defineAPI>[0] = {},
+  { disableSaving, ...options }: Parameters<typeof defineAPI>[0] & { disableSaving?: boolean } = {},
 ) {
   return async (modules: Promise<z.infer<ReturnType<T>>>[]): Promise<Error[]> => {
     const core = (await import('../core/rule.ts')).default;
+
     const core_state = core.load ? await core.load() : undefined;
     const api = await defineAPI(options);
 
     if (core_state === undefined) {
       throw new Error('Core state is undefined');
+    }
+
+    const core_validated = filter(Unknown).safeParse(core);
+
+    if (core_validated.success) {
+      await callback(core_validated.data, core_state, core_state, api);
     }
 
     const settled = await Promise.allSettled(
@@ -62,16 +68,19 @@ export function runRules<
         if (validated.success) {
           const state = validated.data.load ? await validated.data.load() : undefined;
           await callback(validated.data, state, core_state, api);
+          if (validated.data.save && !disableSaving) {
+            await validated.data.save(state);
+          }
         }
       }),
     );
+
+    if (core.save && !disableSaving) {
+      await core.save(core_state);
+    }
 
     return settled
       .map((item) => (item.status === 'rejected' ? item.reason : undefined))
       .filter((reason) => typeof reason !== 'undefined');
   };
 }
-
-// v2(ActionRuleFactory, async (item, state, core_state, api) => {
-//   await console.log(item.action);
-// });
