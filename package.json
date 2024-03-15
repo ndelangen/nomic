@@ -10,6 +10,7 @@
     "coverage": "deno coverage coverage/profile --ignore=node_modules",
     "knip": "knip",
     "lint": "deno lint",
+    "prescience": "bun run run-deno ./run/prescience.ts",
     "progress": "bun run run-deno ./run/progress.ts",
     "run-deno": "deno run --allow-read --allow-env --allow-net=$(paste -d, -s ./allowed_domains)  --allow-write=$(paste -d, -s ./allowed_paths)",
     "test": "deno test -A",
