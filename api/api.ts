@@ -78,6 +78,7 @@ function createBase<T>(schema: z.ZodType<T>) {
   return z.object({
     id: ID,
     load: z.function().returns(z.promise(schema).or(schema)).optional(),
+    save: z.function().args(schema).returns(z.promise(z.void()).or(z.void())).optional(),
   });
 }
 

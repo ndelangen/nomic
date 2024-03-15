@@ -62,9 +62,16 @@ export function runRules<
         if (validated.success) {
           const state = validated.data.load ? await validated.data.load() : undefined;
           await callback(validated.data, state, core_state, api);
+          if (validated.data.save) {
+            await validated.data.save(state);
+          }
         }
       }),
     );
+
+    if (core.save) {
+      await core.save(core_state);
+    }
 
     return settled
       .map((item) => (item.status === 'rejected' ? item.reason : undefined))
