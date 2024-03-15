@@ -56,13 +56,13 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'Prescience'
+          comment-author: 'github-actions[bot]'
           body-includes: Upcoming state changes
-      - name: GrantBirki/git-diff-action@v2
+      - uses: GrantBirki/git-diff-action@v2
         id: git-diff-action
-        run: |
-          myvar=$(git diff --unified=3 state)
-          echo "::set-output name=raw-diff::$myvar"
+        with:
+          base_branch: 'HEAD'
+          search_path: 'state'
       - name: Create or update comment
         uses: peter-evans/create-or-update-comment@v4
         with:
@@ -84,7 +84,7 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'Prescience'
+          comment-author: 'github-actions[bot]'
           body-includes: Upcoming state changes
       - uses: peter-evans/create-or-update-comment@v4
         with:
