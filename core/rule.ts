@@ -35,7 +35,7 @@ export default defineRule({
     }
     await Deno.writeTextFile(LOCATION, YAML.stringify(state));
   },
-  check: async ({ api, state }) => {
+  check: ({ api, state }) => {
     if (api.pr) {
       if (api.pr.user.login !== state.players.active) {
         throw new Error('PR user is not by the active player');
