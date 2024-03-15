@@ -61,7 +61,8 @@ jobs:
       - name: GrantBirki/git-diff-action@v2
         id: git-diff-action
         run: |
-          echo "::set-output name=raw-diff::$(git diff --unified=3 state)"
+          myvar=$(git diff --unified=3 state)
+          echo "::set-output name=raw-diff::$myvar"
       - name: Create or update comment
         uses: peter-evans/create-or-update-comment@v4
         with:
@@ -69,7 +70,9 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Upcoming state changes:
+            ```
             ${{ steps.git-diff-action.outputs.raw-diff }}
+            ```
           edit-mode: replace
   cleanup:
     runs-on: ubuntu-latest
