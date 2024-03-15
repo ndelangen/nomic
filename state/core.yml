@@ -4,3 +4,5 @@ players:
     - ndelangen
     - Awpteamoose
   active: Awpteamoose
+turns:
+  current: 0

@@ -10,4 +10,7 @@ export const STATE = z.object({
     list: z.array(z.string()),
     active: z.string(),
   }),
+  turns: z.object({
+    current: z.number(),
+  }),
 });

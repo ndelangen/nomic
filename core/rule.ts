@@ -49,6 +49,8 @@ export default defineRule({
     const nextIndex = (index + 1) % state.players.list.length;
     state.players.active = state.players.list[nextIndex];
 
+    state.turns.current += 1;
+
     await Deno.writeTextFile(LOCATION, YAML.stringify(state));
 
     console.log('🔵');
