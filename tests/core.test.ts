@@ -3,15 +3,19 @@ import { assert } from 'https://deno.land/std@0.219.0/assert/mod.ts';
 import { z } from 'zod';
 
 import { ActionRuleFactory, ProgressRuleFactory, defineAPI } from '../api/api.ts';
+import { STATE } from '../core/rule.state.ts';
 import core from '../core/rule.ts';
 
 Deno.test('actions -join', async () => {
   const api = await defineAPI();
-  const startState = {
+  const startState: z.infer<typeof STATE> = {
     id: 'core',
     players: {
       active: 'test-user-a',
       list: ['test-user-a', 'test-user-b'],
+    },
+    turns: {
+      current: 0,
     },
   };
 
@@ -29,11 +33,14 @@ Deno.test('actions -join', async () => {
 
 Deno.test('actions -leave', async () => {
   const api = await defineAPI();
-  const startState = {
+  const startState: z.infer<typeof STATE> = {
     id: 'core',
     players: {
       active: 'test-user-a',
       list: ['test-user-a', 'test-user-b'],
+    },
+    turns: {
+      current: 0,
     },
   };
 
@@ -51,11 +58,14 @@ Deno.test('actions -leave', async () => {
 
 Deno.test('actions -leave -active player', async () => {
   const api = await defineAPI();
-  const startState = {
+  const startState: z.infer<typeof STATE> = {
     id: 'core',
     players: {
       active: 'test-user-a',
       list: ['test-user-a', 'test-user-b'],
+    },
+    turns: {
+      current: 0,
     },
   };
 
@@ -74,11 +84,14 @@ Deno.test('actions -leave -active player', async () => {
 
 Deno.test('progress', async () => {
   const api = await defineAPI();
-  const startState = {
+  const startState: z.infer<typeof STATE> = {
     id: 'core',
     players: {
       active: 'test-user-a',
       list: ['test-user-a', 'test-user-b'],
+    },
+    turns: {
+      current: 0,
     },
   };
 
