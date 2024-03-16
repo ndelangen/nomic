@@ -7,7 +7,7 @@ import { LOCATION, STATE } from './rule.state.ts';
 export default defineRule({
   id: 'core',
   load: async () => STATE.parse(YAML.parse(await Deno.readTextFile(LOCATION))),
-  action: async ({ state, action }) => {
+  action: ({ state, action }) => {
     const name = action.payload.name;
     switch (action?.type) {
       case JOIN_ACTION.name: {
@@ -33,7 +33,6 @@ export default defineRule({
         throw new Error('Invalid action');
       }
     }
-    await Deno.writeTextFile(LOCATION, YAML.stringify(state));
   },
   check: ({ api, state }) => {
     if (api.pr) {
@@ -44,15 +43,16 @@ export default defineRule({
 
     console.log('🟢');
   },
-  progress: async ({ state }) => {
+  progress: ({ state }) => {
     const index = state.players.list.indexOf(state.players.active);
     const nextIndex = (index + 1) % state.players.list.length;
-    state.players.active = state.players.list[nextIndex];
 
+    state.players.active = state.players.list[nextIndex];
     state.turns.current += 1;
 
-    await Deno.writeTextFile(LOCATION, YAML.stringify(state));
-
     console.log('🔵');
+  },
+  save: async (state) => {
+    await Deno.writeTextFile(LOCATION, YAML.stringify(state));
   },
 });

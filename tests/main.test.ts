@@ -6,6 +6,7 @@ import { runRules } from '../lib/main.ts';
 Deno.test('empty array', async () => {
   const outcome = await runRules(ActionRuleFactory, async () => {}, {
     disableThrottle: true,
+    disableSaving: true,
   })([]);
 
   assert(Array.isArray(outcome));
@@ -15,9 +16,14 @@ Deno.test('1 item passing', async () => {
   const outcome = await runRules(
     ActionRuleFactory,
     async (item, state, core_state, api) => {
-      await item.action({ state, core: core_state, action: { type: 'join', payload: { name: '' } }, api });
+      await item.action({
+        state,
+        core: core_state,
+        action: { type: 'join', payload: { name: 'test-user' } },
+        api,
+      });
     },
-    { disableThrottle: true },
+    { disableThrottle: true, disableSaving: true },
   )([
     Promise.resolve({
       id: 'test',
@@ -33,9 +39,14 @@ Deno.test('1 item failing', async () => {
   const outcome = await runRules(
     ActionRuleFactory,
     async (item, state, core_state, api) => {
-      await item.action({ state, core: core_state, action: { type: 'join', payload: { name: '' } }, api });
+      await item.action({
+        state,
+        core: core_state,
+        action: { type: 'join', payload: { name: 'test-user' } },
+        api,
+      });
     },
-    { disableThrottle: true },
+    { disableThrottle: true, disableSaving: true },
   )([
     Promise.resolve({
       id: 'test',
