@@ -40,10 +40,10 @@ export const HANDLERS = {
 
         return {
           core: produce(core, (draft) => {
-            draft.players.list = core.players.list.filter((player) => player !== name);
+            draft.players.list = draft.players.list.filter((player) => player !== name);
             if (draft.players.active === name) {
-              const index = core.players.list.indexOf(name);
-              const nextIndex = (index + 1) % core.players.list.length;
+              const index = draft.players.list.indexOf(name);
+              const nextIndex = (index + 1) % draft.players.list.length;
 
               draft.players.active = draft.players.list[nextIndex];
             }
