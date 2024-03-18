@@ -3,6 +3,6 @@ players:
   list:
     - ndelangen
     - Awpteamoose
-  active: Awpteamoose
+  active: ndelangen
 turns:
   current: 1
