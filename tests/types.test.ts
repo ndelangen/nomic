@@ -1,187 +1,191 @@
 import { assert, assertThrows } from 'https://deno.land/std@0.219.0/assert/mod.ts';
-import { z } from 'zod';
 
-import { ActionRuleFactory, CheckRuleFactory, ProgressRuleFactory, defineRule } from '../api/api.ts';
+import { RULE, RULE_ACTION, RULE_CHECK, RULE_PROGRESS } from '../api/api.ts';
 
-Deno.test('ActionRuleFactory', async (t) => {
+Deno.test('validates a check rule', () => {
+  const dummyRule = RULE.parse({
+    check: async () => {},
+  });
+  assert(dummyRule);
+});
+
+Deno.test('validates a progress rule', () => {
+  const dummyRule = RULE.parse({
+    progress: async () => {},
+  });
+  assert(dummyRule);
+});
+
+Deno.test('validates an action rule', () => {
+  const dummyRule = RULE.parse({
+    action: async () => {},
+  });
+  assert(dummyRule);
+});
+
+Deno.test('validates a combined rule', async (t) => {
+  await t.step('A & B', () => {
+    const dummyRule = RULE.parse({
+      action: async () => {},
+      check: async () => {},
+    });
+    assert(dummyRule);
+  });
+
+  await t.step('A & C', () => {
+    const dummyRule = RULE.parse({
+      action: async () => {},
+      check: async () => {},
+    });
+    assert(dummyRule);
+  });
+
+  await t.step('B & C', () => {
+    const dummyRule = RULE.parse({
+      action: async () => {},
+      check: async () => {},
+    });
+    assert(dummyRule);
+  });
+
+  await t.step('A & B & C', () => {
+    const dummyRule = RULE.parse({
+      action: async () => {},
+      check: async () => {},
+      progress: async () => {},
+    });
+    assert(dummyRule);
+  });
+});
+
+Deno.test('rejects invalid rule', () => {
+  assertThrows(() => {
+    RULE.parse({});
+  });
+});
+
+Deno.test('RULE_ACTION', async (t) => {
   await t.step('empty = invalid', () => {
     assertThrows(() => {
-      ActionRuleFactory(z.unknown()).parse({});
+      RULE_ACTION.parse({});
     });
   });
   await t.step('no action = invalid', () => {
     assertThrows(() => {
-      ActionRuleFactory(z.unknown()).parse({ id: 'test' });
-    });
-  });
-  await t.step('no id = invalid', () => {
-    assertThrows(() => {
-      ActionRuleFactory(z.unknown()).parse({ action: () => {} });
+      RULE_ACTION.parse({ id: 'test' });
     });
   });
   await t.step('valid', () => {
     assert(
-      ActionRuleFactory(z.unknown()).parse({
+      RULE_ACTION.parse({
         id: '',
         action: () => {},
       }),
     );
     assert(
-      ActionRuleFactory(z.unknown()).parse({
+      RULE_ACTION.parse({
         id: '',
         action: () => {},
-        load: () => {},
       }),
     );
     assert(
-      ActionRuleFactory(z.unknown()).parse({
+      RULE_ACTION.parse({
         id: '',
         action: () => {},
-        load: () => {},
         check: () => {},
       }),
     );
     assert(
-      ActionRuleFactory(z.unknown()).parse({
+      RULE_ACTION.parse({
         id: '',
         action: () => {},
-        load: () => {},
         check: () => {},
         progress: () => {},
       }),
-    );
-  });
-
-  await t.step('integration', () => {
-    assert(
-      ActionRuleFactory(z.unknown()).parse(
-        defineRule({
-          id: 'a',
-          action: async () => {},
-        }),
-      ),
     );
   });
 });
 
-Deno.test('CheckRuleFactory', async (t) => {
+Deno.test('RULE_CHECK', async (t) => {
   await t.step('empty = invalid', () => {
     assertThrows(() => {
-      CheckRuleFactory(z.unknown()).parse({});
+      RULE_CHECK.parse({});
     });
   });
   await t.step('no action = invalid', () => {
     assertThrows(() => {
-      CheckRuleFactory(z.unknown()).parse({ id: 'test' });
-    });
-  });
-  await t.step('no id = invalid', () => {
-    assertThrows(() => {
-      CheckRuleFactory(z.unknown()).parse({ action: () => {} });
+      RULE_CHECK.parse({ id: 'test' });
     });
   });
   await t.step('valid', () => {
     assert(
-      CheckRuleFactory(z.unknown()).parse({
+      RULE_CHECK.parse({
         id: '',
         check: () => {},
       }),
     );
     assert(
-      CheckRuleFactory(z.unknown()).parse({
+      RULE_CHECK.parse({
         id: '',
         check: () => {},
-        load: () => {},
       }),
     );
     assert(
-      CheckRuleFactory(z.unknown()).parse({
+      RULE_CHECK.parse({
         id: '',
         action: () => {},
-        load: () => {},
         check: () => {},
       }),
     );
     assert(
-      CheckRuleFactory(z.unknown()).parse({
+      RULE_CHECK.parse({
         id: '',
         action: () => {},
-        load: () => {},
         check: () => {},
         progress: () => {},
       }),
-    );
-  });
-
-  await t.step('integration', () => {
-    assert(
-      CheckRuleFactory(z.unknown()).parse(
-        defineRule({
-          id: 'a',
-          check: async () => {},
-        }),
-      ),
     );
   });
 });
 
-Deno.test('ProgressRuleFactory', async (t) => {
+Deno.test('RULE_PROGRESS', async (t) => {
   await t.step('empty = invalid', () => {
     assertThrows(() => {
-      ProgressRuleFactory(z.unknown()).parse({});
+      RULE_PROGRESS.parse({});
     });
   });
   await t.step('no action = invalid', () => {
     assertThrows(() => {
-      ProgressRuleFactory(z.unknown()).parse({ id: 'test' });
-    });
-  });
-  await t.step('no id = invalid', () => {
-    assertThrows(() => {
-      ProgressRuleFactory(z.unknown()).parse({ action: () => {} });
+      RULE_PROGRESS.parse({ id: 'test' });
     });
   });
   await t.step('valid', () => {
     assert(
-      ProgressRuleFactory(z.unknown()).parse({
+      RULE_PROGRESS.parse({
         id: '',
         progress: () => {},
       }),
     );
     assert(
-      ProgressRuleFactory(z.unknown()).parse({
+      RULE_PROGRESS.parse({
         id: '',
         progress: () => {},
-        load: () => {},
       }),
     );
     assert(
-      ProgressRuleFactory(z.unknown()).parse({
+      RULE_PROGRESS.parse({
         id: '',
         action: () => {},
-        load: () => {},
         progress: () => {},
       }),
     );
     assert(
-      ProgressRuleFactory(z.unknown()).parse({
+      RULE_PROGRESS.parse({
         id: '',
         action: () => {},
-        load: () => {},
         check: () => {},
         progress: () => {},
       }),
-    );
-  });
-
-  await t.step('integration', () => {
-    assert(
-      ProgressRuleFactory(z.unknown()).parse(
-        defineRule({
-          id: 'a',
-          progress: async () => {},
-        }),
-      ),
     );
   });
 });

@@ -1,6 +1,8 @@
-id: core
+v: 1
 players:
   list:
     - ndelangen
     - Awpteamoose
   active: ndelangen
+turns:
+  current: 1

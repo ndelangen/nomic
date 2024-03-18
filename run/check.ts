@@ -1,30 +1,23 @@
 import { z } from 'zod';
 
-import { CheckRuleFactory } from '../api/api.ts';
-import { getAllRules, runRules } from '../lib/main.ts';
+import { defineAPI } from '../api/api.ts';
+import { entries, values } from '../lib/entries.ts';
+import { runCheck } from '../lib/run.ts';
+
+const outcomes = await runCheck();
+const api = await defineAPI();
 
 const SHA = z.string();
 const TYPE = z.string();
 
-const allRules = await getAllRules();
-const outcomes = await runRules(CheckRuleFactory, async (item, state, core, api) => {
-  let out;
-
-  try {
-    await item.check({ state, core, api });
-
-    console.log(`Check ${item.id} ran successfully!`);
-  } catch (e: unknown) {
-    out = e;
-
-    throw e;
-  } finally {
+await Promise.all(
+  entries(outcomes).map(async ([id, outcome]) => {
     const sha = SHA.safeParse(Deno.env.get('SHA'));
     const type = TYPE.safeParse(Deno.env.get('TYPE'));
 
     if (api.repository && sha.success && type.success) {
-      const isError = out instanceof Error;
-      const description = out instanceof Error ? out.message.substring(0, 120) : 'Passes';
+      const isError = outcome instanceof Error;
+      const description = outcome instanceof Error ? outcome.message.substring(0, 120) : 'Passes';
 
       await api.github.rest.repos.createCommitStatus({
         owner: api.repository.owner,
@@ -32,22 +25,25 @@ const outcomes = await runRules(CheckRuleFactory, async (item, state, core, api)
         sha: sha.data,
         state: isError ? 'error' : 'success',
         description,
-        context: `${type.data}: ${item.id}`,
+        context: `${type.data}: ${id}`,
       });
-
-      console.log('done');
     }
-  }
-})(allRules);
+  }),
+);
 
-outcomes.forEach((outcome) => {
-  console.log();
-  console.error(outcome.stack || outcome.message);
+const errors = values(outcomes).filter((outcome) => outcome instanceof Error);
+
+errors.forEach((outcome) => {
+  if (outcome instanceof Error) {
+    console.log();
+    console.log(outcome.stack);
+    return;
+  }
 });
 
-if (outcomes.length > 0) {
+if (errors.length > 0) {
   console.log();
-  console.error(`${outcomes.length} rules rejected.`);
+  console.error(`${errors.length} rules rejected.`);
 
   Deno.exit(1);
 }
