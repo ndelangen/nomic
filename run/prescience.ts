@@ -1,7 +1,5 @@
-import { ACTION } from '../api/actions.ts';
-import { RULE_ACTION, RULE_CHECK, RULE_PROGRESS } from '../api/api.ts';
-import { entries, values } from '../lib/entries.ts';
-import { runAction, runCheck, runProgress } from '../lib/run.ts';
+import { values } from '../lib/entries.ts';
+import { runProgress } from '../lib/run.ts';
 
 const outcomes = await runProgress();
 

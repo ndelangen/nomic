@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { produce } from 'immer';
 
 import { JOIN_ACTION, LEAVE_ACTION } from '../api/actions.ts';
 import { RULE } from '../api/api.ts';
@@ -25,23 +26,29 @@ export const HANDLERS = {
         if (core.players.list.includes(name)) {
           throw new Error('409 - conflict: Player already exists');
         }
-        // TODO FIX MUTATION
-        core.players.list = [...core.players.list, name];
-        return { core };
+
+        return {
+          core: produce(core, (draft) => {
+            draft.players.list.push(name);
+          }),
+        };
       }
       case LEAVE_ACTION.name: {
         if (!core.players.list.includes(name)) {
           throw new Error('404 - not found: Player does not exist');
         }
-        core.players.list = core.players.list.filter((player) => player !== name);
-        if (core.players.active === name) {
-          const index = core.players.list.indexOf(name);
-          const nextIndex = (index + 1) % core.players.list.length;
 
-          // TODO FIX MUTATION
-          core.players.active = core.players.list[nextIndex];
-        }
-        return { core };
+        return {
+          core: produce(core, (draft) => {
+            draft.players.list = core.players.list.filter((player) => player !== name);
+            if (draft.players.active === name) {
+              const index = core.players.list.indexOf(name);
+              const nextIndex = (index + 1) % core.players.list.length;
+
+              draft.players.active = draft.players.list[nextIndex];
+            }
+          }),
+        };
       }
       default: {
         throw new Error('Invalid action');
@@ -59,12 +66,11 @@ export const HANDLERS = {
     const index = core.players.list.indexOf(core.players.active);
     const nextIndex = (index + 1) % core.players.list.length;
 
-    // TODO FIX MUTATION
-    core.players.active = core.players.list[nextIndex];
-    core.turns.current += 1;
-
     return {
-      core: core,
+      core: produce(core, (draft) => {
+        draft.players.active = core.players.list[nextIndex];
+        draft.turns.current += 1;
+      }),
     };
   },
 } satisfies z.infer<typeof RULE>;

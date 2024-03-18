@@ -1,9 +1,8 @@
 import { z } from 'zod';
 
-import { ACTION } from '../api/actions.ts';
-import { RULE_ACTION, RULE_CHECK, RULE_PROGRESS, defineAPI } from '../api/api.ts';
+import { defineAPI } from '../api/api.ts';
 import { entries, values } from '../lib/entries.ts';
-import { runAction, runCheck, runProgress } from '../lib/run.ts';
+import { runCheck } from '../lib/run.ts';
 
 const outcomes = await runCheck();
 const api = await defineAPI();
