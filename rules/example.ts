@@ -1,25 +1,30 @@
 import { z } from 'zod';
 
-import { defineRule } from '../api/api.ts';
+import { JOIN_ACTION, LEAVE_ACTION } from '../api/actions.ts';
+import { RULE } from '../api/api.ts';
 
-const STATE = z.object({
-  foo: z.number(),
-});
+export const META = {
+  id: 'example' as const,
+  validator: z.object({
+    v: z.number().int().positive(),
+  }),
+};
 
-export default defineRule({
-  id: 'example',
-  load: () => STATE.parse({ foo: 4 }),
-  check: ({ api }) => {
-    console.log('🍐');
-
-    if (api.pr) {
-      const isGrateful = api.pr.body?.match(/I am grateful for.+\./);
-
-      if (isGrateful) {
-        console.log('🎉');
-      } else {
-        throw new Error('PR body does not contain a gratitude message');
+export const HANDLERS = {
+  action: ({ action }) => {
+    const name = action.payload.name;
+    switch (action?.type) {
+      case JOIN_ACTION.name: {
+        console.log('welcome, ' + name);
+        return;
+      }
+      case LEAVE_ACTION.name: {
+        console.log('bye');
+        return;
+      }
+      default: {
+        throw new Error('Invalid action');
       }
     }
   },
-});
+} satisfies z.infer<typeof RULE>;

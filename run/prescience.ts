@@ -1,17 +1,23 @@
-import { ProgressRuleFactory } from '../api/api.ts';
-import { getAllRules, runRules } from '../lib/main.ts';
+import { ACTION } from '../api/actions.ts';
+import { RULE_ACTION, RULE_CHECK, RULE_PROGRESS } from '../api/api.ts';
+import { entries, values } from '../lib/entries.ts';
+import { runAction, runCheck, runProgress } from '../lib/run.ts';
 
-const allRules = await getAllRules();
+const outcomes = await runProgress();
 
-const progressOutcomes = await runRules(ProgressRuleFactory, async (item, state, core, api) => {
-  await item.progress({ state, core, api });
-})(allRules);
+const errors = values(outcomes).filter((outcome) => outcome instanceof Error);
 
-if (progressOutcomes.length > 0) {
+errors.forEach((outcome) => {
+  if (outcome instanceof Error) {
+    console.log();
+    console.error(outcome.stack || outcome.message);
+    return;
+  }
+});
+
+if (errors.length > 0) {
   console.log();
-  console.error(`${progressOutcomes.length} rules rejected.`);
-}
+  console.error(`${errors.length} rules rejected.`);
 
-if (progressOutcomes.length > 0) {
   Deno.exit(1);
 }

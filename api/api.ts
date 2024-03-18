@@ -1,7 +1,6 @@
 import { ACTION } from './actions.ts';
-import { STATE as CORE_STATE } from '../core/rule.state.ts';
+import { STATES } from './states.ts';
 
-// import { Octokit } from 'octokit';
 import { z } from 'zod';
 import { Octokit } from '@octokit/rest';
 import { type OctokitOptions } from '@octokit/core';
@@ -66,65 +65,33 @@ export const defineAPI = async ({ disableThrottle = false } = {}) => {
   return { pr, github: octokit, repository };
 };
 
-const ID = z.string().describe('The unique identifier for the module.');
-
 export const API = z.object({
   pr: z.any(),
   github: z.any(),
   repository: Repository.optional(),
 }) as z.ZodType<Awaited<ReturnType<typeof defineAPI>>>;
 
-function createBase<T>(schema: z.ZodType<T>) {
-  return z.object({
-    id: ID,
-    load: z.function().returns(z.promise(schema).or(schema)).optional(),
-    save: z.function().args(schema).returns(z.promise(z.void()).or(z.void())).optional(),
-  });
-}
+const HANDLER_ARG_BASE = z.object({
+  states: STATES,
+  api: API,
+});
+const HANDLER_ARG_EVENT = z.object({ action: ACTION }).extend(HANDLER_ARG_BASE.shape);
+const HANDLER_RETURN = z
+  .union([STATES.partial(), z.void()])
+  .or(z.promise(z.union([STATES.partial(), z.void()])));
 
-export function ProgressRuleFactory<T>(schema: z.ZodType<T>) {
-  const aa = z.object({
-    progress: z
-      .function()
-      .args(z.object({ state: schema, core: CORE_STATE, api: API }))
-      .returns(z.promise(z.void()).or(z.void())),
-  });
-  return createBase<T>(schema).extend(aa.shape);
-}
+export const RULE_CHECK = z.object({
+  check: z.function().args(HANDLER_ARG_BASE).returns(z.promise(z.void()).or(z.void())),
+});
+export const RULE_PROGRESS = z.object({
+  progress: z.function().args(HANDLER_ARG_BASE).returns(HANDLER_RETURN),
+});
+export const RULE_ACTION = z.object({
+  action: z.function().args(HANDLER_ARG_EVENT).returns(HANDLER_RETURN),
+});
 
-export function CheckRuleFactory<T>(schema: z.ZodType<T>) {
-  const aa = z.object({
-    check: z
-      .function()
-      .args(z.object({ state: schema, core: CORE_STATE, api: API }))
-      .returns(z.promise(z.void()).or(z.void())),
-  });
-  return createBase<T>(schema).extend(aa.shape);
-}
-export function ActionRuleFactory<T>(schema: z.ZodType<T>) {
-  const aa = z.object({
-    action: z
-      .function()
-      .args(z.object({ state: schema, core: CORE_STATE, api: API, action: ACTION }))
-      .returns(z.promise(z.void()).or(z.void())),
-  });
-  return createBase<T>(schema).extend(aa.shape);
-}
-
-function RuleFactory<T>(schema: z.ZodType<T>) {
-  const aa = CheckRuleFactory<T>(schema);
-  const bb = ProgressRuleFactory<T>(schema);
-  const cc = ActionRuleFactory<T>(schema);
-
-  const m1 = aa.extend(bb.partial().shape).extend(cc.partial().shape);
-  const m2 = bb.extend(aa.partial().shape).extend(cc.partial().shape);
-  const m3 = cc.extend(aa.partial().shape).extend(bb.partial().shape);
-
-  return m1.or(m2).or(m3);
-}
-
-type RULE<T> = z.infer<ReturnType<typeof RuleFactory<T>>>;
-
-export function defineRule<T>(module: RULE<T>) {
-  return RuleFactory(z.unknown()).parse(module) as RULE<T>;
-}
+export const RULE = z
+  .never() // purely for formatting
+  .or(RULE_CHECK.merge(RULE_PROGRESS.partial()).merge(RULE_ACTION.partial()))
+  .or(RULE_PROGRESS.merge(RULE_CHECK.partial()).merge(RULE_ACTION.partial()))
+  .or(RULE_ACTION.merge(RULE_CHECK.partial()).merge(RULE_PROGRESS.partial()));

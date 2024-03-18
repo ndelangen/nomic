@@ -1,27 +1,23 @@
 import { ACTION } from '../api/actions.ts';
-import { ActionRuleFactory } from '../api/api.ts';
-import { getAllRules, runRules } from '../lib/main.ts';
+import { RULE_ACTION, RULE_CHECK, RULE_PROGRESS } from '../api/api.ts';
+import { entries, values } from '../lib/entries.ts';
+import { runAction, runCheck, runProgress } from '../lib/run.ts';
 
-const allRules = await getAllRules();
-const outcomes = await runRules(ActionRuleFactory, async (item, state, core, api) => {
-  const type = Deno.env.get('ACTION_NAME');
-  const payload = JSON.parse(Deno.env.get('ACTION_PAYLOAD') || '');
+const outcomes = await runAction();
 
-  const action = ACTION.parse({ type, payload });
+const errors = values(outcomes).filter((outcome) => outcome instanceof Error);
 
-  await item.action({ state, core, action, api });
-
-  console.log(`Action ${action.type} ran on ${item.id} ran successfully!`);
-})(allRules);
-
-outcomes.forEach((outcome) => {
-  console.log();
-  console.error(outcome.stack || outcome.message);
+errors.forEach((outcome) => {
+  if (outcome instanceof Error) {
+    console.log();
+    console.error(outcome.stack || outcome.message);
+    return;
+  }
 });
 
-if (outcomes.length > 0) {
+if (errors.length > 0) {
   console.log();
-  console.error(`${outcomes.length} rules rejected.`);
+  console.error(`${errors.length} rules rejected.`);
 
   Deno.exit(1);
 }

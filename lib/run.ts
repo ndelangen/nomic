@@ -1,0 +1,105 @@
+import { join } from 'node:path';
+import YAML from 'yaml';
+import { z } from 'zod';
+
+import { ACTION } from '../api/actions.ts';
+import { RULE_ACTION, RULE_CHECK, RULE_PROGRESS, defineAPI } from '../api/api.ts';
+import { RESULTS, STATES_RAW as STATES, STATE_LOCATION, readStates, RULES as rules } from '../api/states.ts';
+import { entries } from './entries.ts';
+
+export async function runProgress() {
+  const results: z.infer<typeof RESULTS> = {};
+  const [api, states] = await Promise.all([defineAPI(), readStates()]);
+
+  for (const [id, r] of entries(rules)) {
+    const rule = RULE_PROGRESS.safeParse(r);
+
+    if (rule.success) {
+      try {
+        const out = await rule.data.progress({ states, api });
+        if (out) {
+          entries(out).forEach(([id, data]) => {
+            // @ts-expect-error (un-discriminated union of state objects)
+            states[id] = STATES[id].parse(data);
+          });
+        }
+        results[id] = states[id];
+      } catch (e) {
+        results[id] = e;
+      }
+    }
+  }
+
+  const success = Object.values(results).filter((item) => item instanceof Error).length == 0;
+
+  if (success) {
+    await Promise.all(
+      entries(states).map(async ([id, data]) => {
+        await Deno.writeTextFile(join(STATE_LOCATION, `${id}.yml`), YAML.stringify(data));
+      }),
+    );
+  }
+
+  return results;
+}
+
+export async function runCheck() {
+  const results: z.infer<typeof RESULTS> = {};
+  const [api, states] = await Promise.all([defineAPI(), readStates()]);
+
+  for (const [id, v] of entries(rules)) {
+    try {
+      const rule = RULE_CHECK.safeParse(v);
+
+      if (rule.success) {
+        await rule.data.check({ states, api });
+      }
+      results[id] = states[id];
+    } catch (e) {
+      results[id] = e;
+    }
+  }
+
+  return results;
+}
+
+export async function runAction() {
+  const results: z.infer<typeof RESULTS> = {};
+
+  const type = Deno.env.get('ACTION_NAME');
+  const payload = JSON.parse(Deno.env.get('ACTION_PAYLOAD') || '');
+  const action = ACTION.parse({ type, payload });
+
+  const [api, states] = await Promise.all([defineAPI(), readStates()]);
+
+  for (const [id, r] of entries(rules)) {
+    try {
+      const rule = RULE_ACTION.safeParse(r);
+
+      if (rule.success) {
+        const out = await rule.data.action({ states, api, action });
+        if (out) {
+          entries(out).forEach(([id, data]) => {
+            // @ts-expect-error (un-discriminated union of state objects)
+            states[id] = STATES[id].parse(data);
+          });
+        }
+      }
+      results[id] = states[id];
+    } catch (e) {
+      results[id] = e;
+    }
+  }
+
+  const success = Object.values(results).filter((item) => item instanceof Error).length == 0;
+
+  if (success) {
+    await Promise.all(
+      entries(states).map(async ([id, data]) => {
+        await Deno.writeTextFile(join(STATE_LOCATION, `${id}.yml`), YAML.stringify(data));
+      }),
+    );
+  }
+
+  return results;
+}

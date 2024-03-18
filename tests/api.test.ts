@@ -1,69 +1,31 @@
-// deno-lint-ignore-file no-explicit-any
 import { assert, assertThrows } from 'https://deno.land/std@0.219.0/assert/mod.ts';
 
-import { defineRule } from '../api/api.ts';
+import { RULE } from '../api/api.ts';
 
-Deno.test('validates a check rule', async (t) => {
-  await t.step('no load function', () => {
-    const dummyRule = defineRule({
-      id: 'a',
-      check: async () => {},
-    });
-    assert(dummyRule);
+Deno.test('validates a check rule', () => {
+  const dummyRule = RULE.parse({
+    check: async () => {},
   });
-
-  await t.step('with load function', () => {
-    const dummyRule = defineRule({
-      id: 'a',
-      load: async () => {},
-      check: async () => {},
-    });
-    assert(dummyRule);
-  });
+  assert(dummyRule);
 });
 
-Deno.test('validates a progress rule', async (t) => {
-  await t.step('no load function', () => {
-    const dummyRule = defineRule({
-      id: 'a',
-      progress: async () => {},
-    });
-    assert(dummyRule);
+Deno.test('validates a progress rule', () => {
+  const dummyRule = RULE.parse({
+    progress: async () => {},
   });
-
-  await t.step('with load function', () => {
-    const dummyRule = defineRule({
-      id: 'a',
-      load: async () => {},
-      progress: async () => {},
-    });
-    assert(dummyRule);
-  });
+  assert(dummyRule);
 });
 
-Deno.test('validates an action rule', async (t) => {
-  await t.step('no load function', () => {
-    const dummyRule = defineRule({
-      id: 'a',
-      action: async () => {},
-    });
-    assert(dummyRule);
+Deno.test('validates an action rule', () => {
+  const dummyRule = RULE.parse({
+    action: async () => {},
   });
-
-  await t.step('with load function', () => {
-    const dummyRule = defineRule({
-      id: 'a',
-      load: async () => {},
-      action: async () => {},
-    });
-    assert(dummyRule);
-  });
+  assert(dummyRule);
 });
 
 Deno.test('validates a combined rule', async (t) => {
   await t.step('A & B', () => {
-    const dummyRule = defineRule({
-      id: 'a',
+    const dummyRule = RULE.parse({
       action: async () => {},
       check: async () => {},
     });
@@ -71,8 +33,7 @@ Deno.test('validates a combined rule', async (t) => {
   });
 
   await t.step('A & C', () => {
-    const dummyRule = defineRule({
-      id: 'a',
+    const dummyRule = RULE.parse({
       action: async () => {},
       check: async () => {},
     });
@@ -80,8 +41,7 @@ Deno.test('validates a combined rule', async (t) => {
   });
 
   await t.step('B & C', () => {
-    const dummyRule = defineRule({
-      id: 'a',
+    const dummyRule = RULE.parse({
       action: async () => {},
       check: async () => {},
     });
@@ -89,9 +49,7 @@ Deno.test('validates a combined rule', async (t) => {
   });
 
   await t.step('A & B & C', () => {
-    const dummyRule = defineRule({
-      id: 'a',
-      load: async () => {},
+    const dummyRule = RULE.parse({
       action: async () => {},
       check: async () => {},
       progress: async () => {},
@@ -102,8 +60,6 @@ Deno.test('validates a combined rule', async (t) => {
 
 Deno.test('rejects invalid rule', () => {
   assertThrows(() => {
-    defineRule({
-      id: 'a',
-    } as any);
+    RULE.parse({});
   });
 });
