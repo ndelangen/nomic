@@ -11,6 +11,9 @@ export const META = {
       list: z.array(z.string()),
       active: z.string(),
     }),
+    turns: z.object({
+      current: z.number().int().positive(),
+    }),
   }),
 };
 
@@ -58,6 +61,7 @@ export const HANDLERS = {
 
     // TODO FIX MUTATION
     core.players.active = core.players.list[nextIndex];
+    core.turns.current += 1;
 
     return {
       core: core,
