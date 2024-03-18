@@ -27,11 +27,6 @@ await Promise.all(
         description,
         context: `${type.data}: ${id}`,
       });
-
-      if (outcome instanceof Error) {
-        console.log();
-        console.error(outcome.stack || outcome.message);
-      }
     }
   }),
 );
@@ -41,7 +36,7 @@ const errors = values(outcomes).filter((outcome) => outcome instanceof Error);
 errors.forEach((outcome) => {
   if (outcome instanceof Error) {
     console.log();
-    console.error(outcome.stack || outcome.message);
+    console.log(outcome.stack);
     return;
   }
 });

@@ -6,23 +6,32 @@ import { RULE_ACTION, RULE_PROGRESS, defineAPI } from '../api/api.ts';
 import { STATES } from '../api/states.ts';
 import * as core from '../rules/core.ts';
 
-Deno.test('actions -join', async () => {
-  const api = await defineAPI();
-  const startState: z.infer<typeof STATES> = {
+const createStates = () => {
+  return {
     core: {
-      id: 'core',
+      v: 1,
       players: {
         active: 'test-user-a',
         list: ['test-user-a', 'test-user-b'],
       },
+      turns: {
+        current: 1,
+      },
     },
-    example: {},
-  };
+    example: {
+      v: 1,
+    },
+  } satisfies z.infer<typeof STATES>;
+};
+
+Deno.test('actions -join', async () => {
+  const api = await defineAPI();
+  const states = createStates();
 
   const module = RULE_ACTION.parse(core.HANDLERS);
 
   const out = await module.action({
-    states: startState,
+    states,
     api,
     action: { type: 'join', payload: { name: 'test-user-c' } },
   });
@@ -33,21 +42,12 @@ Deno.test('actions -join', async () => {
 
 Deno.test('actions -leave', async () => {
   const api = await defineAPI();
-  const startState: z.infer<typeof STATES> = {
-    core: {
-      id: 'core',
-      players: {
-        active: 'test-user-a',
-        list: ['test-user-a', 'test-user-b'],
-      },
-    },
-    example: {},
-  };
+  const states = createStates();
 
   const module = RULE_ACTION.parse(core.HANDLERS);
 
   const out = await module.action({
-    states: startState,
+    states,
     api,
     action: { type: 'leave', payload: { name: 'test-user-b' } },
   });
@@ -58,21 +58,12 @@ Deno.test('actions -leave', async () => {
 
 Deno.test('actions -leave -active player', async () => {
   const api = await defineAPI();
-  const startState: z.infer<typeof STATES> = {
-    core: {
-      id: 'core',
-      players: {
-        active: 'test-user-a',
-        list: ['test-user-a', 'test-user-b'],
-      },
-    },
-    example: {},
-  };
+  const states = createStates();
 
   const module = RULE_ACTION.parse(core.HANDLERS);
 
   const out = await module.action({
-    states: startState,
+    states,
     api,
     action: { type: 'leave', payload: { name: 'test-user-a' } },
   });
@@ -83,21 +74,12 @@ Deno.test('actions -leave -active player', async () => {
 
 Deno.test('progress', async () => {
   const api = await defineAPI();
-  const startState: z.infer<typeof STATES> = {
-    core: {
-      id: 'core',
-      players: {
-        active: 'test-user-a',
-        list: ['test-user-a', 'test-user-b'],
-      },
-    },
-    example: {},
-  };
+  const states = createStates();
 
   const module = RULE_PROGRESS.parse(core.HANDLERS);
 
   const out = await module.progress({
-    states: startState,
+    states,
     api,
   });
 

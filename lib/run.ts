@@ -52,6 +52,7 @@ export async function runCheck() {
       const rule = RULE_CHECK.safeParse(v);
 
       if (rule.success) {
+        console.log(`running check on: ${id}`);
         await rule.data.check({ states, api });
       }
       results[id] = states[id];
@@ -77,6 +78,7 @@ export async function runAction() {
       const rule = RULE_ACTION.safeParse(r);
 
       if (rule.success) {
+        console.log(`running action: ${type} on: ${id}`);
         const out = await rule.data.action({ states, api, action });
         if (out) {
           entries(out).forEach(([id, data]) => {
