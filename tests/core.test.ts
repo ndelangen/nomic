@@ -1,8 +1,7 @@
-import { assertFalse } from 'https://deno.land/std@0.219.0/assert/assert_false.ts';
-import { assert } from 'https://deno.land/std@0.219.0/assert/mod.ts';
+import { assert, assertRejects, assertFalse } from 'https://deno.land/std@0.219.0/assert/mod.ts';
 import { z } from 'zod';
 
-import { RULE_ACTION, RULE_PROGRESS, defineAPI } from '../api/api.ts';
+import { RULE_ACTION, RULE_PROGRESS, RULE_CHECK, defineAPI } from '../api/api.ts';
 import { STATES } from '../api/states.ts';
 import * as core from '../rules/core.ts';
 
@@ -84,4 +83,34 @@ Deno.test('progress', async () => {
   });
 
   assertFalse(out?.core?.players.active === 'test-user-a');
+});
+
+Deno.test('check', async () => {
+  const states = createStates();
+
+  const module = RULE_CHECK.parse(core.HANDLERS);
+
+  await assertRejects(async () => {
+    const api = await defineAPI();
+    api.pr = {
+      user: {
+        login: 'test-user-b',
+      },
+    } as any;
+    await module.check({
+      states,
+      api,
+    });
+  });
+
+  const api = await defineAPI();
+  api.pr = {
+    user: {
+      login: 'test-user-a',
+    },
+  } as any;
+  await module.check({
+    states,
+    api,
+  });
 });
