@@ -1,8 +1,70 @@
 import { assert, assertThrows } from 'https://deno.land/std@0.219.0/assert/mod.ts';
 
-import { RULE_ACTION, RULE_CHECK, RULE_PROGRESS } from '../api/api.ts';
+import { RULE, RULE_ACTION, RULE_CHECK, RULE_PROGRESS } from '../api/api.ts';
 
-Deno.test('ActionRuleFactory', async (t) => {
+Deno.test('validates a check rule', () => {
+  const dummyRule = RULE.parse({
+    check: async () => {},
+  });
+  assert(dummyRule);
+});
+
+Deno.test('validates a progress rule', () => {
+  const dummyRule = RULE.parse({
+    progress: async () => {},
+  });
+  assert(dummyRule);
+});
+
+Deno.test('validates an action rule', () => {
+  const dummyRule = RULE.parse({
+    action: async () => {},
+  });
+  assert(dummyRule);
+});
+
+Deno.test('validates a combined rule', async (t) => {
+  await t.step('A & B', () => {
+    const dummyRule = RULE.parse({
+      action: async () => {},
+      check: async () => {},
+    });
+    assert(dummyRule);
+  });
+
+  await t.step('A & C', () => {
+    const dummyRule = RULE.parse({
+      action: async () => {},
+      check: async () => {},
+    });
+    assert(dummyRule);
+  });
+
+  await t.step('B & C', () => {
+    const dummyRule = RULE.parse({
+      action: async () => {},
+      check: async () => {},
+    });
+    assert(dummyRule);
+  });
+
+  await t.step('A & B & C', () => {
+    const dummyRule = RULE.parse({
+      action: async () => {},
+      check: async () => {},
+      progress: async () => {},
+    });
+    assert(dummyRule);
+  });
+});
+
+Deno.test('rejects invalid rule', () => {
+  assertThrows(() => {
+    RULE.parse({});
+  });
+});
+
+Deno.test('RULE_ACTION', async (t) => {
   await t.step('empty = invalid', () => {
     assertThrows(() => {
       RULE_ACTION.parse({});
@@ -44,7 +106,7 @@ Deno.test('ActionRuleFactory', async (t) => {
   });
 });
 
-Deno.test('CheckRuleFactory', async (t) => {
+Deno.test('RULE_CHECK', async (t) => {
   await t.step('empty = invalid', () => {
     assertThrows(() => {
       RULE_CHECK.parse({});
@@ -86,7 +148,7 @@ Deno.test('CheckRuleFactory', async (t) => {
   });
 });
 
-Deno.test('ProgressRuleFactory', async (t) => {
+Deno.test('RULE_PROGRESS', async (t) => {
   await t.step('empty = invalid', () => {
     assertThrows(() => {
       RULE_PROGRESS.parse({});
