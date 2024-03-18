@@ -2,6 +2,8 @@
 
 Welcome! This is Nomic for Coders, by ndelangen.
 
+- [Read about the soft rules](./docs/SOFT_RULES.md)
+
 ---
 
 This is in very early stages of development.
