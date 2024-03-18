@@ -14,7 +14,7 @@ export const STATES_RAW = {
   [core.META.id]: core.META.validator.strict(),
   [example.META.id]: example.META.validator.strict(),
 };
-export const RESULTS_RAW = {
+const RESULTS_RAW = {
   [core.META.id]: STATES_RAW[core.META.id].partial().or(z.instanceof(Error)),
   [example.META.id]: STATES_RAW[example.META.id].partial().or(z.instanceof(Error)),
 };

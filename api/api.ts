@@ -65,7 +65,7 @@ export const defineAPI = async ({ disableThrottle = false } = {}) => {
   return { pr, github: octokit, repository };
 };
 
-export const API = z.object({
+const API = z.object({
   pr: z.any(),
   github: z.any(),
   repository: Repository.optional(),
