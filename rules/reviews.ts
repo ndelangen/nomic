@@ -2,6 +2,12 @@ import { z } from 'zod';
 
 import { RULE } from '../api/api.ts';
 
+/**
+ * This rule checks if all players have approved the PR.
+ *
+ * - It checks if the PR is approved by all players.
+ */
+
 export const META = {
   id: 'reviews' as const,
   validator: z.object({
@@ -12,7 +18,7 @@ export const META = {
 export const HANDLERS = {
   check: ({ api, states: { core } }) => {
     if (api.pr) {
-      const list = core.players.list;
+      const list = core.players.list.filter((p) => p !== core.players.active);
       const reviews = api.pr.reviews;
       const approved = list.every((player) =>
         reviews.find((review) => review.state === 'APPROVED' && review.user?.login === player),

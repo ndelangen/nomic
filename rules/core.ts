@@ -4,6 +4,14 @@ import { produce } from 'immer';
 import { JOIN_ACTION, LEAVE_ACTION } from '../api/actions.ts';
 import { RULE } from '../api/api.ts';
 
+/**
+ * This rule governs the core game state The list of players, the active player, and the current turn.
+ *
+ * - It handles the join and leave actions, adding/removing players to the list.
+ * - It checks that the PR user is
+ * - The active player. It progresses the game to the next turn.
+ */
+
 export const META = {
   id: 'core' as const,
   validator: z.object({

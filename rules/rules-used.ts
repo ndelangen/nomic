@@ -5,6 +5,14 @@ import { Project, ts } from 'ts-morph';
 
 import { RULE } from '../api/api.ts';
 
+/**
+ * This rule ensure that all rules defined in the rules directory are used correctly.
+ *
+ * - It checks if all rules are used correctly in `states.ts`.
+ * - It checks if all rules have a `HANDLERS` export.
+ * - It demonstrates how to use the `ts-morph` library to parse TypeScript files.
+ */
+
 export const META = {
   id: 'rules-used' as const,
 };
