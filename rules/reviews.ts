@@ -18,7 +18,7 @@ export const META = {
 export const HANDLERS = {
   check: ({ api, states: { core } }) => {
     if (api.pr) {
-      const list = core.players.list;
+      const list = core.players.list.filter((p) => p !== core.players.active);
       const reviews = api.pr.reviews;
       const approved = list.every((player) =>
         reviews.find((review) => review.state === 'APPROVED' && review.user?.login === player),
