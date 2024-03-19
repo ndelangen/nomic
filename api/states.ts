@@ -4,8 +4,9 @@ import { z } from 'zod';
 
 import * as core from '../rules/core.ts';
 import * as example from '../rules/example.ts';
+import * as gratitude from '../rules/gratitude.ts';
 import * as reviews from '../rules/reviews.ts';
-import * as stateless from '../rules/rules-used.ts';
+import * as rulesUsed from '../rules/rules-used.ts';
 
 export const STATE_LOCATION = join(dirname(fileURLToPath(import.meta.url)), '..', `state`);
 
@@ -25,6 +26,7 @@ export const RESULTS = z.object(RESULTS_RAW).partial();
 export const RULES = {
   [core.META.id]: core.HANDLERS,
   [example.META.id]: example.HANDLERS,
-  [stateless.META.id]: stateless.HANDLERS,
+  [rulesUsed.META.id]: rulesUsed.HANDLERS,
   [reviews.META.id]: reviews.HANDLERS,
+  [gratitude.META.id]: gratitude.HANDLERS,
 };

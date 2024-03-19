@@ -10,9 +10,6 @@ import { RULE } from '../api/api.ts';
 
 export const META = {
   id: 'reviews' as const,
-  validator: z.object({
-    v: z.number().int().positive(),
-  }),
 };
 
 export const HANDLERS = {
