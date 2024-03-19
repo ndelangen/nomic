@@ -12,7 +12,7 @@
     "lint": "deno lint",
     "prescience": "bun run run-deno ./run/prescience.ts",
     "progress": "bun run run-deno ./run/progress.ts",
-    "run-deno": "deno run --allow-read --allow-env --allow-net=$(paste -d, -s ./allowed_domains)  --allow-write=$(paste -d, -s ./allowed_paths)",
+    "run-deno": "deno run --allow-read --allow-env --allow-net=$(paste -d, -s ./allowed_domains) --allow-write=$(paste -d, -s ./allowed_paths) --allow-sys=cpus",
     "test": "deno test -A",
     "verify": "deno check **/*.ts"
   },
@@ -20,6 +20,7 @@
     "@octokit/core": "^6.0.1",
     "@octokit/rest": "^20.0.2",
     "immer": "^10.0.4",
+    "ts-morph": "^22.0.0",
     "yaml": "^2.4.0",
     "zod": "^3.22.4"
   },

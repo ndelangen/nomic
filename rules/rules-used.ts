@@ -1,0 +1,48 @@
+import { dirname, join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { z } from 'zod';
+import { Project, ts } from 'ts-morph';
+
+import { RULE } from '../api/api.ts';
+
+export const META = {
+  id: 'rules-used' as const,
+};
+
+const TSCONFIG_LOCATION = join(dirname(fileURLToPath(import.meta.url)), '..');
+
+export const HANDLERS = {
+  check: () => {
+    const tsConfigFilePath = join(TSCONFIG_LOCATION, 'tsconfig.json');
+    const project = new Project({ tsConfigFilePath });
+
+    const files = project
+      .getSourceFiles()
+      .filter((file) => relative(Deno.cwd(), file.getDirectoryPath()) === 'rules');
+
+    files.forEach((file) => {
+      const variable = file.getVariableDeclaration('HANDLERS');
+
+      if (!variable) {
+        throw new Error(`rule ${file.getBaseName()} has no HANDLERS export`);
+      }
+
+      const references = variable
+        .findReferences()
+        .flatMap((r) => r.getReferences())
+        .filter((r) => r.getSourceFile().getBaseName() === 'states.ts');
+
+      const outcome = references.some((r) => {
+        const v = r.getNode().getFirstAncestorByKind(ts.SyntaxKind.VariableDeclaration);
+
+        return v?.isExported() && v?.getName() === 'RULES';
+      });
+
+      if (!outcome) {
+        throw new Error(`rule ${file.getBaseName()} HANDLERS export, is not used correctly in states.ts`);
+      }
+    });
+
+    return;
+  },
+} satisfies z.infer<typeof RULE>;

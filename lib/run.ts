@@ -4,8 +4,9 @@ import { z } from 'zod';
 
 import { ACTION } from '../api/actions.ts';
 import { RULE_ACTION, RULE_CHECK, RULE_PROGRESS, defineAPI } from '../api/api.ts';
-import { RESULTS, STATES_RAW as STATES, STATE_LOCATION, readStates, RULES as rules } from '../api/states.ts';
+import { RESULTS, STATES_RAW as STATES, STATE_LOCATION, RULES as rules } from '../api/states.ts';
 import { entries } from './entries.ts';
+import { readStates } from './read-states.ts';
 
 export async function runProgress() {
   const results: z.infer<typeof RESULTS> = {};
@@ -23,8 +24,10 @@ export async function runProgress() {
             states[id] = STATES[id].parse(data);
           });
         }
+        // @ts-expect-error (un-discriminated union of state objects)
         results[id] = states[id];
       } catch (e) {
+        // @ts-expect-error (un-discriminated union of state objects)
         results[id] = e;
       }
     }
@@ -55,8 +58,10 @@ export async function runCheck() {
         console.log(`running check on: ${id}`);
         await rule.data.check({ states, api });
       }
+      // @ts-expect-error (un-discriminated union of state objects)
       results[id] = states[id];
     } catch (e) {
+      // @ts-expect-error (un-discriminated union of state objects)
       results[id] = e;
     }
   }
@@ -87,8 +92,10 @@ export async function runAction() {
           });
         }
       }
+      // @ts-expect-error (un-discriminated union of state objects)
       results[id] = states[id];
     } catch (e) {
+      // @ts-expect-error (un-discriminated union of state objects)
       results[id] = e;
     }
   }
