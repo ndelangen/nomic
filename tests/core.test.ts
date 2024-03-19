@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { assert, assertRejects, assertFalse } from 'https://deno.land/std@0.219.0/assert/mod.ts';
 import { z } from 'zod';
 
