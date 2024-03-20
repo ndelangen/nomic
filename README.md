@@ -30,7 +30,7 @@ There are technical limitations to what can be done with GitHub pull requests.
 
 For example, it is not possible to review one own's PR.
 
-There are also [soft rules](./docs/SOFT_RULES.md), that are not enforceable by code. These can also be edited via pull requests.
+There are [soft rules](./docs/SOFT_RULES.md), that are not enforceable by code. These can also be edited via pull requests.
 
 ## What can you expect?
 
