@@ -15,7 +15,7 @@ jobs:
       - name: Check for merge commit
         id: check_merge
         run: |
-          last_merge_sha = git log --pretty=format:"%H" --merges -n 1
+          last_merge_sha=$(git log --pretty=format:"%H" --merges -n 1)
 
           echo $last_merge_sha
           echo ${{ github.sha }}
