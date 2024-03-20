@@ -12,15 +12,14 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Get last merge commit SHA
-        id: last_merge_commit
-        run: |
-          git log --pretty=format:"%H" --merges -n 1
-
       - name: Check for merge commit
         id: check_merge
         run: |
-          last_merge_sha=${{ steps.last_merge_commit.outputs }}
+          last_merge_sha = git log --pretty=format:"%H" --merges -n 1
+
+          echo $last_merge_sha
+          echo ${{ github.sha }}
+
           if [[ -z "$last_merge_sha" ]]; then
             echo "skip=true" >> $GITHUB_OUTPUT
           elif [[ "$last_merge_sha" == ${{ github.sha }} ]]; then
