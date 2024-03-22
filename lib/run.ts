@@ -8,6 +8,8 @@ import { RESULTS, STATES_RAW as STATES, STATE_LOCATION, RULES as rules } from '.
 import { entries } from './entries.ts';
 import { readStates } from './read-states.ts';
 
+console.log('bookzie');
+
 export async function runProgress() {
   const results: z.infer<typeof RESULTS> = {};
   const [api, states] = await Promise.all([defineAPI(), readStates()]);
