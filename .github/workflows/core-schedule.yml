@@ -12,11 +12,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 20
       - name: Check for inactivity
         id: check_inactivity
         run: |
           now=$(date +%s)
-          last_commit_timestamp=$(git log --since=HEAD@{28.hours} --pretty="%ct %B" | grep -E "new active player = " -m 1 | cut -d ' ' -f1)
+          last_commit_timestamp=$(git log --pretty="%ct" --merges -n 1)
           difference=$((now - last_commit_timestamp))
           desired_inactivity_seconds=$(( $DESIRED_INACTIVITY_SECONDS + $DESIRED_INACTIVITY_MINUTES * 60 + $DESIRED_INACTIVITY_HOURS * 60 * 60 + $DESIRED_INACTIVITY_DAYS * 24 * 60 * 60 ))
 
@@ -60,22 +61,21 @@ jobs:
         run: bun run progress
       - name: Run core-yaml
         id: yaml-data
-        uses: jbutcher5/read-yaml@main
+        uses: pietrobolcato/action-read-yaml@1.0.0
         with:
-          file: './state/core.yml'
-          key-path: '["players", "active"]'
+          config: './state/core.yml'
       - name: Get user email
         id: email-data
         uses: ndelangen/email-by-username-action@main
         continue-on-error: true
         with:
-          github-username: ${{ steps.yaml-data.outputs.data }}
+          github-username: ${{ steps.yaml-data.outputs['players.active'] }}
           token: ${{ steps.generate-token.outputs.token }}
       - name: Commit changes
         run: |
-          git config --local user.name ${{ steps.yaml-data.outputs.data }}
+          git config --local user.name ${{ steps.yaml-data.outputs['players.active'] }}
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git commit -a --allow-empty -m "new active player = ${{ steps.yaml-data.outputs.data }} [schedule] by ${{ github.actor }} [skip ci]"
+          git commit -a --allow-empty -m "new active player = ${{ steps.yaml-data.outputs['players.active'] }} [schedule] by ${{ github.actor }} [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
