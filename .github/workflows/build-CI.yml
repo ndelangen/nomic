@@ -2,6 +2,7 @@ name: Build - CI
 on:
   pull_request:
     types:
+      - opened
       - edited
       - synchronize
   push:
