@@ -53,25 +53,24 @@ jobs:
         run: bun run progress
       - name: Run core-yaml
         id: yaml-data
-        uses: jbutcher5/read-yaml@main
+        uses: pietrobolcato/action-read-yaml@1.0.0
         with:
-          file: './state/core.yml'
-          key-path: '["players", "active"]'
+          config: './state/core.yml'
       - name: Get user email
         id: email-data
         uses: ndelangen/email-by-username-action@main
         continue-on-error: true
         with:
-          github-username: ${{ steps.yaml-data.outputs.data }}
+          github-username: ${{ steps.yaml-data.outputs['players.active'] }}
           token: ${{ steps.generate-token.outputs.token }}
       - run: |
-          echo "active player = ${{ steps.yaml-data.outputs.data }}"
+          echo "active player = ${{ steps.yaml-data.outputs['players.active'] }}"
           echo "email = ${{ steps.email-data.outputs.email }}"
       - name: Commit changes
         run: |
-          git config --local user.name ${{ steps.yaml-data.outputs.data }}
+          git config --local user.name ${{ steps.yaml-data.outputs['players.active'] }}
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git commit -a --allow-empty -m "new active player = ${{ steps.yaml-data.outputs.data }} [merge] by ${{ github.actor }} [skip ci]"
+          git commit -a --allow-empty -m "new active player = ${{ steps.yaml-data.outputs['players.active'] }} [merge] by ${{ github.actor }} [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
