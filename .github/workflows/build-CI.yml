@@ -46,13 +46,19 @@ jobs:
       - name: Setup LCOV
         uses: hrishikesh-kadam/setup-lcov@v1
       - name: Report code coverage
-        uses: zgosalvez/github-actions-report-lcov@main
+        uses: zgosalvez/github-actions-report-lcov@v4
         with:
           coverage-files: coverage/lcov.info
           minimum-coverage: 49
           artifact-name: coverage-report
           github-token: ${{ secrets.GITHUB_TOKEN }}
           update-comment: true
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/lcov.info
+          slug: ndelangen/nomic
   spellcheck:
     runs-on: ubuntu-latest
     steps:
