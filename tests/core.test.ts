@@ -40,6 +40,21 @@ Deno.test('actions -join', async () => {
   assert(out?.core?.players.list.includes('test-user-c'));
 });
 
+Deno.test('actions -join (fail when exists)', async () => {
+  const api = await defineAPI();
+  const states = createStates();
+
+  const module = RULE_ACTION.parse(core.HANDLERS);
+
+  await assertRejects(async () => {
+    await module.action({
+      states,
+      api,
+      action: { type: 'join', payload: { name: 'test-user-a' } },
+    });
+  });
+});
+
 Deno.test('actions -leave', async () => {
   const api = await defineAPI();
   const states = createStates();
@@ -56,6 +71,21 @@ Deno.test('actions -leave', async () => {
   assertFalse(out?.core?.players.list.includes('test-user-b'));
 });
 
+Deno.test('actions -leave (fail when missing)', async () => {
+  const api = await defineAPI();
+  const states = createStates();
+
+  const module = RULE_ACTION.parse(core.HANDLERS);
+
+  await assertRejects(async () => {
+    await module.action({
+      states,
+      api,
+      action: { type: 'leave', payload: { name: 'test-user-c' } },
+    });
+  });
+});
+
 Deno.test('actions -leave -active player', async () => {
   const api = await defineAPI();
   const states = createStates();
@@ -70,6 +100,22 @@ Deno.test('actions -leave -active player', async () => {
 
   assertFalse(out?.core?.players.list.includes('test-user-a'));
   assert(out?.core?.players.active === 'test-user-b');
+});
+
+Deno.test('actions -unsupported', async () => {
+  const api = await defineAPI();
+  const states = createStates();
+
+  const module = RULE_ACTION.parse(core.HANDLERS);
+
+  await assertRejects(async () => {
+    await module.action({
+      states,
+      api,
+      // @ts-expect-error (forcing a non-existing action for testing purposes)
+      action: { type: 'non-existing-action', payload: { name: 'test-user-c' } },
+    });
+  });
 });
 
 Deno.test('progress', async () => {
