@@ -102,6 +102,22 @@ Deno.test('actions -leave -active player', async () => {
   assert(out?.core?.players.active === 'test-user-b');
 });
 
+Deno.test('actions -unsupported', async () => {
+  const api = await defineAPI();
+  const states = createStates();
+
+  const module = RULE_ACTION.parse(core.HANDLERS);
+
+  await assertRejects(async () => {
+    await module.action({
+      states,
+      api,
+      // @ts-expect-error (forcing a non-existing action for testing purposes)
+      action: { type: 'non-existing-action', payload: { name: 'test-user-c' } },
+    });
+  });
+});
+
 Deno.test('progress', async () => {
   const api = await defineAPI();
   const states = createStates();
