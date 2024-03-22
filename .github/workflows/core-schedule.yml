@@ -61,7 +61,7 @@ jobs:
         run: bun run progress
       - name: Run core-yaml
         id: yaml-data
-        uses: pietrobolcato/action-read-yaml@main
+        uses: ndelangen/action-read-yaml
         with:
           config: './state/core.yml'
       - name: Get user email
