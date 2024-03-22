@@ -15,7 +15,7 @@ This is in very early stages of development.
 >
 > The game demonstrates that in any system where rule changes are possible, a situation may arise in which the resulting laws are contradictory or insufficient to determine what is in fact legal.
 >
-> ~ [wikipedia](https://en.wikipedia.org/wiki/Nomic)
+> ~ [wikipedia](https://en.wikipedia.org/wiki/Nomic)  
 > ~ [Peter Suber's website](http://legacy.earlham.edu/~peters/nomic.htm)
 
 ## What is Nomic on GitHub?
