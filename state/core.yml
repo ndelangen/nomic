@@ -4,6 +4,6 @@ players:
     - ndelangen
     - ShaunEvening
     - Awpteamoose
-  active: Awpteamoose
+  active: ndelangen
 turns:
-  current: 12090
+  current: 12091
