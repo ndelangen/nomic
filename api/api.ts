@@ -70,7 +70,7 @@ export const defineAPI = async ({ disableThrottle = false } = {}) => {
   return { pr, github: octokit, repository };
 };
 
-export type API = Awaited<ReturnType<typeof defineAPI>>;
+type API = Awaited<ReturnType<typeof defineAPI>>;
 
 // Use z.custom with type predicate to preserve TypeScript type for inference
 // while still allowing zod runtime validation
