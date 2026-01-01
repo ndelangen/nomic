@@ -3,7 +3,6 @@ players:
   list:
     - ndelangen
     - ShaunEvening
-    - Awpteamoose
   active: ShaunEvening
 turns:
   current: 14723
