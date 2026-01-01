@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import * as core from '../rules/core.ts';
 import * as example from '../rules/example.ts';
+import * as fridayParty from '../rules/friday-party.ts';
 import * as gratitude from '../rules/gratitude.ts';
 import * as reviews from '../rules/reviews.ts';
 import * as rulesUsed from '../rules/rules-used.ts';
@@ -29,4 +30,5 @@ export const RULES = {
   [rulesUsed.META.id]: rulesUsed.HANDLERS,
   [reviews.META.id]: reviews.HANDLERS,
   [gratitude.META.id]: gratitude.HANDLERS,
+  [fridayParty.META.id]: fridayParty.HANDLERS,
 };

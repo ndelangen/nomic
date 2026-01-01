@@ -14,7 +14,7 @@ const Repository = z.object({
 });
 
 async function getPrInfo(octokit: Octokit, repository: z.infer<typeof Repository>, pull_number: number) {
-  const [pr, reviews] = await Promise.all([
+  const [pr, reviews, reactions] = await Promise.all([
     octokit.rest.pulls.get({
       owner: repository.owner,
       repo: repository.name,
@@ -25,9 +25,14 @@ async function getPrInfo(octokit: Octokit, repository: z.infer<typeof Repository
       repo: repository.name,
       pull_number,
     }),
+    octokit.rest.reactions.listForIssue({
+      owner: repository.owner,
+      repo: repository.name,
+      issue_number: pull_number,
+    }),
   ]);
 
-  return { ...pr.data, reviews: reviews.data };
+  return { ...pr.data, reviews: reviews.data, reactions: reactions.data };
 }
 
 const createOctokit = (options?: OctokitOptions) =>
