@@ -8,6 +8,7 @@
     "action": "bun run run-deno ./run/action.ts",
     "check": "bun run run-deno ./run/check.ts",
     "coverage": "deno coverage coverage/profile --ignore=node_modules",
+    "cspell": "cspell . --config ./cspell.json",
     "knip": "knip",
     "lint": "deno lint",
     "prescience": "bun run run-deno ./run/prescience.ts",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
+    "cspell": "^8.0.0",
     "knip": "^5.78.0",
     "prettier": "^3.7.4",
     "prettier-plugin-jsdoc": "^1.8.0",
