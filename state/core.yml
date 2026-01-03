@@ -3,6 +3,6 @@ players:
   list:
     - ndelangen
     - ShaunEvening
-  active: ndelangen
+  active: ShaunEvening
 turns:
-  current: 14728
+  current: 14729
