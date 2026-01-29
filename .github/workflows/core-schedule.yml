@@ -9,7 +9,7 @@ jobs:
     outputs:
       skip: ${{ steps.check_inactivity.outputs.skip }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 20
@@ -34,8 +34,8 @@ jobs:
         env:
           DESIRED_INACTIVITY_SECONDS: 0
           DESIRED_INACTIVITY_MINUTES: 0
-          DESIRED_INACTIVITY_HOURS: 24
-          DESIRED_INACTIVITY_DAYS: 0
+          DESIRED_INACTIVITY_HOURS: 0
+          DESIRED_INACTIVITY_DAYS: 7
   run:
     runs-on: ubuntu-latest
     environment: safe
@@ -44,18 +44,18 @@ jobs:
     steps:
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
           persist-credentials: false
           token: ${{ steps.generate-token.outputs.token }}
-      - uses: oven-sh/setup-bun@v1
-      - uses: denoland/setup-deno@v1
+      - uses: oven-sh/setup-bun@v2
+      - uses: denoland/setup-deno@v2
       - run: bun install
       - name: Rules progress
         run: bun run progress

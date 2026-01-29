@@ -1,4 +1,4 @@
-import { assert, assertThrows } from 'https://deno.land/std@0.219.0/assert/mod.ts';
+import { assert, assertThrows } from '@std/assert';
 
 import { RULE, RULE_ACTION, RULE_CHECK, RULE_PROGRESS } from '../api/api.ts';
 

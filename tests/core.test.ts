@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { assert, assertRejects, assertFalse } from 'https://deno.land/std@0.219.0/assert/mod.ts';
+import { assert, assertRejects, assertFalse } from '@std/assert';
 import { z } from 'zod';
 
 import { RULE_ACTION, RULE_PROGRESS, RULE_CHECK, defineAPI } from '../api/api.ts';
