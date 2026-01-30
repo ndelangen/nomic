@@ -14,7 +14,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install
       - name: Rules action
-        run: bun run action-event
+        run: bun run action
         env:
           ACTION_NAME: ${{github.event.requested_action }}
           ACTION_PAYLOAD: ${{ toJson(github.event.action) }}

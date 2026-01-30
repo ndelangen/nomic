@@ -74,7 +74,7 @@ export async function runAction() {
   const results: z.infer<typeof RESULTS> = {};
 
   const type = process.env.ACTION_NAME;
-  const payload = JSON.parse(process.env.ACTION_PAYLOAD || '');
+  const payload = JSON.parse(process.env.ACTION_PAYLOAD ?? '{}');
   const action = ACTION.parse({ type, payload });
 
   const [api, states] = await Promise.all([defineAPI(), readStates()]);
