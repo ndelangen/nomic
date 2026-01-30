@@ -72,8 +72,10 @@ export const defineAPI = async ({ disableThrottle = false } = {}) => {
 
 type API = Awaited<ReturnType<typeof defineAPI>>;
 
-// Use z.custom with type predicate to preserve TypeScript type for inference
-// while still allowing zod runtime validation
+/**
+ * Use z.custom with type predicate to preserve TypeScript type for inference while still allowing zod runtime
+ * validation
+ */
 const API = z.custom<API>((val): val is API => {
   return typeof val === 'object' && val !== null && 'pr' in val && 'github' in val;
 });
