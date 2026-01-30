@@ -2,8 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
   "version": "0.2",
   "dictionaries": ["en_US", "softwareTerms", "typescript"],
-  "words": ["Awpteamoose", "Deno", "immer", "knip", "ndelangen", "Nomic"],
-  "ignoreWords": ["lockb"],
+  "words": ["Awpteamoose", "immer", "knip", "ndelangen", "Nomic", "Suber"],
   "ignorePaths": [".vscode", "*.lock", "*.lockb", ".github"],
   "useGitignore": true
 }

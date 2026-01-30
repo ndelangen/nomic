@@ -12,8 +12,8 @@ const TYPE = z.string();
 
 await Promise.all(
   entries(outcomes).map(async ([id, outcome]) => {
-    const sha = SHA.safeParse(Deno.env.get('SHA'));
-    const type = TYPE.safeParse(Deno.env.get('TYPE'));
+    const sha = SHA.safeParse(process.env.SHA);
+    const type = TYPE.safeParse(process.env.TYPE);
 
     if (api.repository && sha.success && type.success) {
       const isError = outcome instanceof Error;
@@ -33,17 +33,15 @@ await Promise.all(
 
 const errors = values(outcomes).filter((outcome) => outcome instanceof Error);
 
-errors.forEach((outcome) => {
-  if (outcome instanceof Error) {
-    console.log();
-    console.log(outcome.stack);
-    return;
-  }
-});
+for (const outcome of errors) {
+  console.log();
+  console.log(outcome.message);
+  console.log(outcome.stack);
+}
 
 if (errors.length > 0) {
   console.log();
   console.error(`${errors.length} rules rejected.`);
 
-  Deno.exit(1);
+  process.exit(1);
 }

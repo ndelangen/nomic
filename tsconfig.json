@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
+    "allowImportingTsExtensions": true,
     "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
@@ -9,6 +10,7 @@
     "noUnusedLocals": true,
     "noImplicitAny": true,
     "noEmit": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["bun-types"]
   }
 }

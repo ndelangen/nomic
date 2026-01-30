@@ -4,9 +4,8 @@
 
 1. Install [`git`](https://git-scm.com/).
    - Configure git with your name and email.
-2. Install the runtime [`Deno`](https://docs.deno.com/runtime/manual/).
-3. Install the package manager [`Bun`](https://bun.sh/).
-4. You need to setup your PATH to have access to the above tools.
+2. Install [`Bun`](https://bun.sh/) (used as both runtime and package manager).
+3. You need to setup your PATH to have access to the above tools.
    _How to do this is beyond the scope of this document._
 
 ## Account requirements
@@ -22,7 +21,7 @@
 1. Choose an editor, if you do not have a preference, [VSCode](https://code.visualstudio.com/) is the recommended choice.
 2. Clone the repository using [`git`](https://git-scm.com/), alternatively you could use the GitHub CLI [`gh`](https://cli.github.com/).
 3. Open the repository in your editor.
-   If you are using VSCode, it will recommend installing the a few extensions, including the `Deno` extension.
+   If you are using VSCode, it will recommend installing a few extensions.
    It's strongly recommended to install these extensions.
    You can install more extensions if you like, but it's not required.
 4. Open a terminal in the repository. If you are using VSCode, you can use the [integrated terminal](https://code.visualstudio.com/docs/terminal/basics) using the hotkey `⌘ + T` (MacOS).

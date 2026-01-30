@@ -3,7 +3,7 @@ import { STATES } from './states.ts';
 
 import { z } from 'zod';
 import { Octokit } from '@octokit/rest';
-import { type OctokitOptions } from '@octokit/core';
+import type { OctokitOptions } from '@octokit/core';
 
 const ARGS = z.tuple([z.string(), z.string()]);
 const SHA = z.string();
@@ -36,13 +36,13 @@ async function getPrInfo(octokit: Octokit, repository: z.infer<typeof Repository
 }
 
 const createOctokit = (options?: OctokitOptions) =>
-  new Octokit({ auth: Deno.env.get('GITHUB_TOKEN'), ...options });
+  new Octokit({ auth: process.env.GITHUB_TOKEN, ...options });
 
 export const defineAPI = async ({ disableThrottle = false } = {}) => {
   const octokit = createOctokit(disableThrottle ? { throttle: { enabled: false } } : undefined);
-  const repo = ARGS.safeParse(Deno.env.get('GITHUB_REPOSITORY')?.split('/'));
-  const sha = SHA.safeParse(Deno.env.get('SHA'));
-  let pull_number = parseInt(Deno.env.get('PR_NUMBER')!, 10);
+  const repo = ARGS.safeParse(process.env.GITHUB_REPOSITORY?.split('/'));
+  const sha = SHA.safeParse(process.env.SHA);
+  let pull_number = Number.parseInt(process.env.PR_NUMBER || '0', 10);
 
   const repository = repo.success ? { owner: repo.data[0], name: repo.data[1] } : undefined;
 
@@ -70,11 +70,15 @@ export const defineAPI = async ({ disableThrottle = false } = {}) => {
   return { pr, github: octokit, repository };
 };
 
-const API = z.object({
-  pr: z.any(),
-  github: z.any(),
-  repository: Repository.optional(),
-}) as z.ZodType<Awaited<ReturnType<typeof defineAPI>>>;
+type API = Awaited<ReturnType<typeof defineAPI>>;
+
+/**
+ * Use z.custom with type predicate to preserve TypeScript type for inference while still allowing zod runtime
+ * validation
+ */
+const API = z.custom<API>((val): val is API => {
+  return typeof val === 'object' && val !== null && 'pr' in val && 'github' in val;
+});
 
 const HANDLER_ARG_BASE = z.object({
   states: STATES,
@@ -86,17 +90,17 @@ const HANDLER_RETURN = z
   .or(z.promise(z.union([STATES.partial(), z.void()])));
 
 export const RULE_CHECK = z.object({
-  check: z.function().args(HANDLER_ARG_BASE).returns(z.promise(z.void()).or(z.void())),
+  check: z.function({ input: [HANDLER_ARG_BASE], output: z.promise(z.void()).or(z.void()) }),
 });
 export const RULE_PROGRESS = z.object({
-  progress: z.function().args(HANDLER_ARG_BASE).returns(HANDLER_RETURN),
+  progress: z.function({ input: [HANDLER_ARG_BASE], output: HANDLER_RETURN }),
 });
 export const RULE_ACTION = z.object({
-  action: z.function().args(HANDLER_ARG_EVENT).returns(HANDLER_RETURN),
+  action: z.function({ input: [HANDLER_ARG_EVENT], output: HANDLER_RETURN }),
 });
 
 export const RULE = z
   .never() // purely for formatting
-  .or(RULE_CHECK.merge(RULE_PROGRESS.partial()).merge(RULE_ACTION.partial()))
-  .or(RULE_PROGRESS.merge(RULE_CHECK.partial()).merge(RULE_ACTION.partial()))
-  .or(RULE_ACTION.merge(RULE_CHECK.partial()).merge(RULE_PROGRESS.partial()));
+  .or(RULE_CHECK.extend(RULE_PROGRESS.partial().shape).extend(RULE_ACTION.partial().shape))
+  .or(RULE_PROGRESS.extend(RULE_CHECK.partial().shape).extend(RULE_ACTION.partial().shape))
+  .or(RULE_ACTION.extend(RULE_CHECK.partial().shape).extend(RULE_PROGRESS.partial().shape));

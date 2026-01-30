@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "denoland.vscode-deno",
+    "oven.bun-vscode",
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "unional.vscode-sort-package-json",

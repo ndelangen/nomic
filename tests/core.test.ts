@@ -1,9 +1,8 @@
-// deno-lint-ignore-file no-explicit-any
-import { assert, assertRejects, assertFalse } from 'https://deno.land/std@0.219.0/assert/mod.ts';
-import { z } from 'zod';
+import { expect, test } from 'bun:test';
+import type { z } from 'zod';
 
 import { RULE_ACTION, RULE_PROGRESS, RULE_CHECK, defineAPI } from '../api/api.ts';
-import { STATES } from '../api/states.ts';
+import type { STATES } from '../api/states.ts';
 import * as core from '../rules/core.ts';
 
 const createStates = () => {
@@ -24,7 +23,7 @@ const createStates = () => {
   } satisfies z.infer<typeof STATES>;
 };
 
-Deno.test('actions -join', async () => {
+test('actions -join', async () => {
   const api = await defineAPI();
   const states = createStates();
 
@@ -36,26 +35,26 @@ Deno.test('actions -join', async () => {
     action: { type: 'join', payload: { name: 'test-user-c' } },
   });
 
-  assert(out?.core);
-  assert(out?.core?.players.list.includes('test-user-c'));
+  expect(out?.core).toBeTruthy();
+  expect(out?.core?.players.list.includes('test-user-c')).toBe(true);
 });
 
-Deno.test('actions -join (fail when exists)', async () => {
+test('actions -join (fail when exists)', async () => {
   const api = await defineAPI();
   const states = createStates();
 
   const module = RULE_ACTION.parse(core.HANDLERS);
 
-  await assertRejects(async () => {
+  await expect(async () => {
     await module.action({
       states,
       api,
       action: { type: 'join', payload: { name: 'test-user-a' } },
     });
-  });
+  }).toThrowErrorMatchingInlineSnapshot(`"409 - conflict: Player already exists"`);
 });
 
-Deno.test('actions -leave', async () => {
+test('actions -leave', async () => {
   const api = await defineAPI();
   const states = createStates();
 
@@ -67,26 +66,26 @@ Deno.test('actions -leave', async () => {
     action: { type: 'leave', payload: { name: 'test-user-b' } },
   });
 
-  assert(out?.core);
-  assertFalse(out?.core?.players.list.includes('test-user-b'));
+  expect(out?.core).toBeTruthy();
+  expect(out?.core?.players.list.includes('test-user-b')).toBe(false);
 });
 
-Deno.test('actions -leave (fail when missing)', async () => {
+test('actions -leave (fail when missing)', async () => {
   const api = await defineAPI();
   const states = createStates();
 
   const module = RULE_ACTION.parse(core.HANDLERS);
 
-  await assertRejects(async () => {
+  await expect(async () => {
     await module.action({
       states,
       api,
       action: { type: 'leave', payload: { name: 'test-user-c' } },
     });
-  });
+  }).toThrowErrorMatchingInlineSnapshot(`"404 - not found: Player does not exist"`);
 });
 
-Deno.test('actions -leave -active player', async () => {
+test('actions -leave -active player', async () => {
   const api = await defineAPI();
   const states = createStates();
 
@@ -98,27 +97,27 @@ Deno.test('actions -leave -active player', async () => {
     action: { type: 'leave', payload: { name: 'test-user-a' } },
   });
 
-  assertFalse(out?.core?.players.list.includes('test-user-a'));
-  assert(out?.core?.players.active === 'test-user-b');
+  expect(out?.core?.players.list.includes('test-user-a')).toBe(false);
+  expect(out?.core?.players.active).toBe('test-user-b');
 });
 
-Deno.test('actions -unsupported', async () => {
+test('actions -unsupported', async () => {
   const api = await defineAPI();
   const states = createStates();
 
   const module = RULE_ACTION.parse(core.HANDLERS);
 
-  await assertRejects(async () => {
+  await expect(async () => {
     await module.action({
       states,
       api,
       // @ts-expect-error (forcing a non-existing action for testing purposes)
       action: { type: 'non-existing-action', payload: { name: 'test-user-c' } },
     });
-  });
+  }).toThrow();
 });
 
-Deno.test('progress', async () => {
+test('progress', async () => {
   const api = await defineAPI();
   const states = createStates();
 
@@ -129,15 +128,15 @@ Deno.test('progress', async () => {
     api,
   });
 
-  assertFalse(out?.core?.players.active === 'test-user-a');
+  expect(out?.core?.players.active === 'test-user-a').toBe(false);
 });
 
-Deno.test('check', async () => {
+test('check', async () => {
   const states = createStates();
 
   const module = RULE_CHECK.parse(core.HANDLERS);
 
-  await assertRejects(async () => {
+  await expect(async () => {
     const api = await defineAPI();
     api.pr = {
       user: {
@@ -148,7 +147,7 @@ Deno.test('check', async () => {
       states,
       api,
     });
-  });
+  }).toThrow();
 
   const api = await defineAPI();
   api.pr = {

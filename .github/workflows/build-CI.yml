@@ -13,57 +13,42 @@ jobs:
   knip:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
       - run: bun install
       - run: bun run knip
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
       - run: bun install
       - run: bun run verify
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
       - run: bun install
       - run: bun run lint
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
       - run: bun install
-      - run: bun run test --coverage=coverage/profile
-      - run: bun run coverage --lcov > coverage/lcov.info
-      # - name: Setup LCOV
-      #   uses: hrishikesh-kadam/setup-lcov@v1
-      # - name: Report code coverage
-      #   uses: zgosalvez/github-actions-report-lcov@v4
-      #   with:
-      #     coverage-files: coverage/lcov.info
-      #     minimum-coverage: 49
-      #     artifact-name: coverage-report
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     update-comment: true
+      - run: bun run coverage
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage/lcov.info
+          files: coverage/profile/lcov.info
           slug: ndelangen/nomic
   spellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: streetsidesoftware/cspell-action@v6
+      - uses: actions/checkout@v6
+      - uses: streetsidesoftware/cspell-action@v8
         with:
           config: './cspell.json'
           use_cspell_files: true

@@ -23,9 +23,8 @@ jobs:
   rules:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
       - run: bun install
       - name: Rules check
         run: bun run check
@@ -39,9 +38,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: rules
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
       - run: bun install
       - name: Prescience check
         run: bun run prescience
@@ -52,7 +50,7 @@ jobs:
           TYPE: PR
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Find Comment
-        uses: peter-evans/find-comment@v3
+        uses: peter-evans/find-comment@v4
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -64,7 +62,7 @@ jobs:
           base_branch: 'HEAD'
           search_path: 'state'
       - name: Create or update comment
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@v5
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
@@ -79,14 +77,14 @@ jobs:
     needs: rules
     if: ${{ always() && needs.rules.result == 'failure'}}
     steps:
-      - uses: actions/checkout@v4
-      - uses: peter-evans/find-comment@v3
+      - uses: actions/checkout@v6
+      - uses: peter-evans/find-comment@v4
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'github-actions[bot]'
           body-includes: Upcoming state changes
-      - uses: peter-evans/create-or-update-comment@v4
+      - uses: peter-evans/create-or-update-comment@v5
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}

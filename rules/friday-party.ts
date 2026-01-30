@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 
-import { RULE } from '../api/api.ts';
+import type { RULE } from '../api/api.ts';
 
 /**
  * This is the friday party rule.

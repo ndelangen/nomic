@@ -11,9 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: safe
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
       - run: bun install
       - name: Rules check
         run: bun run check

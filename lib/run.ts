@@ -1,10 +1,11 @@
+import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import YAML from 'yaml';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 import { ACTION } from '../api/actions.ts';
 import { RULE_ACTION, RULE_CHECK, RULE_PROGRESS, defineAPI } from '../api/api.ts';
-import { RESULTS, STATES_RAW as STATES, STATE_LOCATION, RULES as rules } from '../api/states.ts';
+import { type RESULTS, STATES_RAW as STATES, STATE_LOCATION, RULES as rules } from '../api/states.ts';
 import { entries } from './entries.ts';
 import { readStates } from './read-states.ts';
 
@@ -19,10 +20,10 @@ export async function runProgress() {
       try {
         const out = await rule.data.progress({ states, api });
         if (out) {
-          entries(out).forEach(([id, data]) => {
+          for (const [id, data] of entries(out)) {
             // @ts-expect-error (un-discriminated union of state objects)
             states[id] = STATES[id].parse(data);
-          });
+          }
         }
         // @ts-expect-error (un-discriminated union of state objects)
         results[id] = states[id];
@@ -33,12 +34,12 @@ export async function runProgress() {
     }
   }
 
-  const success = Object.values(results).filter((item) => item instanceof Error).length == 0;
+  const success = Object.values(results).filter((item) => item instanceof Error).length === 0;
 
   if (success) {
     await Promise.all(
       entries(states).map(async ([id, data]) => {
-        await Deno.writeTextFile(join(STATE_LOCATION, `${id}.yml`), YAML.stringify(data));
+        await writeFile(join(STATE_LOCATION, `${id}.yml`), YAML.stringify(data));
       }),
     );
   }
@@ -72,8 +73,8 @@ export async function runCheck() {
 export async function runAction() {
   const results: z.infer<typeof RESULTS> = {};
 
-  const type = Deno.env.get('ACTION_NAME');
-  const payload = JSON.parse(Deno.env.get('ACTION_PAYLOAD') || '');
+  const type = process.env.ACTION_NAME;
+  const payload = JSON.parse(process.env.ACTION_PAYLOAD ?? '{}');
   const action = ACTION.parse({ type, payload });
 
   const [api, states] = await Promise.all([defineAPI(), readStates()]);
@@ -86,10 +87,10 @@ export async function runAction() {
         console.log(`running action: ${type} on: ${id}`);
         const out = await rule.data.action({ states, api, action });
         if (out) {
-          entries(out).forEach(([id, data]) => {
+          for (const [id, data] of entries(out)) {
             // @ts-expect-error (un-discriminated union of state objects)
             states[id] = STATES[id].parse(data);
-          });
+          }
         }
       }
       // @ts-expect-error (un-discriminated union of state objects)
@@ -100,12 +101,12 @@ export async function runAction() {
     }
   }
 
-  const success = Object.values(results).filter((item) => item instanceof Error).length == 0;
+  const success = Object.values(results).filter((item) => item instanceof Error).length === 0;
 
   if (success) {
     await Promise.all(
       entries(states).map(async ([id, data]) => {
-        await Deno.writeTextFile(join(STATE_LOCATION, `${id}.yml`), YAML.stringify(data));
+        await writeFile(join(STATE_LOCATION, `${id}.yml`), YAML.stringify(data));
       }),
     );
   }

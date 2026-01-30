@@ -5,30 +5,33 @@
   "author": "central419",
   "type": "module",
   "scripts": {
-    "action": "bun run run-deno ./run/action.ts",
-    "check": "bun run run-deno ./run/check.ts",
-    "coverage": "deno coverage coverage/profile --ignore=node_modules",
+    "action": "bun run ./run/action.ts",
+    "check": "bun run ./run/check.ts",
+    "coverage": "bun test --coverage --coverage-dir=coverage/profile",
+    "cspell": "cspell . --config ./cspell.json",
     "knip": "knip",
-    "lint": "deno lint",
-    "prescience": "bun run run-deno ./run/prescience.ts",
-    "progress": "bun run run-deno ./run/progress.ts",
-    "run-deno": "deno run --allow-read --allow-env --allow-net=$(paste -d, -s ./allowed_domains) --allow-write=$(paste -d, -s ./allowed_paths) --allow-sys=cpus",
-    "test": "deno test -A",
-    "verify": "deno check **/*.ts"
+    "lint": "biome lint .",
+    "prescience": "bun run ./run/prescience.ts",
+    "progress": "bun run ./run/progress.ts",
+    "test": "bun test",
+    "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@octokit/core": "^6.0.1",
-    "@octokit/rest": "^20.0.2",
-    "immer": "^10.0.4",
-    "ts-morph": "^22.0.0",
-    "yaml": "^2.4.0",
-    "zod": "^3.22.4"
+    "@octokit/core": "^7.0.6",
+    "@octokit/rest": "^22.0.1",
+    "immer": "^11.1.3",
+    "ts-morph": "^27.0.2",
+    "yaml": "^2.8.2",
+    "zod": "^4.3.4"
   },
   "devDependencies": {
-    "@types/node": "^16.18.87",
-    "knip": "^5.0.3",
-    "prettier": "^3.2.5",
-    "prettier-plugin-jsdoc": "^1.3.0",
-    "typescript": "^5.2.2"
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^25.0.3",
+    "bun-types": "latest",
+    "cspell": "^9.4.0",
+    "knip": "^5.78.0",
+    "prettier": "^3.7.4",
+    "prettier-plugin-jsdoc": "^1.8.0",
+    "typescript": "^5.9.3"
   }
 }
