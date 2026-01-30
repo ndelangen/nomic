@@ -51,7 +51,7 @@ test('actions -join (fail when exists)', async () => {
       api,
       action: { type: 'join', payload: { name: 'test-user-a' } },
     });
-  }).toThrow();
+  }).toThrowErrorMatchingInlineSnapshot(`"409 - conflict: Player already exists"`);
 });
 
 test('actions -leave', async () => {
@@ -82,7 +82,7 @@ test('actions -leave (fail when missing)', async () => {
       api,
       action: { type: 'leave', payload: { name: 'test-user-c' } },
     });
-  }).toThrow();
+  }).toThrowErrorMatchingInlineSnapshot(`"404 - not found: Player does not exist"`);
 });
 
 test('actions -leave -active player', async () => {
