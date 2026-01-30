@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { JOIN_ACTION, LEAVE_ACTION } from '../api/actions.ts';
-import { RULE } from '../api/api.ts';
+import type { RULE } from '../api/api.ts';
 
 /**
  * This is an example rule. It does nothing.
@@ -23,7 +23,7 @@ export const HANDLERS = {
     const name = action.payload.name;
     switch (action?.type) {
       case JOIN_ACTION.name: {
-        console.log('welcome, ' + name);
+        console.log(`welcome, ${name}`);
         return;
       }
       case LEAVE_ACTION.name: {

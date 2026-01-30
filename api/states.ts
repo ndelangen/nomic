@@ -9,7 +9,7 @@ import * as gratitude from '../rules/gratitude.ts';
 import * as reviews from '../rules/reviews.ts';
 import * as rulesUsed from '../rules/rules-used.ts';
 
-export const STATE_LOCATION = join(dirname(fileURLToPath(import.meta.url)), '..', `state`);
+export const STATE_LOCATION = join(dirname(fileURLToPath(import.meta.url)), '..', 'state');
 
 export const STATES_RAW = {
   [core.META.id]: core.META.validator.strict(),

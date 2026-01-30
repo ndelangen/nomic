@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-      - uses: denoland/setup-deno@v2
       - run: bun install
       - name: Rules check
         run: bun run check

@@ -1,191 +1,191 @@
-import { assert, assertThrows } from '@std/assert';
+import { expect, test, describe } from 'bun:test';
 
 import { RULE, RULE_ACTION, RULE_CHECK, RULE_PROGRESS } from '../api/api.ts';
 
-Deno.test('validates a check rule', () => {
+test('validates a check rule', () => {
   const dummyRule = RULE.parse({
     check: async () => {},
   });
-  assert(dummyRule);
+  expect(dummyRule).toBeTruthy();
 });
 
-Deno.test('validates a progress rule', () => {
+test('validates a progress rule', () => {
   const dummyRule = RULE.parse({
     progress: async () => {},
   });
-  assert(dummyRule);
+  expect(dummyRule).toBeTruthy();
 });
 
-Deno.test('validates an action rule', () => {
+test('validates an action rule', () => {
   const dummyRule = RULE.parse({
     action: async () => {},
   });
-  assert(dummyRule);
+  expect(dummyRule).toBeTruthy();
 });
 
-Deno.test('validates a combined rule', async (t) => {
-  await t.step('A & B', () => {
+describe('validates a combined rule', () => {
+  test('A & B', () => {
     const dummyRule = RULE.parse({
       action: async () => {},
       check: async () => {},
     });
-    assert(dummyRule);
+    expect(dummyRule).toBeTruthy();
   });
 
-  await t.step('A & C', () => {
+  test('A & C', () => {
     const dummyRule = RULE.parse({
       action: async () => {},
       check: async () => {},
     });
-    assert(dummyRule);
+    expect(dummyRule).toBeTruthy();
   });
 
-  await t.step('B & C', () => {
+  test('B & C', () => {
     const dummyRule = RULE.parse({
       action: async () => {},
       check: async () => {},
     });
-    assert(dummyRule);
+    expect(dummyRule).toBeTruthy();
   });
 
-  await t.step('A & B & C', () => {
+  test('A & B & C', () => {
     const dummyRule = RULE.parse({
       action: async () => {},
       check: async () => {},
       progress: async () => {},
     });
-    assert(dummyRule);
+    expect(dummyRule).toBeTruthy();
   });
 });
 
-Deno.test('rejects invalid rule', () => {
-  assertThrows(() => {
+test('rejects invalid rule', () => {
+  expect(() => {
     RULE.parse({});
-  });
+  }).toThrow();
 });
 
-Deno.test('RULE_ACTION', async (t) => {
-  await t.step('empty = invalid', () => {
-    assertThrows(() => {
+describe('RULE_ACTION', () => {
+  test('empty = invalid', () => {
+    expect(() => {
       RULE_ACTION.parse({});
-    });
+    }).toThrow();
   });
-  await t.step('no action = invalid', () => {
-    assertThrows(() => {
+  test('no action = invalid', () => {
+    expect(() => {
       RULE_ACTION.parse({ id: 'test' });
-    });
+    }).toThrow();
   });
-  await t.step('valid', () => {
-    assert(
+  test('valid', () => {
+    expect(
       RULE_ACTION.parse({
         id: '',
         action: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_ACTION.parse({
         id: '',
         action: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_ACTION.parse({
         id: '',
         action: () => {},
         check: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_ACTION.parse({
         id: '',
         action: () => {},
         check: () => {},
         progress: () => {},
       }),
-    );
+    ).toBeTruthy();
   });
 });
 
-Deno.test('RULE_CHECK', async (t) => {
-  await t.step('empty = invalid', () => {
-    assertThrows(() => {
+describe('RULE_CHECK', () => {
+  test('empty = invalid', () => {
+    expect(() => {
       RULE_CHECK.parse({});
-    });
+    }).toThrow();
   });
-  await t.step('no action = invalid', () => {
-    assertThrows(() => {
+  test('no action = invalid', () => {
+    expect(() => {
       RULE_CHECK.parse({ id: 'test' });
-    });
+    }).toThrow();
   });
-  await t.step('valid', () => {
-    assert(
+  test('valid', () => {
+    expect(
       RULE_CHECK.parse({
         id: '',
         check: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_CHECK.parse({
         id: '',
         check: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_CHECK.parse({
         id: '',
         action: () => {},
         check: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_CHECK.parse({
         id: '',
         action: () => {},
         check: () => {},
         progress: () => {},
       }),
-    );
+    ).toBeTruthy();
   });
 });
 
-Deno.test('RULE_PROGRESS', async (t) => {
-  await t.step('empty = invalid', () => {
-    assertThrows(() => {
+describe('RULE_PROGRESS', () => {
+  test('empty = invalid', () => {
+    expect(() => {
       RULE_PROGRESS.parse({});
-    });
+    }).toThrow();
   });
-  await t.step('no action = invalid', () => {
-    assertThrows(() => {
+  test('no action = invalid', () => {
+    expect(() => {
       RULE_PROGRESS.parse({ id: 'test' });
-    });
+    }).toThrow();
   });
-  await t.step('valid', () => {
-    assert(
+  test('valid', () => {
+    expect(
       RULE_PROGRESS.parse({
         id: '',
         progress: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_PROGRESS.parse({
         id: '',
         progress: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_PROGRESS.parse({
         id: '',
         action: () => {},
         progress: () => {},
       }),
-    );
-    assert(
+    ).toBeTruthy();
+    expect(
       RULE_PROGRESS.parse({
         id: '',
         action: () => {},
         check: () => {},
         progress: () => {},
       }),
-    );
+    ).toBeTruthy();
   });
 });

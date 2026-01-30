@@ -1,8 +1,8 @@
-import { assert } from '@std/assert';
+import { expect, test } from 'bun:test';
 
 import { entries, values } from '../lib/entries.ts';
 
-Deno.test('entries', () => {
+test('entries', () => {
   const obj = {
     a: 1,
     b: 2,
@@ -11,13 +11,13 @@ Deno.test('entries', () => {
 
   const result = entries(obj);
 
-  assert(result.length === 3);
+  expect(result.length).toBe(3);
 
-  assert(result[0][0] === 'a');
-  assert(result[0][1] === 1);
+  expect(result[0][0]).toBe('a');
+  expect(result[0][1]).toBe(1);
 });
 
-Deno.test('values', () => {
+test('values', () => {
   const obj = {
     a: 1,
     b: 2,
@@ -26,8 +26,8 @@ Deno.test('values', () => {
 
   const result = values(obj);
 
-  assert(result.length === 3);
+  expect(result.length).toBe(3);
 
-  assert(result[0] === 1);
-  assert(result[1] === 2);
+  expect(result[0]).toBe(1);
+  expect(result[1]).toBe(2);
 });

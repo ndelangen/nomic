@@ -5,17 +5,16 @@
   "author": "central419",
   "type": "module",
   "scripts": {
-    "action": "bun run run-deno ./run/action.ts",
-    "check": "bun run run-deno ./run/check.ts",
-    "coverage": "deno coverage coverage/profile --ignore=node_modules",
+    "action": "bun run ./run/action.ts",
+    "check": "bun run ./run/check.ts",
+    "coverage": "bun test --coverage --coverage-dir=coverage/profile",
     "cspell": "cspell . --config ./cspell.json",
     "knip": "knip",
-    "lint": "deno lint",
-    "prescience": "bun run run-deno ./run/prescience.ts",
-    "progress": "bun run run-deno ./run/progress.ts",
-    "run-deno": "deno run --allow-read --allow-env --allow-net=$(paste -d, -s ./allowed_domains) --allow-write=$(paste -d, -s ./allowed_paths) --allow-sys=cpus",
-    "test": "deno test -A",
-    "verify": "deno check **/*.ts"
+    "lint": "biome lint .",
+    "prescience": "bun run ./run/prescience.ts",
+    "progress": "bun run ./run/progress.ts",
+    "test": "bun test",
+    "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@octokit/core": "^7.0.6",
@@ -26,7 +25,9 @@
     "zod": "^4.3.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@types/node": "^25.0.3",
+    "bun-types": "latest",
     "cspell": "^9.4.0",
     "knip": "^5.78.0",
     "prettier": "^3.7.4",

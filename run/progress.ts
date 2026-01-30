@@ -7,19 +7,19 @@ const progressOutcomes = await runProgress();
 const rulesErrors = values(rulesOutcomes).filter((outcome) => outcome instanceof Error);
 const progressErrors = values(progressOutcomes).filter((outcome) => outcome instanceof Error);
 
-rulesErrors.forEach((outcome) => {
+for (const outcome of rulesErrors) {
   if (outcome instanceof Error) {
     console.log();
     console.error(outcome.stack || outcome.message);
   }
-});
+}
 
-progressErrors.forEach((outcome) => {
+for (const outcome of progressErrors) {
   if (outcome instanceof Error) {
     console.log();
     console.error(outcome.stack || outcome.message);
   }
-});
+}
 
 if (rulesErrors.length > 0) {
   console.log();
@@ -31,5 +31,5 @@ if (progressErrors.length > 0) {
 }
 
 if (rulesErrors.length > 0 || progressErrors.length > 0) {
-  Deno.exit(1);
+  process.exit(1);
 }

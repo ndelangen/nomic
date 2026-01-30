@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-      - uses: denoland/setup-deno@v2
       - run: bun install
       - name: Rules action
         run: bun run action-event

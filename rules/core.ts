@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { produce } from 'immer';
 
 import { JOIN_ACTION, LEAVE_ACTION } from '../api/actions.ts';
-import { RULE } from '../api/api.ts';
+import type { RULE } from '../api/api.ts';
 
 /**
  * This rule governs the core game state The list of players, the active player, and the current turn.

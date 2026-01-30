@@ -55,7 +55,6 @@ jobs:
           persist-credentials: false
           token: ${{ steps.generate-token.outputs.token }}
       - uses: oven-sh/setup-bun@v2
-      - uses: denoland/setup-deno@v2
       - run: bun install
       - name: Rules progress
         run: bun run progress

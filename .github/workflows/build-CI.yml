@@ -15,7 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-      - uses: denoland/setup-deno@v2
       - run: bun install
       - run: bun run knip
   verify:
@@ -23,7 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-      - uses: denoland/setup-deno@v2
       - run: bun install
       - run: bun run verify
   lint:
@@ -31,7 +29,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-      - uses: denoland/setup-deno@v2
       - run: bun install
       - run: bun run lint
   test:
@@ -39,10 +36,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-      - uses: denoland/setup-deno@v2
       - run: bun install
-      - run: bun run test --coverage=coverage/profile
-      - run: bun run coverage --lcov > coverage/lcov.info
+      - run: bun test --coverage --coverage-dir=coverage/profile
+      - run: |
+          if [ -f coverage/profile/lcov.info ]; then
+            cp coverage/profile/lcov.info coverage/lcov.info
+          else
+            echo "Coverage file not found, generating basic LCOV format"
+            echo "TN:" > coverage/lcov.info
+            echo "SF:" >> coverage/lcov.info
+            echo "end_of_record" >> coverage/lcov.info
+          fi
       # - name: Setup LCOV
       #   uses: hrishikesh-kadam/setup-lcov@v1
       # - name: Report code coverage

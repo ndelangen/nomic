@@ -1,12 +1,10 @@
 {
-  "deno.enable": true,
-  "deno.lint": true,
-  "deno.unstable": true,
   "editor.formatOnSave": true,
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

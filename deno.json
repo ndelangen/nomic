@@ -1,7 +1,0 @@
-{
-  "unstable": ["byonm"],
-  "lock": false,
-  "imports": {
-    "@std/assert": "jsr:@std/assert@1.0.0"
-  }
-}

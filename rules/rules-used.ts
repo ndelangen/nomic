@@ -1,9 +1,9 @@
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { Project, ts } from 'ts-morph';
 
-import { RULE } from '../api/api.ts';
+import type { RULE } from '../api/api.ts';
 
 /**
  * This rule ensure that all rules defined in the rules directory are used correctly.
@@ -26,9 +26,9 @@ export const HANDLERS = {
 
     const files = project
       .getSourceFiles()
-      .filter((file) => relative(Deno.cwd(), file.getDirectoryPath()) === 'rules');
+      .filter((file) => relative(process.cwd(), file.getDirectoryPath()) === 'rules');
 
-    files.forEach((file) => {
+    for (const file of files) {
       const variable = file.getVariableDeclaration('HANDLERS');
 
       if (!variable) {
@@ -49,7 +49,7 @@ export const HANDLERS = {
       if (!outcome) {
         throw new Error(`rule ${file.getBaseName()} HANDLERS export, is not used correctly in states.ts`);
       }
-    });
+    }
 
     return;
   },

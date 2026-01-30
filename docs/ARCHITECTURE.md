@@ -61,18 +61,12 @@ I've used `TypeScript` as a language:
 - It's beginner friendly, with loads of information online
 - It runs fast enough for our purposes
 
-I've used `Deno` as the runtime:
+I've used `Bun` as both the runtime and package manager:
 
-- Mostly because `Bun` had a bug, failing to parse some `TypeScript` syntax.
-- It means not having to deal with any transpilers/compilers for `TypeScript`.
-- It has excellent helpers and utilities and docs.
-- It is stable.
-
-I've used `Bun` as package manager:
-
-- It's a bit risky, because of how experimental it is, but it's so fast.
-- It's relatively easy to switch to `pnpm` if it falls apart.
-- Once I report the bug, and they get it fixed, I might switch the runtime to `Bun` as well.
+- It's fast and efficient for both running code and managing dependencies.
+- It has excellent TypeScript support without needing transpilers/compilers.
+- It provides a modern, unified development experience.
+- It's actively developed and improving rapidly.
 
 I've used GitHub actions as a CI:
 
