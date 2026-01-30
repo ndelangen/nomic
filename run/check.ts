@@ -34,10 +34,9 @@ await Promise.all(
 const errors = values(outcomes).filter((outcome) => outcome instanceof Error);
 
 for (const outcome of errors) {
-  if (outcome instanceof Error) {
-    console.log();
-    console.log(outcome.stack);
-  }
+  console.log();
+  console.log(outcome.message);
+  console.log(outcome.stack);
 }
 
 if (errors.length > 0) {
