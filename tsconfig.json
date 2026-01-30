@@ -10,6 +10,7 @@
     "noUnusedLocals": true,
     "noImplicitAny": true,
     "noEmit": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["bun-types"]
   }
 }
