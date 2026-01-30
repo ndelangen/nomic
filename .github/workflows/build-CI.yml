@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: streetsidesoftware/cspell-action@v9
+      - uses: streetsidesoftware/cspell-action@v8
         with:
           config: './cspell.json'
           use_cspell_files: true
