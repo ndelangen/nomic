@@ -16,8 +16,8 @@ export async function updateIssue(
     owner: repository.owner,
     repo: repository.name,
     issue_number: issueNumber,
-    title: title ?? null,
-    body: body ?? null,
+    title: title ?? undefined,
+    body: body ?? undefined,
   });
 }
 
