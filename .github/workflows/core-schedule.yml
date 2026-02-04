@@ -58,6 +58,11 @@ jobs:
       - run: bun install
       - name: Rules progress
         run: bun run progress
+      - name: Generate visualization
+        run: bun run visualize
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
       - name: Run core-yaml
         id: yaml-data
         uses: ndelangen/action-read-yaml@main

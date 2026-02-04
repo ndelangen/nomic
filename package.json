@@ -13,6 +13,7 @@
     "lint": "biome lint .",
     "prescience": "bun run ./run/prescience.ts",
     "progress": "bun run ./run/progress.ts",
+    "visualize": "bun run ./run/visualize.ts",
     "test": "bun test",
     "verify": "tsc --noEmit"
   },
