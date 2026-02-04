@@ -38,17 +38,17 @@ async function generateVisualization(input: {
   const lines: string[] = [
     '# Nomic Game State',
     '',
-    `**Current turn**: \`${states.core.turns.current}\``,
-    `**Active Player**: @${states.core.players.active}`,
-    `**Time Remaining**: ${formatTimeRemaining(turnInfo.remainingSeconds)}`,
+    `- **Current turn**: \`${states.core.turns.current}\``,
+    `- **Active Player**: @${states.core.players.active}`,
+    `- **Time Remaining**: ${formatTimeRemaining(turnInfo.remainingSeconds)}`,
   ];
 
   // Add metadata section
   lines.push('', '---', '');
   lines.push('## Metadata', '');
-  lines.push(`**Last Updated**: ${gitInfo.timestamp}`);
-  lines.push(`**Commit**: \[${gitInfo.commitSha.substring(0, 7)}\](${commitURL})`);
-  lines.push(`**Generated at**: ${new Date().toISOString()}`);
+  lines.push(`- **Last Updated**: ${new Date(gitInfo.timestamp * 1000).toISOString()}`);
+  lines.push(`- **Commit**: \[${gitInfo.commitSha.substring(0, 7)}\](${commitURL})`);
+  lines.push(`- **Generated at**: ${new Date().toISOString()}`);
   lines.push('');
 
   return lines.join('\n');
