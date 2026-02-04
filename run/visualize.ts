@@ -28,7 +28,7 @@ async function generateVisualization(input: {
   gitInfo: { commitSha: string; timestamp: number };
   turnInfo: { remainingSeconds: number };
 }) {
-  const { states, gitInfo } = input;
+  const { states, gitInfo, turnInfo } = input;
 
   const commitURL = `https://github.com/${process.env.GITHUB_REPOSITORY || 'owner/repo'}/commit/${gitInfo.commitSha}`;
 
