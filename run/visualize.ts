@@ -75,21 +75,23 @@ const turnInfo = {
 const content = await generateVisualization({ states, gitInfo, turnInfo });
 const outputPath = join(dirname(fileURLToPath(import.meta.url)), '..', 'visualization', 'state.md');
 
+const issueNumber = 53;
+
 const api = await defineAPI();
 if (api.repository && process.env.GITHUB_TOKEN) {
   const title = `Turn ${turnNumber ?? '?'} - Active Player: @${activePlayer}`;
-  await updateIssue(api.github, api.repository, 53, { body: content, title });
-  console.log('Updated GitHub issue #53');
+  await updateIssue(api.github, api.repository, issueNumber, { body: content, title });
+  console.log(`Updated GitHub issue #${issueNumber}`);
 
   // Delete previous notification comments first
-  await deletePreviousNotificationComments(api.github, api.repository, 53);
+  await deletePreviousNotificationComments(api.github, api.repository, issueNumber);
   console.log('Deleted previous notification comments');
 
   // Post new one
   await api.github.rest.issues.createComment({
     owner: api.repository.owner,
     repo: api.repository.name,
-    issue_number: 53,
+    issue_number: issueNumber,
     body: `Hey @${activePlayer}, it's your turn! 🎮`,
   });
 
