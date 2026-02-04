@@ -1,15 +1,12 @@
-import { join } from 'node:path';
-import { dirname } from 'node:path';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { writeFile } from 'node:fs/promises';
-
 import { defineAPI } from '../api/api.ts';
-import { readStates } from '../lib/read-states.ts';
 import { getGitCommitSha, getLastCommitTimestamp } from '../lib/git.ts';
+import { deleteComments, updateIssue } from '../lib/github-issue.ts';
 import { formatTimeRemaining } from '../lib/inactivity.ts';
-import { updateIssue, deleteComments } from '../lib/github-issue.ts';
-import { mkdir } from 'node:fs/promises';
+import { readStates } from '../lib/read-states.ts';
 
 async function deletePreviousNotificationComments(
   octokit: Awaited<ReturnType<typeof defineAPI>>['github'],
@@ -80,7 +77,10 @@ const issueNumber = 53;
 const api = await defineAPI();
 if (api.repository && process.env.GITHUB_TOKEN) {
   const title = `Turn ${turnNumber ?? '?'} - Active Player: @${activePlayer}`;
-  await updateIssue(api.github, api.repository, issueNumber, { body: content, title });
+  await updateIssue(api.github, api.repository, issueNumber, {
+    body: content,
+    title,
+  });
   console.log(`Updated GitHub issue #${issueNumber}`);
 
   // Delete previous notification comments first

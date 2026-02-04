@@ -9,10 +9,17 @@
       "recommended": true
     }
   },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
   "formatter": {
+    "formatWithErrors": true,
     "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2
+    "lineWidth": 110,
+    "indentWidth": 2,
+    "indentStyle": "space"
   },
   "files": {
     "ignore": ["node_modules", "coverage", "*.lock"]
