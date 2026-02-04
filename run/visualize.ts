@@ -76,26 +76,30 @@ const issueNumber = 53;
 
 const api = await defineAPI();
 if (api.repository && process.env.GITHUB_TOKEN) {
-  const title = `Turn ${turnNumber ?? '?'} - Active Player: @${activePlayer}`;
-  await updateIssue(api.github, api.repository, issueNumber, {
-    body: content,
-    title,
-  });
-  console.log(`Updated GitHub issue #${issueNumber}`);
+  try {
+    const title = `Turn ${turnNumber ?? '?'} - Active Player: @${activePlayer}`;
+    await updateIssue(api.github, api.repository, issueNumber, {
+      body: content,
+      title,
+    });
+    console.log(`Updated GitHub issue #${issueNumber}`);
 
-  // Delete previous notification comments first
-  await deletePreviousNotificationComments(api.github, api.repository, issueNumber);
-  console.log('Deleted previous notification comments');
+    // Delete previous notification comments first
+    await deletePreviousNotificationComments(api.github, api.repository, issueNumber);
+    console.log('Deleted previous notification comments');
 
-  // Post new one
-  await api.github.rest.issues.createComment({
-    owner: api.repository.owner,
-    repo: api.repository.name,
-    issue_number: issueNumber,
-    body: `Hey @${activePlayer}, it's your turn! 🎮`,
-  });
+    // Post new one
+    await api.github.rest.issues.createComment({
+      owner: api.repository.owner,
+      repo: api.repository.name,
+      issue_number: issueNumber,
+      body: `Hey @${activePlayer}, it's your turn! 🎮`,
+    });
 
-  console.log(`Posted turn notification for @${activePlayer}`);
+    console.log(`Posted turn notification for @${activePlayer}`);
+  } catch (error) {
+    console.error('Error updating issue:', error);
+  }
 } else {
   console.log(`Visualization generated at: ${outputPath}`);
   await mkdir(dirname(outputPath), { recursive: true });
