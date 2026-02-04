@@ -17,7 +17,7 @@ jobs:
         id: check_inactivity
         run: |
           now=$(date +%s)
-          last_commit_timestamp=$(git log --pretty="%ct" --merges -n 1)
+          last_commit_timestamp=$(git log --pretty="%ct" -n 1)
           difference=$((now - last_commit_timestamp))
           desired_inactivity_seconds=$(( $DESIRED_INACTIVITY_SECONDS + $DESIRED_INACTIVITY_MINUTES * 60 + $DESIRED_INACTIVITY_HOURS * 60 * 60 + $DESIRED_INACTIVITY_DAYS * 24 * 60 * 60 ))
 
@@ -70,11 +70,16 @@ jobs:
         with:
           github-username: ${{ steps.yaml-data.outputs['players.active'] }}
           token: ${{ steps.generate-token.outputs.token }}
-      - name: Commit changes
+      - name: Commit changes as merge commit
         run: |
           git config --local user.name ${{ steps.yaml-data.outputs['players.active'] }}
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git commit -a --allow-empty -m "new active player = ${{ steps.yaml-data.outputs['players.active'] }} [schedule] by ${{ github.actor }} [skip ci]"
+          git checkout -b temp-schedule-merge
+          git add -A
+          git commit --allow-empty -m "new active player = ${{ steps.yaml-data.outputs['players.active'] }} [schedule] by ${{ github.actor }} [skip ci]"
+          git checkout main
+          git merge --no-ff temp-schedule-merge -m "new active player = ${{ steps.yaml-data.outputs['players.active'] }} [schedule] by ${{ github.actor }} [skip ci]"
+          git branch -d temp-schedule-merge
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
