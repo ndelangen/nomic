@@ -34,6 +34,11 @@ jobs:
         env:
           ACTION_NAME: ${{github.event.inputs.activity }}
           ACTION_PAYLOAD: '{"name":"${{ github.actor }}"}'
+      - name: Generate visualization
+        run: bun run visualize
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
       - name: Get user email
         id: email-data
         uses: ndelangen/email-by-username-action@main
@@ -45,7 +50,8 @@ jobs:
         run: |
           git config --local user.name "${{ github.actor }}"
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git commit -a -m "${{ github.actor }} performs ${{ github.event.inputs.activity }} [skip ci]"
+          git add -A
+          git commit -m "${{ github.actor }} performs ${{ github.event.inputs.activity }} [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:

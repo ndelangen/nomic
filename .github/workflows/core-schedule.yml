@@ -17,7 +17,7 @@ jobs:
         id: check_inactivity
         run: |
           now=$(date +%s)
-          last_commit_timestamp=$(git log --pretty="%ct" --merges -n 1)
+          last_commit_timestamp=$(git log --pretty="%ct" -n 1)
           difference=$((now - last_commit_timestamp))
           desired_inactivity_seconds=$(( $DESIRED_INACTIVITY_SECONDS + $DESIRED_INACTIVITY_MINUTES * 60 + $DESIRED_INACTIVITY_HOURS * 60 * 60 + $DESIRED_INACTIVITY_DAYS * 24 * 60 * 60 ))
 
@@ -58,6 +58,11 @@ jobs:
       - run: bun install
       - name: Rules progress
         run: bun run progress
+      - name: Generate visualization
+        run: bun run visualize
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
       - name: Run core-yaml
         id: yaml-data
         uses: ndelangen/action-read-yaml@main
@@ -74,7 +79,8 @@ jobs:
         run: |
           git config --local user.name ${{ steps.yaml-data.outputs['players.active'] }}
           git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
-          git commit -a --allow-empty -m "new active player = ${{ steps.yaml-data.outputs['players.active'] }} [schedule] by ${{ github.actor }} [skip ci]"
+          git add -A
+          git commit --allow-empty -m "new active player = ${{ steps.yaml-data.outputs['players.active'] }} [schedule] by ${{ github.actor }} [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
