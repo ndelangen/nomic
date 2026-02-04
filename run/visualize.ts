@@ -47,7 +47,7 @@ async function generateVisualization(input: {
   lines.push('', '---', '');
   lines.push('## Metadata', '');
   lines.push(`- **Last Updated**: ${new Date(gitInfo.timestamp * 1000).toISOString()}`);
-  lines.push(`- **Commit**: \[${gitInfo.commitSha.substring(0, 7)}\](${commitURL})`);
+  lines.push(`- **Commit**: [${gitInfo.commitSha.substring(0, 7)}](${commitURL})`);
   lines.push(`- **Generated at**: ${new Date().toISOString()}`);
   lines.push('');
 
