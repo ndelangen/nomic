@@ -4,9 +4,9 @@ export async function updateIssue(
   octokit: Octokit,
   repository: { owner: string; name: string },
   issueNumber: number,
-  data: { body?: string; title?: string },
+  data: { body?: string; title?: string, assignees?: string[] },
 ) {
-  const { body, title } = data;
+  const { body, title, assignees } = data;
 
   if (!body && !title) {
     throw new Error('Either body or title must be provided');
@@ -18,6 +18,7 @@ export async function updateIssue(
     issue_number: issueNumber,
     title: title ?? undefined,
     body: body ?? undefined,
+    assignees: assignees ?? undefined,
   });
 }
 
@@ -27,7 +28,7 @@ export async function deleteComments(
   octokit: Octokit,
   repository: { owner: string; name: string },
   issueNumber: number,
-  filter = (comment: IssueComment) => true,
+  filter = (_comment: IssueComment) => true,
 ): Promise<void> {
   const { data: comments } = await octokit.rest.issues.listComments({
     owner: repository.owner,
