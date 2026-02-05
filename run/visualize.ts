@@ -13,8 +13,7 @@ async function deletePreviousNotificationComments(
   repository: { owner: string; name: string },
   issueNumber: number,
 ): Promise<void> {
-  const { data: authUser } = await octokit.rest.users.getAuthenticated();
-  const botLogin = authUser.login;
+  const botLogin = 'nomic-commit';
 
   const notificationPattern = /it's your turn/i;
   const filter: Parameters<typeof deleteComments>[3] = (comment) =>
@@ -77,7 +76,7 @@ const issueNumber = 53;
 const api = await defineAPI();
 if (api.repository && process.env.GITHUB_TOKEN) {
   try {
-    const title = `Turn ${turnNumber ?? '?'} - Active Player: @${activePlayer}`;
+    const title = `Turn \`${turnNumber ?? '?'}\` - Active Player: ${activePlayer}`;
     await updateIssue(api.github, api.repository, issueNumber, {
       body: content,
       title,
