@@ -11,6 +11,7 @@
     "cspell": "cspell . --config ./cspell.json",
     "knip": "knip",
     "lint": "biome lint .",
+    "format": "biome format .",
     "prescience": "bun run ./run/prescience.ts",
     "progress": "bun run ./run/progress.ts",
     "visualize": "bun run ./run/visualize.ts",
