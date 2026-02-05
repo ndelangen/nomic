@@ -26,7 +26,7 @@
     "indentStyle": "space"
   },
   "files": {
-    "includes": ["**","!node_modules","!coverage","!*.lock"]
+    "includes": ["**", "!node_modules", "!coverage", "!*.lock"]
   },
   "overrides": [
     {

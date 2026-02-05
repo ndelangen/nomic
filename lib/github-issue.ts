@@ -4,7 +4,7 @@ export async function updateIssue(
   octokit: Octokit,
   repository: { owner: string; name: string },
   issueNumber: number,
-  data: { body?: string; title?: string, assignees?: string[] },
+  data: { body?: string; title?: string; assignees?: string[] },
 ) {
   const { body, title, assignees } = data;
 
