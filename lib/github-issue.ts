@@ -27,7 +27,7 @@ export async function deleteComments(
   octokit: Octokit,
   repository: { owner: string; name: string },
   issueNumber: number,
-  filter = (comment: IssueComment) => true,
+  filter = (_comment: IssueComment) => true,
 ): Promise<void> {
   const { data: comments } = await octokit.rest.issues.listComments({
     owner: repository.owner,

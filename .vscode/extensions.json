@@ -1,12 +1,11 @@
 {
   "recommendations": [
     "oven.bun-vscode",
-    "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "unional.vscode-sort-package-json",
     "dskwrk.vscode-generate-getter-setter",
     "ms-vscode.vscode-typescript-next",
-    "amatiasq.sort-imports",
-    "streetsidesoftware.code-spell-checker"
+    "streetsidesoftware.code-spell-checker",
+    "biomejs.biome"
   ]
 }

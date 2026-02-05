@@ -1,7 +1,11 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
@@ -22,11 +26,11 @@
     "indentStyle": "space"
   },
   "files": {
-    "ignore": ["node_modules", "coverage", "*.lock"]
+    "includes": ["**","!node_modules","!coverage","!*.lock"]
   },
   "overrides": [
     {
-      "include": ["tests/**/*.ts"],
+      "includes": ["tests/**/*.ts"],
       "linter": {
         "rules": {
           "suspicious": {
