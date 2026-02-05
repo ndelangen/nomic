@@ -8,15 +8,18 @@ import { deleteComments, updateIssue } from '../lib/github-issue.ts';
 import { formatTimeRemaining } from '../lib/inactivity.ts';
 import { readStates } from '../lib/read-states.ts';
 
+const COMMENTS = process.argv.includes('--comments');
+
 async function deletePreviousNotificationComments(
   octokit: Awaited<ReturnType<typeof defineAPI>>['github'],
   repository: { owner: string; name: string },
   issueNumber: number,
 ): Promise<void> {
-
   const notificationPattern = /it's your turn/i;
   const filter: Parameters<typeof deleteComments>[3] = (comment) =>
-    comment.user?.type === 'Bot' && comment.user?.name === 'nomic-commit' && notificationPattern.test(comment.body || '');
+    comment.user?.type === 'Bot' &&
+    comment.user?.name === 'nomic-commit' &&
+    notificationPattern.test(comment.body || '');
 
   await deleteComments(octokit, repository, issueNumber, filter);
 }
@@ -83,19 +86,21 @@ if (api.repository && process.env.GITHUB_TOKEN) {
     });
     console.log(`Updated GitHub issue #${issueNumber}`);
 
-    // Delete previous notification comments first
-    await deletePreviousNotificationComments(api.github, api.repository, issueNumber);
-    console.log('Deleted previous notification comments');
+    if (COMMENTS) {
+      // Delete previous notification comments first
+      await deletePreviousNotificationComments(api.github, api.repository, issueNumber);
+      console.log('Deleted previous notification comments');
 
-    // Post new one
-    await api.github.rest.issues.createComment({
-      owner: api.repository.owner,
-      repo: api.repository.name,
-      issue_number: issueNumber,
-      body: `Hey @${activePlayer}, it's your turn! 🎮`,
-    });
+      // Post new one
+      await api.github.rest.issues.createComment({
+        owner: api.repository.owner,
+        repo: api.repository.name,
+        issue_number: issueNumber,
+        body: `Hey @${activePlayer}, it's your turn! 🎮`,
+      });
 
-    console.log(`Posted turn notification for @${activePlayer}`);
+      console.log(`Posted turn notification for @${activePlayer}`);
+    }
   } catch (error) {
     console.error('Error updating issue:', error);
   }

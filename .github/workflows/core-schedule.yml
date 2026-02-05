@@ -59,7 +59,7 @@ jobs:
       - name: Rules progress
         run: bun run progress
       - name: Generate visualization
-        run: bun run visualize
+        run: bun run visualize --comments
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
