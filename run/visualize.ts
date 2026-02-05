@@ -13,11 +13,10 @@ async function deletePreviousNotificationComments(
   repository: { owner: string; name: string },
   issueNumber: number,
 ): Promise<void> {
-  const botLogin = 'nomic-commit';
 
   const notificationPattern = /it's your turn/i;
   const filter: Parameters<typeof deleteComments>[3] = (comment) =>
-    comment.user?.login === botLogin && notificationPattern.test(comment.body || '');
+    comment.user?.type === 'Bot' && comment.user?.name === 'nomic-commit' && notificationPattern.test(comment.body || '');
 
   await deleteComments(octokit, repository, issueNumber, filter);
 }
@@ -80,6 +79,7 @@ if (api.repository && process.env.GITHUB_TOKEN) {
     await updateIssue(api.github, api.repository, issueNumber, {
       body: content,
       title,
+      assignees: [activePlayer],
     });
     console.log(`Updated GitHub issue #${issueNumber}`);
 
