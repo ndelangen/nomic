@@ -1,0 +1,44 @@
+name: Action - Honk
+on:
+  workflow_dispatch:
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    environment: safe
+    steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ steps.generate-token.outputs.token }}
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - name: Rules action
+        run: bun run action
+        env:
+          ACTION_NAME: honk
+          ACTION_PAYLOAD: '{"name":"${{ github.actor }}"}'
+      - name: Get user email
+        id: email-data
+        uses: ndelangen/email-by-username-action@main
+        continue-on-error: true
+        with:
+          github-username: ${{ github.actor }}
+          token: ${{ steps.generate-token.outputs.token }}
+      - name: Commit changes
+        run: |
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email ${{ steps.email-data.outputs.email || 'github-action@gihub.com' }}
+          git add -A
+          git commit -m "${{ github.actor }} performs honk [skip ci]"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ steps.generate-token.outputs.token }}
